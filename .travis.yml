@@ -8,5 +8,5 @@ install:
 
 branches:
   only:
-  - gh-pages
-  - /.*/
+  - master
+  - feature_authentication
