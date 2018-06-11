@@ -1,7 +1,10 @@
 package edu.dhbw.ka.mwi.businesshorizon2.dataaccess.interfaces;
 
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
+import edu.dhbw.ka.mwi.businesshorizon2.models.daos.UserDao;
 
+@Repository
 public interface IUserRepository extends CrudRepository<UserDao, Long> {
-	UserDao findByUsername(String username);
+	UserDao findByEmail(String email);
 }
