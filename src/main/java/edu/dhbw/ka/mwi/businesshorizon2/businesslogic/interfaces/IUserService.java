@@ -7,5 +7,7 @@ import edu.dhbw.ka.mwi.businesshorizon2.models.daos.UserDao;
 public interface IUserService {
 	public List<UserDao> findAllUsers();
     
-    public UserDao findByEmail(String email);
+    public UserDao findById(int id);
+    
+    public UserDao findByEmail(String s);
 }

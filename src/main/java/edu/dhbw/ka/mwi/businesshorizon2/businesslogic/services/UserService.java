@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.IUserService;
 import edu.dhbw.ka.mwi.businesshorizon2.dataaccess.interfaces.IUserRepository;
 import edu.dhbw.ka.mwi.businesshorizon2.models.daos.UserDao;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.UserDto;
 
 @Service
 public class UserService implements IUserService {
@@ -18,7 +19,14 @@ public class UserService implements IUserService {
         return (List<UserDao>)userRepository.findAll();
     }
     
-    public UserDao findByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public UserDao findById(int id) {
+        return userRepository.findById(id);
     }
+
+	@Override
+	public UserDao findByEmail(String s) {
+		return userRepository.findByEmail(s);
+	}
+    
+    
 }
