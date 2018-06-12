@@ -15,10 +15,12 @@ public class UserService implements IUserService {
     @Autowired
     private IUserRepository userRepository;
     
+    @Override
     public List<UserDao> findAllUsers() {
         return (List<UserDao>)userRepository.findAll();
     }
     
+    @Override
     public UserDao findById(int id) {
         return userRepository.findById(id);
     }

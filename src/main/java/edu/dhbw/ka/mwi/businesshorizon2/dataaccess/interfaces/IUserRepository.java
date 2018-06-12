@@ -4,7 +4,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import edu.dhbw.ka.mwi.businesshorizon2.models.daos.UserDao;
 
-@Repository
+
 public interface IUserRepository extends CrudRepository<UserDao, Integer> {
 	UserDao findById(int id);
 	

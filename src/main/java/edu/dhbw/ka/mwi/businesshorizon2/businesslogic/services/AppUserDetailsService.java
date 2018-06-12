@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import edu.dhbw.ka.mwi.businesshorizon2.dataaccess.interfaces.IUserRepository;
 import edu.dhbw.ka.mwi.businesshorizon2.models.daos.UserDao;
 
-@Component
 @Service
 public class AppUserDetailsService implements UserDetailsService {
     @Autowired
