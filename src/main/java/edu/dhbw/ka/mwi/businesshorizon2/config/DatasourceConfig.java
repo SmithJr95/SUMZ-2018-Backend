@@ -20,7 +20,7 @@ import java.beans.PropertyVetoException;
 
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = "edu.dhbw.ka.mwi.businesshorizon2.models.daos")
+@EnableJpaRepositories(basePackages = "edu.dhbw.ka.mwi.businesshorizon2.dataaccess.interfaces")
 public class DatasourceConfig {
 
     @Bean
@@ -39,7 +39,7 @@ public class DatasourceConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(@Qualifier("datasource") DataSource ds) throws PropertyVetoException{
         LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactory.setDataSource(ds);
-        entityManagerFactory.setPackagesToScan(new String[]{"edu.dhbw.ka.mwi.businesshorizon2.models.repositories"});
+        entityManagerFactory.setPackagesToScan(new String[]{"edu.dhbw.ka.mwi.businesshorizon2.models.daos"});
         JpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
         entityManagerFactory.setJpaVendorAdapter(jpaVendorAdapter);
         return entityManagerFactory;

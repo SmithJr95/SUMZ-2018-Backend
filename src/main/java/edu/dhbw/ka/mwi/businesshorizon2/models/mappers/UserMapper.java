@@ -13,13 +13,13 @@ public class UserMapper {
 	
 	public static List<UserDto> mapToDto(List<UserDao> userDao){
 		List<UserDto> result = new ArrayList<UserDto>();
-		for (UserDao ud: userDao) {
-			result.add(mapToDto(ud));
+		for (UserDao uDao: userDao) {
+			result.add(mapToDto(uDao));
 		}
 		return result;
 	}
 	
-	public static UserDto mapToDto(UserDao userDao) {
-		throw new UnsupportedOperationException();
+	public static UserDto mapToDto(UserDao uDao) {
+		return new UserDto(uDao.getId(), uDao.getEmail(), uDao.getPassword(), uDao.getRoles());
 	}
 }
