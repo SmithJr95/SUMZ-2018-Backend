@@ -14,7 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "user")
+@Table(name = "app_user")
 public class UserDao {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

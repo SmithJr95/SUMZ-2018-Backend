@@ -17,14 +17,10 @@ public class UserService implements IUserService {
     
     @Override
     public List<UserDao> findAllUsers() {
+    	System.out.println("TEST");
         return (List<UserDao>)userRepository.findAll();
     }
-    
-    @Override
-    public UserDao findById(int id) {
-        return userRepository.findById(id);
-    }
-
+   
 	@Override
 	public UserDao findByEmail(String s) {
 		return userRepository.findByEmail(s);

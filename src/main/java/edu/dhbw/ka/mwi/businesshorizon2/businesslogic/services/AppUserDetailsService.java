@@ -22,6 +22,7 @@ public class AppUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+    	System.out.println("eins");
         UserDao user = userRepository.findByEmail(s);
 
         if(user == null) {

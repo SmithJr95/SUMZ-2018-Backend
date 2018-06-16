@@ -5,8 +5,6 @@ import org.springframework.stereotype.Repository;
 import edu.dhbw.ka.mwi.businesshorizon2.models.daos.UserDao;
 
 
-public interface IUserRepository extends CrudRepository<UserDao, Integer> {
-	UserDao findById(int id);
-	
+public interface IUserRepository extends CrudRepository<UserDao, Long> {
 	UserDao findByEmail(String s);
 }

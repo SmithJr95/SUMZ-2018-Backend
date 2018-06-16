@@ -19,7 +19,7 @@ import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.UserDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.mappers.UserMapper;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/user")
 public class UserController {
 	
 	@Autowired
@@ -27,14 +27,8 @@ public class UserController {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasAuthority('ADMIN_USER') or hasAuthority('STANDARD_USER')")
-	public Collection<UserDto> getAllStudents(){
+	public Collection<UserDto> getAllUsers(){
 		return UserMapper.mapToDto(userService.findAllUsers());
-	}
-	
-	@GetMapping("/{id}")
-	@PreAuthorize("hasAuthority('ADMIN_USER') or hasAuthority('STANDARD_USER')")
-	public UserDto getStudentById(@PathVariable("id") int id){
-		return UserMapper.mapToDto(userService.findById(id));
 	}
 	
 }
