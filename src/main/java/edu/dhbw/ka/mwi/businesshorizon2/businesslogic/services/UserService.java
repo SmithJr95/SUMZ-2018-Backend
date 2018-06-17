@@ -17,7 +17,6 @@ public class UserService implements IUserService {
     
     @Override
     public List<UserDao> findAllUsers() {
-    	System.out.println("TEST");
         return (List<UserDao>)userRepository.findAll();
     }
    

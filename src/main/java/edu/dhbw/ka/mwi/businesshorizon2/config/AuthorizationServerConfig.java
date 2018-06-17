@@ -15,6 +15,8 @@ import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
+import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.services.AppUserDetailsService;
+
 @Configuration
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
@@ -45,6 +47,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
+	
+    @Autowired
+    private AppUserDetailsService userDetailsService;
 
 	@Override
 	public void configure(ClientDetailsServiceConfigurer configurer) throws Exception {
@@ -63,9 +68,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 		TokenEnhancerChain enhancerChain = new TokenEnhancerChain();
 		enhancerChain.setTokenEnhancers(Arrays.asList(accessTokenConverter));
-		endpoints.tokenStore(tokenStore)
+		endpoints.tokenStore(this.tokenStore)
 		        .accessTokenConverter(accessTokenConverter)
 		        .tokenEnhancer(enhancerChain)
+		        .userDetailsService(userDetailsService)
 		        .authenticationManager(authenticationManager);
 	}
 	
