@@ -1,12 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-
   <groupId>dhbw.ka.mwi.businesshorizon2</groupId>
   <artifactId>businesshorizon2</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
-
   <name>businesshorizon2</name>
   
   <parent>
@@ -22,12 +20,10 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
-		
 	    <base>frolvlad/alpine-oraclejdk8:slim</base>
 	    <tomcat.port>9081</tomcat.port>
 	    <tomcat.ip>127.0.0.1</tomcat.ip>
-	    <file>readme</file>
-	    
+	    <file>readme</file> 
 	</properties>
 
 	<dependencies>
@@ -89,8 +85,8 @@
 		    <artifactId>jackson-annotations</artifactId>
 		    <version>2.9.0</version>
 		</dependency>
-
 	</dependencies>
+	
 	<build>
 		<plugins>
 			<plugin>
@@ -108,21 +104,14 @@
                     </execution>
                 </executions>
 			</plugin>
-			
 	        <plugin>
+	        	<groupId>org.apache.maven.plugins</groupId>
 	            <artifactId>maven-compiler-plugin</artifactId>
-	            <version>3.1</version>
-	            <configuration>
-	                <fork>true</fork>
-	                <executable>C:\Program Files\Java\jdk1.8.0_172\bin\javac.exe</executable>
-	            </configuration>
         	</plugin>
-			
-	         <plugin>
+	        <plugin>
 		        <groupId>io.fabric8</groupId>
 		        <artifactId>docker-maven-plugin</artifactId>
 		        <extensions>true</extensions>
-		        
  		        <configuration>
 		          <images>
 			            <image>
@@ -150,8 +139,7 @@
 			            </image>
 		          </images>
 		        </configuration>	
-		        	
-		      </plugin>
+		    </plugin>
 		</plugins>
 	</build>
 </project>
