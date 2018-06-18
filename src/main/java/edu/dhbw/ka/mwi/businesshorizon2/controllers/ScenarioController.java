@@ -2,6 +2,7 @@ package edu.dhbw.ka.mwi.businesshorizon2.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,7 +17,7 @@ public class ScenarioController {
 	//private IScenarioService scenarioService;
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public void createScenario(ScenarioPostRequestDto scenario, BindingResult bindingResult) {
-		System.out.println("Hallo");
+	public void createScenario(@RequestBody ScenarioPostRequestDto scenario) {
+		System.out.println(scenario);
 	} 
 }

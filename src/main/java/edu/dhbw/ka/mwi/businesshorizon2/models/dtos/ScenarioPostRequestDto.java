@@ -1,15 +1,19 @@
 package edu.dhbw.ka.mwi.businesshorizon2.models.dtos;
 
+import javax.validation.constraints.Email;
+
 import edu.dhbw.ka.mwi.businesshorizon2.models.common.AccountingFigure;
 
 public class ScenarioPostRequestDto {
+	
+	@Email
 	private String name;
 	private String description;
 	private int periods;
 	private double equityInterest;
 	private double outsideCapitalInterest;
 	private double corporateTax;
-	private AccountingFigure[] accoutingFigures;
+	private AccountingFigure[] accountingFigures;
 	
 	public String getName() {
 		return name;
@@ -59,16 +63,18 @@ public class ScenarioPostRequestDto {
 		this.corporateTax = corporateTax;
 	}
 
-	public AccountingFigure[] getAccoutingFigures() {
-		return accoutingFigures;
+	public AccountingFigure[] getAccountingFigures() {
+		return accountingFigures;
 	}
 
-	public void setAccoutingFigures(AccountingFigure[] accoutingFigures) {
-		this.accoutingFigures = accoutingFigures;
+	public void setAccountingFigures(AccountingFigure[] accountingFigures) {
+		this.accountingFigures = accountingFigures;
 	}
 	
 	@Override
 	public String toString() {
+		String newLine = System.getProperty("line.separator");
+		
 		StringBuilder sb = new StringBuilder();
 		sb.append("Name: ");
 		sb.append(this.name);
@@ -88,7 +94,9 @@ public class ScenarioPostRequestDto {
 		sb.append("Outside Capital Interest: ");
 		sb.append(this.outsideCapitalInterest);
 		sb.append(", ");
-		sb.append(this.accoutingFigures.toString());
+		for (int i = 0; i < this.accountingFigures.length; i++) {
+			sb.append(this.accountingFigures[i].toString() + newLine);
+		}
 	
 		return sb.toString();
 	}

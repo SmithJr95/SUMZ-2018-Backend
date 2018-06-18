@@ -30,11 +30,13 @@ public class AccountingFigure {
 	}
 	
 	@Override
-	public String toString() {
-		String result = "Id: " +  this.id+ ", " + "Historic: " + this.historic +  ", [\n";
+	public String toString() { 
+		String newLine = System.getProperty("line.separator");
+		
+		String result = "Id: " +  this.id+ ", " + "Historic: " + this.historic +  ", [";
 		
 		for(int i = 0; i < this.timeSeries.length - 1; i++) {
-			result += this.timeSeries[i].toString() + ",\n";
+			result += this.timeSeries[i].toString() + "," + newLine;
 		}
 		
 		result += this.timeSeries[this.timeSeries.length - 1].toString();
