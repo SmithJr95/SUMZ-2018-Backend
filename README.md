@@ -4,6 +4,8 @@
 
 DHBW-Projekt SUMZ 2018, Teilprojekt Backend
 
+Cashflow Calculation
+
 ## Front-End Project
 
 Kanban-Board mit übergeordneten Aufgaben (gesamt): 
