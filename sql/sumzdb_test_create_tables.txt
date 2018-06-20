@@ -1,0 +1,137 @@
+USE sumzdb
+
+DROP TABLE IF EXISTS Scenario;
+DROP TABLE IF EXISTS FteValuationResult;
+DROP TABLE IF EXISTS FcfValuationResult;
+DROP TABLE IF EXISTS ApvValuationResult;
+DROP TABLE IF EXISTS CompanyValueDistribution;
+DROP TABLE IF EXISTS DistributionBar;
+DROP TABLE IF EXISTS TimeSeriesItem;
+DROP TABLE IF EXISTS AccountingFigure;
+
+CREATE TABLE FteValuationResult (
+	FteValuationResultId BIGINT IDENTITY(1,1) NOT NULL,
+	CompanyValue BIGINT NOT NULL,
+
+	CONSTRAINT PK_FteValuationResult PRIMARY KEY (FteValuationResultId),
+	CONSTRAINT CHK_FteValuationResult_CompanyValue CHECK (CompanyValue >= 0),
+);
+
+CREATE TABLE FcfValuationResult(
+	FcfValuationResultId BIGINT IDENTITY(1,1) NOT NULL,
+	CompanyValue BIGINT NOT NULL,
+	MarketValueTotalAssets BIGINT NOT NULL,
+	TotalLiabilities BIGINT NOT NULL,
+
+	CONSTRAINT PK_FcfValuationResult PRIMARY KEY (FcfValuationResultId),
+	CONSTRAINT CHK_FcfValuationResult_CompanyValue CHECK (CompanyValue >= 0),
+	CONSTRAINT CHK_FcfValuationResult_MarketValueTotalAssets CHECK (MarketValueTotalAssets >= 0),
+	CONSTRAINT CHK_FcfValuationResult_TotalLiabilities CHECK (TotalLiabilities >= 0),
+);
+
+CREATE TABLE ApvValuationResult(
+	ApvValuationResultId BIGINT IDENTITY(1,1) NOT NULL,
+	CompanyValue BIGINT NOT NULL,
+	MarketValueTotalAssets BIGINT NOT NULL,
+	TotalLiabilities BIGINT NOT NULL,
+	MarketValueEquity BIGINT NOT NULL,
+	TaxShield FLOAT NOT NULL,
+
+	CONSTRAINT PK_ApvValuationResult PRIMARY KEY (ApvValuationResultId),
+	CONSTRAINT CHK_ApvValuationResult_CompanyValue CHECK (CompanyValue >= 0),
+	CONSTRAINT CHK_ApvValuationResult_MarketValueTotalAssets CHECK (MarketValueTotalAssets >= 0),
+	CONSTRAINT CHK_ApvValuationResult_TotalLiabilities CHECK (TotalLiabilities >= 0),
+	CONSTRAINT CHK_ApvValuationResult_MarketValueEquity CHECK (MarketValueEquity >= 0),
+	CONSTRAINT CHK_ApvValuationResult_TaxShield CHECK (TaxShield >= 0),
+);
+
+CREATE TABLE DistributionBar(
+	DistributionBarId BIGINT IDENTITY(1,1) NOT NULL,
+	MinLabel BIGINT NOT NULL,
+	MaxLabel BIGINT NOT NULL,
+	Height FLOAT NOT NULL,
+
+	CONSTRAINT PK_DistributionBar PRIMARY KEY (DistributionBarId),
+	CONSTRAINT CHK_DistributionBar_MinLabel CHECK (MinLabel > 0),
+	CONSTRAINT CHK_DistributionBar_MaxLabel CHECK (MaxLabel > 0),
+	CONSTRAINT CHK_DistributionBar_Height CHECK(Height >= 0 AND Height <= 1),
+	
+);
+
+CREATE TABLE CompanyValueDistribution(
+	CompanyValueDistributionId BIGINT IDENTITY(1,1) NOT NULL,
+	Bar1Id BIGINT NOT NULL,
+	Bar2Id BIGINT NOT NULL,
+	Bar3Id BIGINT NOT NULL,
+	Bar4Id BIGINT NOT NULL,
+	Bar5Id BIGINT NOT NULL,
+	Bar6Id BIGINT NOT NULL,
+	Bar7Id BIGINT NOT NULL,
+	Bar8Id BIGINT NOT NULL,
+	Bar9Id BIGINT NOT NULL,
+	Bar10Id BIGINT NOT NULL,
+	Bar11Id BIGINT NOT NULL,
+
+	CONSTRAINT PK_CompanyValueDistribution PRIMARY KEY (CompanyValueDistributionId),
+	CONSTRAINT FK_CompanyValueDistribution_Bar1Id FOREIGN KEY (Bar1Id) REFERENCES DistributionBar(DistributionBarId),
+	CONSTRAINT FK_CompanyValueDistribution_Bar2Id FOREIGN KEY (Bar2Id) REFERENCES DistributionBar(DistributionBarId),
+	CONSTRAINT FK_CompanyValueDistribution_Bar3Id FOREIGN KEY (Bar3Id) REFERENCES DistributionBar(DistributionBarId),
+	CONSTRAINT FK_CompanyValueDistribution_Bar4Id FOREIGN KEY (Bar4Id) REFERENCES DistributionBar(DistributionBarId),
+	CONSTRAINT FK_CompanyValueDistribution_Bar5Id FOREIGN KEY (Bar5Id) REFERENCES DistributionBar(DistributionBarId),
+	CONSTRAINT FK_CompanyValueDistribution_Bar6Id FOREIGN KEY (Bar6Id) REFERENCES DistributionBar(DistributionBarId),
+	CONSTRAINT FK_CompanyValueDistribution_Bar7Id FOREIGN KEY (Bar7Id) REFERENCES DistributionBar(DistributionBarId),
+	CONSTRAINT FK_CompanyValueDistribution_Bar8Id FOREIGN KEY (Bar8Id) REFERENCES DistributionBar(DistributionBarId),
+	CONSTRAINT FK_CompanyValueDistribution_Bar9Id FOREIGN KEY (Bar9Id) REFERENCES DistributionBar(DistributionBarId),
+	CONSTRAINT FK_CompanyValueDistribution_Bar10Id FOREIGN KEY (Bar10Id) REFERENCES DistributionBar(DistributionBarId),
+	CONSTRAINT FK_CompanyValueDistribution_Bar11Id FOREIGN KEY (Bar11Id) REFERENCES DistributionBar(DistributionBarId),
+);
+
+CREATE TABLE Scenario(
+	ScenarioId BIGINT IDENTITY(1,1) NOT NULL,
+	ScenarioName NVARCHAR(150) NOT NULL,
+	ScenarioDescription NVARCHAR(150) NOT NULL,
+	ForecastPeriods INT NOT NULL,
+	EquityInterest FLOAT NOT NULL,
+	OutsideCapitalInterest FLOAT NOT NULL,
+	CorporateTax FLOAT NOT NULL,
+	FteValuationResultId BIGINT NOT NULL,
+	FcfValuationResultId BIGINT NOT NULL,
+	ApvValuationResultId BIGINT NOT NULL,
+	CompanyValueDistributionId BIGINT, 
+
+	CONSTRAINT PK_Scenario PRIMARY KEY (ScenarioId),
+	CONSTRAINT FK_Scenario_FteValuationResultId FOREIGN KEY (FteValuationResultId) REFERENCES FteValuationResult(FteValuationResultId),
+	CONSTRAINT FK_Scenario_FcfValuationResultId FOREIGN KEY (FcfValuationResultId) REFERENCES FcfValuationResult(FcfValuationResultId),
+	CONSTRAINT FK_Scenario_ApvValuationResultId FOREIGN KEY (ApvValuationResultId) REFERENCES ApvValuationResult(ApvValuationResultId),
+	CONSTRAINT FK_Scenario_CompanyValueDistributionId FOREIGN KEY (CompanyValueDistributionId) REFERENCES CompanyValueDistribution(CompanyValueDistributionId),
+	CONSTRAINT CHK_Scenario_ScenarioName CHECK (LEN(ScenarioName) > 0),
+	CONSTRAINT CHK_Scenario_ScenarioDescription CHECK (LEN(ScenarioDescription) > 0),
+	CONSTRAINT CHK_Scenario_ForecastPeriods CHECK (ForecastPeriods > 0),
+	CONSTRAINT CHK_Scenario_EquityInterest CHECK (EquityInterest >= 0),
+	CONSTRAINT CHK_Scenario_OutsideCapitalInterest CHECK (OutsideCapitalInterest >= 0),
+	CONSTRAINT CHK_Scenario_CorporateTax CHECK (CorporateTax >= 0),
+);
+
+CREATE TABLE AccountingFigure(
+	AccountingFigureId BIGINT IDENTITY(1,1) NOT NULL,
+	ScenarioId BIGINT NOT NULL,
+	FigureName NVARCHAR(20) NOT NULL,
+
+	CONSTRAINT PK_AccountingFigure PRIMARY KEY (AccountingFigureId),
+	CONSTRAINT FK_AccountingFigure_ScenarioId FOREIGN KEY (ScenarioId) REFERENCES Scenario(ScenarioId),
+	CONSTRAINT CHK_AccountingFigure_FigureName CHECK (LEN(FigureName) > 0),
+);
+
+CREATE TABLE TimeSeriesItem(
+	TimeSeriesItemId BIGINT IDENTITY(1,1) NOT NULL,
+	AccountingFigureId BIGINT NOT NULL,
+	Historic BIT NOT NULL,
+	ItemYear INT NOT NULL,
+	ItemQuarter INT NOT NULL,
+	ItemAmount BIGINT NOT NULL,
+
+	CONSTRAINT PK_TimeSeriesItem PRIMARY KEY (TimeSeriesItemId),
+	CONSTRAINT FK_TimeSeriesItem_AccountingFigureId FOREIGN KEY (AccountingFigureId) REFERENCES AccountingFigure(AccountingFigureId),
+	CONSTRAINT CHK_TimeSeriesItem_FigureYear CHECK (ItemYear > 1900 AND ItemYear < 9999),
+	CONSTRAINT CHK_TimeSeriesItem_FigureQuarter CHECK (ItemQuarter IN (1,2,3,4)),
+);

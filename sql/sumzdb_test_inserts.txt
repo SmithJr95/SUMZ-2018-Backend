@@ -1,0 +1,35 @@
+USE sumzdb
+
+INSERT INTO FteValuationResult (CompanyValue) VALUES (1234)
+INSERT INTO FcfValuationResult (CompanyValue, MarketValueTotalAssets, TotalLiabilities) VALUES (123, 22, 22)
+INSERT INTO ApvValuationResult (CompanyValue, MarketValueTotalAssets, TotalLiabilities, MarketValueEquity, TaxShield) VALUES (123, 22, 22, 45, 2.4)
+
+INSERT INTO DistributionBar (MinLabel, MaxLabel, Height) VALUES (123, 425, 0.22)
+INSERT INTO DistributionBar (MinLabel, MaxLabel, Height) VALUES (123, 425, 0.22)
+INSERT INTO DistributionBar (MinLabel, MaxLabel, Height) VALUES (123, 425, 0.22)
+INSERT INTO DistributionBar (MinLabel, MaxLabel, Height) VALUES (123, 425, 0.22)
+INSERT INTO DistributionBar (MinLabel, MaxLabel, Height) VALUES (123, 425, 0.22)
+INSERT INTO DistributionBar (MinLabel, MaxLabel, Height) VALUES (123, 425, 0.22)
+INSERT INTO DistributionBar (MinLabel, MaxLabel, Height) VALUES (123, 425, 0.22)
+INSERT INTO DistributionBar (MinLabel, MaxLabel, Height) VALUES (123, 425, 0.22)
+INSERT INTO DistributionBar (MinLabel, MaxLabel, Height) VALUES (123, 425, 0.22)
+INSERT INTO DistributionBar (MinLabel, MaxLabel, Height) VALUES (123, 425, 0.22)
+INSERT INTO DistributionBar (MinLabel, MaxLabel, Height) VALUES (123, 425, 0.22)
+
+INSERT INTO CompanyValueDistribution (Bar1Id, Bar2Id, Bar3Id, Bar4Id, Bar5Id, Bar6Id, Bar7Id, Bar8Id, Bar9Id, Bar10Id, Bar11Id) VALUES (1,2,3,4,5,6,7,8,9,10,11)
+
+INSERT INTO Scenario (
+	ScenarioName, 
+	ScenarioDescription, 
+	ForecastPeriods, 
+	EquityInterest, 
+	OutsideCapitalInterest, 
+	CorporateTax, 
+	FcfValuationResultId, 
+	FteValuationResultId, 
+	ApvValuationResultId, 
+	CompanyValueDistributionId
+	) VALUES ('testname', 'testdescription', 4, 34.2, 342.3, 3.3, 1, 1, 1, 1)
+
+INSERT INTO AccountingFigure (ScenarioId, FigureName) VALUES (1, 'uv')
+INSERT INTO TimeSeriesItem (AccountingFigureId, Historic, ItemYear, ItemQuarter, ItemAmount) VALUES (1, 0, 2004, 2, 1000) 
