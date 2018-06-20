@@ -1,8 +1,18 @@
 package edu.dhbw.ka.mwi.businesshorizon2.models.common;
 
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
 public class TimeSeriesItem {
+	
+	@DecimalMin("1900")
 	private int year;
+	
+	@NotNull
 	private Quarters quarter;
+	
 	private int amount;
 	
 	public int getYear() {

@@ -1,8 +1,17 @@
 package edu.dhbw.ka.mwi.businesshorizon2.models.common;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
 public class AccountingFigure {
+	@NotNull
 	private String id;
+	
+	@NotNull
 	private boolean historic;
+	
+	@NotNull
+	@Valid
 	private TimeSeriesItem[] timeSeries;
 	
 	public String getId() {

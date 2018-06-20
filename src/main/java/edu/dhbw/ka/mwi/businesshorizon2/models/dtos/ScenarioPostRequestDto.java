@@ -1,19 +1,36 @@
 package edu.dhbw.ka.mwi.businesshorizon2.models.dtos;
 
+import javax.validation.Valid;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 
 import edu.dhbw.ka.mwi.businesshorizon2.models.common.AccountingFigure;
 
 public class ScenarioPostRequestDto {
 	
-	@Email
+	@NotNull
 	private String name;
+	
+	@NotNull
 	private String description;
+	
+	@DecimalMin("1")
 	private int periods;
+	
+	@DecimalMin("0.0")
 	private double equityInterest;
+	
+	@DecimalMin("0.0")
 	private double outsideCapitalInterest;
+	
+	@DecimalMin("0.0")
 	private double corporateTax;
+	
+	@NotNull
+	@Valid
 	private AccountingFigure[] accountingFigures;
+	
 	
 	public String getName() {
 		return name;
@@ -73,8 +90,9 @@ public class ScenarioPostRequestDto {
 	
 	@Override
 	public String toString() {
-		String newLine = System.getProperty("line.separator");
 		
+		String newLine = System.getProperty("line.separator");
+
 		StringBuilder sb = new StringBuilder();
 		sb.append("Name: ");
 		sb.append(this.name);
