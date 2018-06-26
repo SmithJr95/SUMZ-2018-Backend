@@ -31,7 +31,7 @@ public class CompanyValuationService implements ICompanyValuationService{
 	}
 	
 	public FcfCompanyValuationResult performFcfCompanyValuationResult() {
-		return null;
+		throw new UnsupportedOperationException();
 	}
 	
 	public FteCompanyValuationResult performFteCompanyValuationResult(double[] cashflows, double[] liabilities, double equityInterest, double outsideCapitalInterest, double corporateTax) {
@@ -63,9 +63,9 @@ public class CompanyValuationService implements ICompanyValuationService{
 		
 		for (int i = marketValueEquity.length - 3; i >= 0; i--) {
 			marketValueEquity[i] = (marketValueEquity[i + 1] + cashflows[i] - (equityInterest - outsideCapitalInterest) * ((liabilities[i]) - discountedTaxShields[i])) / (1 + equityInterest);
-			
 		}
-		return null;
+		
+		return new FteCompanyValuationResult(marketValueEquity[0]);
 		
 	}
 }

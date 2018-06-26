@@ -36,9 +36,7 @@ public class CompanyValuationServiceTests{
 		CompanyValuationService valuationService = new CompanyValuationService();
 		FteCompanyValuationResult fteCompanyValuationResult = valuationService.performFteCompanyValuationResult(cashflows, liabilities, equityInterest, outsideCapitalInterest, corporateTax);
 		
-		//Assert.assertEquals(32146.0, fteCompanyValuationResult.getCompanyValue(), 0.1);
-		Assert.assertEquals(true, true);
-		
+		Assert.assertEquals(1055.24, fteCompanyValuationResult.getCompanyValue(), 0.1);
+
 	}
-	
 }
