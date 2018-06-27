@@ -12,19 +12,19 @@ public class CashflowCalculationTest {
 	
 	
 	
-	@SuppressWarnings("deprecation")
+	
 	@Test
 	public void test(){
 		/**
-		 * proceeds = Einzahlungen
-		 * payments = Auszahlungen 
-		 * deprication = Abschreibung
-		 * businessTax = Gewerbesteuersatz
-		 * corporationTax = Körperschaftssteuersatz
-		 * solidaryTax = Solidaritätszuschlag
-		 * interest = gezahlte Zinsen (absolut)
-		 * investments = getätigte Investitionen
-		 * proceedsFromDeinvestments = Einzahlungen aus Desinvestitionen
+		 * @param proceeds = Einzahlungen
+		 * @param payments = Auszahlungen 
+		 * @param depreciation = Abschreibung
+		 * @param businessTaxRate = Gewerbesteuersatz
+		 * @param corporateTax = Körperschaftssteuersatz
+		 * @param solidaryTaxRate = Solidaritätszuschlag
+		 * @param interest = gezahlte Zinsen (absolut)
+		 * @param investments = getätigte Investitionen
+		 * @param divestments = Einzahlungen aus Desinvestitionen
 		 */
 		CashflowCalculationService cashflowCalculation = new CashflowCalculationService(2000.0, 1431.41, 280.0, 0.14, 0.15, 0.055, 280.0, 0.0);
 		

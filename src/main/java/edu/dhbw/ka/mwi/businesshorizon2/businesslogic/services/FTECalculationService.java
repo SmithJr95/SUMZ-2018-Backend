@@ -5,9 +5,9 @@ public class FTECalculationService extends CashflowCalculationService {
 	
 	// Input parameters
 	private double
-	interest,
-	previousForeignCapital,
-	foreignCapital;
+	interestOnLiabilities,
+	previousLiabilities,
+	liabilities;
 	
 	// Parameters to be calculated
 	private double
@@ -23,19 +23,19 @@ public class FTECalculationService extends CashflowCalculationService {
 	 * @param businessTax = Gewerbesteuersatz
 	 * @param corporationTax = Körperschaftssteuersatz
 	 * @param solidaryTax = Solidaritätszuschlag
-	 * @param interest = gezahlte Zinsen (absolut)
+	 * @param interestOnLiabilities = gezahlte Zinsen (absolut)
 	 * @param investments = getätigte Investitionen
-	 * @param proceedsFromDeinvestments = Einzahlungen aus Desinvestitionen
-	 * @param interest = Zinsen --> paid interests
-	 * @param previousForeignCapital --> foreign capital at the end of the previous period
-	 * @param foreignCapital --> foreign capital at the end of the relevant period
+	 * @param divestments = Einzahlungen aus Desinvestitionen
+	 * @param interestOnLiabilities = Zinsen --> paid interests
+	 * @param previousLiabilities --> foreign capital at the end of the previous period
+	 * @param liabilities --> foreign capital at the end of the relevant period
 	 */
-	public FTECalculationService(double proceeds, double payments, double deprication, double businessTax, double corporationTax, double solidaryTax, double investments, double proceedsFromDeinvestments, double interest, double previousForeignCapital, double foreignCapital){
+	public FTECalculationService(double proceeds, double payments, double depreciation, double businessTaxRate, double corporateTaxRate, double solidaryTaxRate, double investments, double divestments, double interestOnLiabilities, double previousLiabilities, double liabilities){
 		
-		super(proceeds, payments, deprication, businessTax, corporationTax, solidaryTax, investments, proceedsFromDeinvestments);
-		this.interest = interest;
-		this.previousForeignCapital = previousForeignCapital;
-		this.foreignCapital = foreignCapital;
+		super(proceeds, payments, depreciation, businessTaxRate, corporateTaxRate, solidaryTaxRate, investments, divestments);
+		this.interestOnLiabilities = interestOnLiabilities;
+		this.previousLiabilities = previousLiabilities;
+		this.liabilities = liabilities;
 		
 		runCalculation();
 		
@@ -53,9 +53,9 @@ public class FTECalculationService extends CashflowCalculationService {
 	}
 	
 	private double calculateFTE() {
-		double creditAdd = this.foreignCapital - previousForeignCapital;
+		double creditAdd = this.liabilities - previousLiabilities;
 		
-		double fte = this.calculateTotalCF() - this.interest + creditAdd;
+		double fte = this.calculateTotalCF() - this.interestOnLiabilities + creditAdd;
 		
 		return fte;
 	}
@@ -69,11 +69,11 @@ public class FTECalculationService extends CashflowCalculationService {
 	
 	private double calculateTaxShield(){
 		
-		double ebit = calculateEBIT(super.getCf(), super.getDeprication());
-		double absoluteTaxWithoutForeignCapital = super.calculateAbsoluteTax(ebit);
-		double ebt = ebit - interest;
+		double ebit = calculateEBIT(super.getCf(), super.getDepreciation());
+		double absoluteTaxWithoutForeignCapital = super.calculateAbsoluteTaxWithoutLiabilities(ebit);
+		double ebt = ebit - interestOnLiabilities;
 		
-		double paidTaxes = (ebt + 0.25 * interest) * super.getBusinessTax() + ebt * (super.getCorporationTax() * (1 + super.getSolidaryTax()));
+		double paidTaxes = (ebt + 0.25 * interestOnLiabilities) * super.getBusinessTaxRate() + ebt * (super.getCorporateTaxRate() * (1 + super.getSolidaryTaxRate()));
 		
 		double taxShield = Math.abs(absoluteTaxWithoutForeignCapital - paidTaxes);
 		
@@ -83,28 +83,28 @@ public class FTECalculationService extends CashflowCalculationService {
 				
 	}
 
-	public double getInterest() {
-		return interest;
+	public double getInterestOnLiabilities() {
+		return interestOnLiabilities;
 	}
 
-	public void setInterest(double interest) {
-		this.interest = interest;
+	public void setInterestOnLiabilities(double interestOnLiabilities) {
+		this.interestOnLiabilities = interestOnLiabilities;
 	}
 
-	public double getPreviousForeignCapital() {
-		return previousForeignCapital;
+	public double getPreviousLiabilities() {
+		return previousLiabilities;
 	}
 
-	public void setPreviousForeignCapital(double previousForeignCapital) {
-		this.previousForeignCapital = previousForeignCapital;
+	public void setPreviousLiabilities(double previousLiabilities) {
+		this.previousLiabilities = previousLiabilities;
 	}
 
-	public double getForeignCapital() {
-		return foreignCapital;
+	public double getLiabilities() {
+		return liabilities;
 	}
 
-	public void setForeignCapital(double foreignCapital) {
-		this.foreignCapital = foreignCapital;
+	public void setLiabilities(double liabilities) {
+		this.liabilities = liabilities;
 	}
 
 	public double getTaxShield() {
