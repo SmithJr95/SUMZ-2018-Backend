@@ -13,9 +13,11 @@ import javax.persistence.ManyToMany;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
+import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
+
 @Entity
 @Table(name = "app_user")
-public class UserDao {
+public class UserDao{
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

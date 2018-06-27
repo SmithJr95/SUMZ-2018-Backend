@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import edu.dhbw.ka.mwi.businesshorizon2.config.CustomUserDetails;
 import edu.dhbw.ka.mwi.businesshorizon2.dataaccess.interfaces.IUserRepository;
 import edu.dhbw.ka.mwi.businesshorizon2.models.daos.UserDao;
 
@@ -34,9 +35,7 @@ public class AppUserDetailsService implements UserDetailsService {
             authorities.add(new SimpleGrantedAuthority(role.getRoleName()));
         });
 
-        UserDetails userDetails = new org.springframework.security.core.userdetails.
-                User(user.getEmail(), user.getPassword(), authorities);
-        		System.out.println(user.getPassword());
+        UserDetails userDetails = new CustomUserDetails(user.getEmail(), user.getPassword(), authorities, user.getId());
 
         return userDetails;
     }
