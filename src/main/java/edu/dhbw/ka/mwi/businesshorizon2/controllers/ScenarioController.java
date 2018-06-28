@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.IScenarioService;
-import edu.dhbw.ka.mwi.businesshorizon2.models.common.Zahl;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioPostRequestDto;
 
 @RestController
@@ -18,11 +17,6 @@ import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioPostRequestDto;
 public class ScenarioController {
 	//@Autowired
 	//private IScenarioService scenarioService;
-	
-	//@RequestMapping(method = RequestMethod.POST)
-	//public void createScenario(@RequestBody @Valid Zahl i) {
-	//	System.out.println(i.getValue());
-	//}
 	
 	@RequestMapping(method = RequestMethod.POST)
 	public void createScenario(@RequestBody @Valid ScenarioPostRequestDto scenario) {

@@ -1,121 +1,292 @@
 package edu.dhbw.ka.mwi.businesshorizon2.models.dtos;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.validation.Valid;
+import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Email;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-import edu.dhbw.ka.mwi.businesshorizon2.models.common.AccountingFigure;
+import edu.dhbw.ka.mwi.businesshorizon2.models.common.MultiPeriodAccountingFigure;
+import edu.dhbw.ka.mwi.businesshorizon2.models.common.MultiPeriodAccountingFigureNames;
+import edu.dhbw.ka.mwi.businesshorizon2.validators.IsContinuousTimeSeries;
+import edu.dhbw.ka.mwi.businesshorizon2.validators.IsDateFormatConsistent;
+import edu.dhbw.ka.mwi.businesshorizon2.validators.IsValidAccountingFigureCombination;
+import edu.dhbw.ka.mwi.businesshorizon2.validators.IsValidTimeSeriesRanges;
 
+@IsValidAccountingFigureCombination()
+@IsDateFormatConsistent()
+@IsContinuousTimeSeries()
+@IsValidTimeSeriesRanges()
 public class ScenarioPostRequestDto {
 	
-	@NotNull
-	private String name;
+	@NotNull(message = "scenarioName must not be null.")
+	@Size(min=1, max=20, message="scenarioName must consist of 1-20 characters.")
+	private String scenarioName;
 	
-	@NotNull
-	private String description;
+	@NotNull(message = "scenarioDescription must not be null.")
+	@Size(min=1, max=100, message="scenarioDescription must consist of 1-100 characters.")
+	private String scenarioDescription;
 	
-	@DecimalMin("1")
-	private int periods;
+	@NotNull(message = "periods must not be null.")
+	@Min(value=1, message="periods must be >=1 and <=10.")
+	@Max(value=10, message="periods must be >=1 and <=10.")
+	private Integer periods;
 	
-	@DecimalMin("0.0")
-	private double equityInterest;
+	@NotNull(message = "businessTaxRate must not be null.")
+	@DecimalMin(value="0.0", message="businessTaxRate must be >=0 and <=100.")
+	@DecimalMax(value="100.0", message="businessTaxRate must be >= 0 and <=100.")
+	private Double businessTaxRate;
 	
-	@DecimalMin("0.0")
-	private double outsideCapitalInterest;
+	@NotNull(message = "corporateTaxRate must not be null.")
+	@DecimalMin(value="0.0", message="corporateTaxRate must be >=0 and <=100.")
+	@DecimalMax(value="100.0", message="corporateTaxRate must be >=0 and <=100.")
+	private Double corporateTaxRate;
 	
-	@DecimalMin("0.0")
-	private double corporateTax;
+	@NotNull(message = "solidaryTaxRate must not be null.")
+	@DecimalMin(value="0.0", message="solidaryTaxRate must be >=0 and <=100.")
+	@DecimalMax(value="100.0", message="solidaryTaxRate must be >=0 and <=100.")
+	private Double solidaryTaxRate;
 	
-	@NotNull
+	@NotNull(message = "costOfEquity must not be null.")
+	@DecimalMin(value="0.0", message="costOfEquity must be >=0 and <=1000.")
+	@DecimalMax(value="1000.0", message="costOfEquity must be >=0 and <=1000.")
+	private Double costOfEquity;
+	
 	@Valid
-	private AccountingFigure[] accountingFigures;
+	private MultiPeriodAccountingFigure interestOnLiabilities;
 	
+	@Valid
+	private MultiPeriodAccountingFigure depreciation;
 	
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public int getPeriods() {
-		return periods;
-	}
-
-	public void setPeriods(int periods) {
-		this.periods = periods;
-	}
-
-	public double getEquityInterest() {
-		return equityInterest;
-	}
-
-	public void setEquityInterest(double equityInterest) {
-		this.equityInterest = equityInterest;
-	}
-
-	public double getOutsideCapitalInterest() {
-		return outsideCapitalInterest;
-	}
-
-	public void setOutsideCapitalInterest(double outsideCapitalInterest) {
-		this.outsideCapitalInterest = outsideCapitalInterest;
-	}
-
-	public double getCorporateTax() {
-		return corporateTax;
-	}
-
-	public void setCorporateTax(double corporateTax) {
-		this.corporateTax = corporateTax;
-	}
-
-	public AccountingFigure[] getAccountingFigures() {
-		return accountingFigures;
-	}
-
-	public void setAccountingFigures(AccountingFigure[] accountingFigures) {
-		this.accountingFigures = accountingFigures;
+	@Valid
+	private MultiPeriodAccountingFigure additionalIncome;
+	
+	@Valid
+	private MultiPeriodAccountingFigure additionalCosts;
+	
+	@Valid
+	private MultiPeriodAccountingFigure investments;
+	
+	@Valid
+	private MultiPeriodAccountingFigure divestments;
+	
+	@Valid
+	private MultiPeriodAccountingFigure revenue;
+	
+	@Valid
+	private MultiPeriodAccountingFigure costOfMaterial;
+	
+	@Valid
+	private MultiPeriodAccountingFigure costOfStaff;
+	
+	@Valid
+	private MultiPeriodAccountingFigure liabilities;
+	
+	@Valid
+	private MultiPeriodAccountingFigure freeCashFlows;
+	
+	public String getScenarioName() { return scenarioName; }
+	public void setScenarioName(String name) { this.scenarioName = name; }
+	
+	public String getScenarioDescription() { return scenarioDescription; }
+	public void getScenarioDescription(String description) { this.scenarioDescription = description; }
+	
+	public int getPeriods() { return periods; }
+	public void setPeriods(int periods) { this.periods = periods; }
+	
+	public double getBusinessTaxRate() { return businessTaxRate; }
+	public void setBusinessTaxRate(double businessTaxRate) { this.businessTaxRate = businessTaxRate; }
+	
+	public double getCorporateTaxRate() { return corporateTaxRate; }
+	public void setCorporateTaxRate(double corporateTaxRate) { this.corporateTaxRate = corporateTaxRate; }
+	
+	public double getSolidaryTaxRate() { return solidaryTaxRate; }
+	public void setSolidaryTaxRate(double solidaryTaxRate) { this.solidaryTaxRate = solidaryTaxRate; }
+	
+	public double getCostOfEquity() { return costOfEquity; }
+	public void setCostOfEquity(double costOfEquity) { this.costOfEquity = costOfEquity; }
+	
+	public MultiPeriodAccountingFigure getRevenue() { return revenue; }
+	public void setRevenue(MultiPeriodAccountingFigure revenue) {
+		this.revenue = revenue; 
+		this.revenue.setFigureName(MultiPeriodAccountingFigureNames.Revenue);
 	}
 	
+	public MultiPeriodAccountingFigure getAdditionalIncome() { return additionalIncome; }
+	public void setAdditionalIncome(MultiPeriodAccountingFigure additionalIncome) { 
+		this.additionalIncome = additionalIncome; 
+		this.additionalIncome.setFigureName(MultiPeriodAccountingFigureNames.AdditionalIncome);
+	}
+	
+	public MultiPeriodAccountingFigure getCostOfMaterial() { return costOfMaterial; }
+	public void setCostOfMaterial(MultiPeriodAccountingFigure costOfMaterial) { 
+		this.costOfMaterial = costOfMaterial; 
+		this.costOfMaterial.setFigureName(MultiPeriodAccountingFigureNames.CostOfMaterial);
+	}
+	
+	public MultiPeriodAccountingFigure getCostOfStaff() { return costOfStaff; }
+	public void setCostOfStaff(MultiPeriodAccountingFigure costOfStaff) { 
+		this.costOfStaff = costOfStaff; 
+		this.costOfStaff.setFigureName(MultiPeriodAccountingFigureNames.CostOfStaff);
+	}
+	
+	public MultiPeriodAccountingFigure getAdditionalCosts() { return additionalCosts; }
+	public void setAdditionalCosts(MultiPeriodAccountingFigure additionalCosts) { 
+		this.additionalCosts = additionalCosts; 
+		this.additionalCosts.setFigureName(MultiPeriodAccountingFigureNames.AdditionalCosts);
+	}
+	
+	public MultiPeriodAccountingFigure getInterestOnLiabilities() { return interestOnLiabilities; }
+	public void setInterestOnLiabilities(MultiPeriodAccountingFigure interestOnLiabilites) { 
+		this.interestOnLiabilities = interestOnLiabilites; 
+		this.interestOnLiabilities.setFigureName(MultiPeriodAccountingFigureNames.InterestOnLiabilities);
+	}
+	
+	public MultiPeriodAccountingFigure getInvestments() { return investments; }
+	public void setInvestments(MultiPeriodAccountingFigure investments) { 
+		this.investments = investments; 
+		this.investments.setFigureName(MultiPeriodAccountingFigureNames.Investments);
+	}
+	
+	public MultiPeriodAccountingFigure getDivestments() { return divestments; }
+	public void setDivestments(MultiPeriodAccountingFigure divestments) { 
+		this.divestments = divestments; 
+		this.divestments.setFigureName(MultiPeriodAccountingFigureNames.Divestments);
+	}
+	
+	public MultiPeriodAccountingFigure getLiabilities() { return liabilities; }
+	public void setLiabilities(MultiPeriodAccountingFigure liabilities) { 
+		this.liabilities = liabilities; 
+		this.liabilities.setFigureName(MultiPeriodAccountingFigureNames.Liabilities);
+	}
+	
+	public MultiPeriodAccountingFigure getFreeCashFlows() { return freeCashFlows; }
+	public void setFreeCashFlows(MultiPeriodAccountingFigure freeCashFlows) { 
+		this.freeCashFlows = freeCashFlows; 
+		this.freeCashFlows.setFigureName(MultiPeriodAccountingFigureNames.FreeCashFlows);
+	}
+	
+	public MultiPeriodAccountingFigure getDepreciation() { return depreciation; }
+	public void setDepreciation(MultiPeriodAccountingFigure depreciation) { 
+		this.depreciation = depreciation; 
+		this.depreciation.setFigureName(MultiPeriodAccountingFigureNames.Depreciation);
+	} 
+	
+	public List<MultiPeriodAccountingFigure> getAllMultiPeriodAccountingFigures(){
+		List<MultiPeriodAccountingFigure> multiPeriodAccountingFigures = new ArrayList<MultiPeriodAccountingFigure>();
+		
+		multiPeriodAccountingFigures.add(this.interestOnLiabilities);
+		multiPeriodAccountingFigures.add(this.depreciation);
+		multiPeriodAccountingFigures.add(this.additionalIncome);
+		multiPeriodAccountingFigures.add(this.additionalCosts);
+		multiPeriodAccountingFigures.add(this.investments);
+		multiPeriodAccountingFigures.add(this.divestments);
+		multiPeriodAccountingFigures.add(this.revenue);
+		multiPeriodAccountingFigures.add(this.costOfMaterial);
+		multiPeriodAccountingFigures.add(this.costOfStaff);
+		multiPeriodAccountingFigures.add(this.liabilities);
+		multiPeriodAccountingFigures.add(this.freeCashFlows);
+		
+		return multiPeriodAccountingFigures;
+	}
+		
 	@Override
 	public String toString() {
 		
 		String newLine = System.getProperty("line.separator");
 
 		StringBuilder sb = new StringBuilder();
+		
+		sb.append("------------------------------------------------------------------------");
+		sb.append(newLine);
 		sb.append("Name: ");
-		sb.append(this.name);
+		sb.append(this.scenarioName);
 		sb.append(", ");
+		sb.append(newLine);
 		sb.append("Description: ");
-		sb.append(this.description);
+		sb.append(this.scenarioDescription);
 		sb.append(", ");
+		sb.append(newLine);
 		sb.append("Periods: ");
 		sb.append(this.periods);
 		sb.append(", ");
-		sb.append("Equity Interest: ");
-		sb.append(this.equityInterest);
+		sb.append(newLine);
+		sb.append("Business Tax: ");
+		sb.append(this.businessTaxRate);
 		sb.append(", ");
+		sb.append(newLine);
 		sb.append("Corporate Tax: ");
-		sb.append(this.corporateTax);
+		sb.append(this.corporateTaxRate);
 		sb.append(", ");
-		sb.append("Outside Capital Interest: ");
-		sb.append(this.outsideCapitalInterest);
+		sb.append(newLine);
+		sb.append("Solidary Tax: ");
+		sb.append(this.solidaryTaxRate);
 		sb.append(", ");
-		for (int i = 0; i < this.accountingFigures.length; i++) {
-			sb.append(this.accountingFigures[i].toString() + newLine);
-		}
-	
+		sb.append(newLine);
+		sb.append("Cost Of Equity: ");
+		sb.append(this.costOfEquity);
+		sb.append(", ");
+		sb.append(newLine);
+		sb.append("Interest On Liabilites: ");
+		sb.append(this.interestOnLiabilities != null ? this.interestOnLiabilities : "");
+		sb.append(", ");
+		sb.append(newLine);
+		sb.append("Additional Income: ");
+		sb.append(newLine);
+		sb.append(this.additionalIncome != null ? this.additionalIncome : "");
+		sb.append(", ");
+		sb.append(newLine);
+		sb.append("Depreciation: ");
+		sb.append(newLine);
+		sb.append(this.depreciation != null ? this.depreciation : "");
+		sb.append(", ");
+		sb.append(newLine);
+		sb.append("Additional Costs: ");
+		sb.append(newLine);
+		sb.append(this.additionalCosts != null ? this.additionalCosts : "");
+		sb.append(", ");
+		sb.append(newLine);
+		sb.append("Investments: ");
+		sb.append(newLine);
+		sb.append(this.investments != null ? this.investments : "");
+		sb.append(", ");
+		sb.append(newLine);
+		sb.append("Divestments: ");
+		sb.append(newLine);
+		sb.append(this.divestments != null ? this.divestments : "");
+		sb.append(", ");
+		sb.append(newLine);
+		sb.append("Revenue: ");
+		sb.append(newLine);
+		sb.append(this.revenue != null ? this.revenue : "");
+		sb.append(", ");
+		sb.append(newLine);
+		sb.append("Cost Of Material: ");
+		sb.append(newLine);
+		sb.append(this.costOfMaterial != null ? this.costOfMaterial : "");
+		sb.append(", ");
+		sb.append(newLine);
+		sb.append("Cost Of Staff: ");
+		sb.append(newLine);
+		sb.append(this.costOfStaff != null ? this.costOfStaff : "");
+		sb.append(", ");
+		sb.append(newLine);
+		sb.append("Liabilites: ");
+		sb.append(newLine);
+		sb.append(this.liabilities != null ? this.liabilities : "");
+		sb.append(", ");
+		sb.append(newLine);
+		sb.append("Free Cash Flows:  ");
+		sb.append(newLine);
+		sb.append(this.freeCashFlows != null ? this.freeCashFlows : "");
+		sb.append(newLine);
+		sb.append("------------------------------------------------------------------------");
+		
 		return sb.toString();
 	}
 }
