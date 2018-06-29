@@ -21,5 +21,12 @@ public class ScenarioController {
 	@RequestMapping(method = RequestMethod.POST)
 	public void createScenario(@RequestBody @Valid ScenarioPostRequestDto scenario) {
 		System.out.println(scenario);
+		
+		if(scenario.getFreeCashFlows() == null) {
+			//calculate fcfs
+		}
+		else {
+			
+		}
 	} 
 }
