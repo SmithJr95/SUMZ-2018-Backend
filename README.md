@@ -4,6 +4,9 @@
 
 DHBW-Projekt SUMZ 2018, Teilprojekt Backend
 
+test to trigger a build 
+with public repository
+
 Cashflow Calculation
 
 ## Front-End Project
