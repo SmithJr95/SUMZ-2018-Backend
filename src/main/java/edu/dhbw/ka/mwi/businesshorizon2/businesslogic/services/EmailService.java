@@ -24,7 +24,7 @@ public class EmailService implements IEmailService {
 	@Autowired
 	JavaMailSender mailSender;
 	
-	@Bean
+	//@Bean
 	public JavaMailSender getJavaMailSender() {
 	    JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 	    
