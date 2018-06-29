@@ -13,6 +13,6 @@ public class App
     public static void main( String[] args )
     {
     	SpringApplication.run(App.class, args);
-        System.out.println( "App is running in feature_authentication branch." );
+        System.out.println( "App is running." );
     }
 }
