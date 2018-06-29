@@ -96,20 +96,20 @@ public class ScenarioPostRequestDto {
 	public String getScenarioDescription() { return scenarioDescription; }
 	public void setScenarioDescription(String description) { this.scenarioDescription = description; }
 	
-	public int getPeriods() { return periods; }
-	public void setPeriods(int periods) { this.periods = periods; }
+	public Integer getPeriods() { return periods; }
+	public void setPeriods(Integer periods) { this.periods = periods; }
 	
-	public double getBusinessTaxRate() { return businessTaxRate; }
-	public void setBusinessTaxRate(double businessTaxRate) { this.businessTaxRate = businessTaxRate; }
+	public Double getBusinessTaxRate() { return businessTaxRate; }
+	public void setBusinessTaxRate(Double businessTaxRate) { this.businessTaxRate = businessTaxRate; }
 	
-	public double getCorporateTaxRate() { return corporateTaxRate; }
-	public void setCorporateTaxRate(double corporateTaxRate) { this.corporateTaxRate = corporateTaxRate; }
+	public Double getCorporateTaxRate() { return corporateTaxRate; }
+	public void setCorporateTaxRate(Double corporateTaxRate) { this.corporateTaxRate = corporateTaxRate; }
 	
-	public double getSolidaryTaxRate() { return solidaryTaxRate; }
-	public void setSolidaryTaxRate(double solidaryTaxRate) { this.solidaryTaxRate = solidaryTaxRate; }
+	public Double getSolidaryTaxRate() { return solidaryTaxRate; }
+	public void setSolidaryTaxRate(Double solidaryTaxRate) { this.solidaryTaxRate = solidaryTaxRate; }
 	
-	public double getCostOfEquity() { return costOfEquity; }
-	public void setCostOfEquity(double costOfEquity) { this.costOfEquity = costOfEquity; }
+	public Double getCostOfEquity() { return costOfEquity; }
+	public void setCostOfEquity(Double costOfEquity) { this.costOfEquity = costOfEquity; }
 	
 	public MultiPeriodAccountingFigure getRevenue() { return revenue; }
 	public void setRevenue(MultiPeriodAccountingFigure revenue) {

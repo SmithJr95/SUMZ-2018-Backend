@@ -45,6 +45,8 @@ public class TimeSeriesItemDate implements Comparable<TimeSeriesItemDate> {
 		this.quarter = quarter; 
 		this.updateDateFormat();
 	}
+	
+	public TimeSeriesItemDateFormats getDateFormat() { return dateFormat; }
 		
 	public TimeSeriesItemDate getNextDate(){
 		TimeSeriesItemDate nextDate = new TimeSeriesItemDate();
@@ -161,5 +163,17 @@ public class TimeSeriesItemDate implements Comparable<TimeSeriesItemDate> {
 		else {
 			this.dateFormat = TimeSeriesItemDateFormats.YearQuarter;
 		}
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Year: ");
+		sb.append(this.year != null ? this.year : "");
+		sb.append("\t");
+		sb.append("Quarter: ");
+		sb.append(this.quarter != null ? this.quarter : "");
+		
+		return sb.toString();
 	}
 }

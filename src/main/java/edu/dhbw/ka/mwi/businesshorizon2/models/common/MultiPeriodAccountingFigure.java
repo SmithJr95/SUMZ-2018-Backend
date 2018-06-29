@@ -34,7 +34,7 @@ public class MultiPeriodAccountingFigure {
 		
 		List<TimeSeriesItemDate> dates = new ArrayList<TimeSeriesItemDate>();
 		for (TimeSeriesItem item : this.timeSeries) {
-			if(item.getDate() != null) {
+			if(item.getDate() != null && item.getDate().getDateFormat() != TimeSeriesItemDateFormats.Invalid) {
 				dates.add(item.getDate());
 			}
 		}
@@ -53,7 +53,7 @@ public class MultiPeriodAccountingFigure {
 		
 		List<TimeSeriesItemDate> dates = new ArrayList<TimeSeriesItemDate>();
 		for (TimeSeriesItem item : this.timeSeries) {
-			if(item.getDate() != null) {
+			if(item.getDate() != null && item.getDate().getDateFormat() != TimeSeriesItemDateFormats.Invalid) {
 				dates.add(item.getDate());
 			}
 		}
@@ -72,7 +72,9 @@ public class MultiPeriodAccountingFigure {
 		
 		List<TimeSeriesItemDate> dates = new ArrayList<TimeSeriesItemDate>();
 		for (int i = 0; i < this.timeSeries.size(); i++) {
-			dates.add(this.timeSeries.get(i).getDate());
+			if(this.timeSeries.get(i).getDate() != null && this.timeSeries.get(i).getDate().getDateFormat() != TimeSeriesItemDateFormats.Invalid) {
+				dates.add(this.timeSeries.get(i).getDate());
+			}
 		}
 		dates.sort(null);
 		
@@ -93,6 +95,7 @@ public class MultiPeriodAccountingFigure {
 		String newLine = System.getProperty("line.separator");
 		
 		StringBuilder sb = new StringBuilder();
+		sb.append(newLine);
 		sb.append("\tHistoric: ");
 		sb.append(this.isHistoric != null ? this.isHistoric : "");
 		sb.append(",");

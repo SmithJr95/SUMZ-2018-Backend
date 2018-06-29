@@ -16,10 +16,10 @@ public class IsValidTimeSeriesRangesValidator implements ConstraintValidator<IsV
 	public boolean isValid(ScenarioPostRequestDto arg0, ConstraintValidatorContext arg1) {
 		
 		List<MultiPeriodAccountingFigure> historicMultiPeriodAccountingFigures = arg0.getAllMultiPeriodAccountingFigures();
-		historicMultiPeriodAccountingFigures.removeIf(x -> x == null || x.getTimeSeries() == null || x.getIsHistoric().equals(false));
+		historicMultiPeriodAccountingFigures.removeIf(x -> x == null || x.getTimeSeries() == null || x.getIsHistoric() == null || x.getIsHistoric().equals(false));
 		
 		List<MultiPeriodAccountingFigure> futureMultiPeriodAccountingFigures = arg0.getAllMultiPeriodAccountingFigures();
-		futureMultiPeriodAccountingFigures.removeIf(x -> x == null || x.getTimeSeries() == null || x.getIsHistoric().equals(true));
+		futureMultiPeriodAccountingFigures.removeIf(x -> x == null || x.getTimeSeries() == null || x.getIsHistoric() == null || x.getIsHistoric().equals(true));
 		
 		if (historicMultiPeriodAccountingFigures.isEmpty() && futureMultiPeriodAccountingFigures.isEmpty()) {
 			return true;
@@ -29,6 +29,9 @@ public class IsValidTimeSeriesRangesValidator implements ConstraintValidator<IsV
 		
 		for(int i = 0; i < historicMultiPeriodAccountingFigures.size(); i++) {
 			TimeSeriesItemDate maxDate = historicMultiPeriodAccountingFigures.get(i).getMaxDate();
+			if(maxDate == null) {
+				return false;
+			}
 			
 			if(basisDate == null) {
 				basisDate = maxDate;
@@ -41,7 +44,11 @@ public class IsValidTimeSeriesRangesValidator implements ConstraintValidator<IsV
 			}			
 		}
 		
-		int periods = arg0.getPeriods();
+		if(arg0.getPeriods() == null) {
+			return false;
+		}
+		
+		int periods = arg0.getPeriods().intValue();
 		
 		for(int i = 0; i < futureMultiPeriodAccountingFigures.size(); i++) {
 			
@@ -54,6 +61,9 @@ public class IsValidTimeSeriesRangesValidator implements ConstraintValidator<IsV
 			if(futureMultiPeriodAccountingFigures.get(i).getFigureName() == MultiPeriodAccountingFigureNames.Liabilities) {
 				
 				minDate = futureMultiPeriodAccountingFigures.get(i).getMinDate(); 
+				if(minDate == null) {
+					return false;
+				}
 				
 				if(basisDate == null) {
 					basisDate = minDate;
@@ -68,6 +78,9 @@ public class IsValidTimeSeriesRangesValidator implements ConstraintValidator<IsV
 			}
 			
 			minDate = futureMultiPeriodAccountingFigures.get(i).getMinDate();
+			if(minDate == null) {
+				return false;
+			}
 			
 			if(basisDate == null) {
 				basisDate = minDate.getPrevDate();
