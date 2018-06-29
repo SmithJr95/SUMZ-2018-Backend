@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;
+import javax.validation.Valid;
 import javax.validation.Validator;
 
 import org.junit.Before;
@@ -37,7 +38,7 @@ public class ScenarioPostRequestDtoTest {
 		ScenarioPostRequestDto request = new ScenarioPostRequestDto();
 		request.setScenarioName("xyz");
 		request.setScenarioDescription("xyz");
-		request.setPeriods(5);
+		request.setPeriods(2);
 		request.setBusinessTaxRate(50.0);
 		request.setCorporateTaxRate(50.0);
 		request.setSolidaryTaxRate(50.0);
@@ -461,6 +462,513 @@ public class ScenarioPostRequestDtoTest {
 		
 		//Assert
 		assertTrue(violations.size() > 0);
+	}
+	
+	@Test
+	public void validation_timeSeriesYearQuarterNotContinuous_violationsExist() throws Exception {
+		//Arrange
+		ScenarioPostRequestDto request = this.validRequest;
+		
+		List<TimeSeriesItem> liabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
+		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 4), 50.0));
+		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 2), 50.0));
+		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 1), 60.0));
+		
+		request.getLiabilities().setTimeSeries(liabilitiesTimeSeries);
+		
+		//Act
+		Set<ConstraintViolation<ScenarioPostRequestDto>> violations = validator.validate(request);
+		
+		//Assert
+		assertTrue(violations.size() > 0);
+	}
+	
+	@Test
+	public void validation_timeSeriesYearNotContinuous_violationsExist() throws Exception {
+		//Arrange
+		ScenarioPostRequestDto request = this.validRequest;
+		
+		List<TimeSeriesItem> freeCashFlowsTimeSeries = new ArrayList<TimeSeriesItem>();
+		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000), 50.0));
+		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001), 60.0));
+		
+		List<TimeSeriesItem> liabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
+		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(1999), 50.0));
+		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001), 60.0));
+
+		List<TimeSeriesItem> interestOnLiabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
+		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000), 50.0));
+		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001), 60.0));
+		
+		request.getFreeCashFlows().setTimeSeries(freeCashFlowsTimeSeries);
+		request.getLiabilities().setTimeSeries(liabilitiesTimeSeries);
+		request.getInterestOnLiabilities().setTimeSeries(interestOnLiabilitiesTimeSeries);
+		
+		//Act
+		Set<ConstraintViolation<ScenarioPostRequestDto>> violations = validator.validate(request);
+		
+		//Assert
+		assertTrue(violations.size() > 0);
+	}
+	
+	@Test
+	public void validation_timeSeriesDateFormatNotConsistent_violationsExist() throws Exception {
+		//Arrange
+		ScenarioPostRequestDto request = this.validRequest;
+	
+		List<TimeSeriesItem> liabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
+		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000), 50.0));
+		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001), 60.0));
+		
+		request.getLiabilities().setTimeSeries(liabilitiesTimeSeries);
+		
+		//Act
+		Set<ConstraintViolation<ScenarioPostRequestDto>> violations = validator.validate(request);
+		
+		//Assert
+		assertTrue(violations.size() > 0);
+	}
+	
+	@Test
+	public void validation_invalidAccountingFigureCombination_violationsExist() throws Exception {
+		//Arrange
+		ScenarioPostRequestDto request = this.validRequest;
+		
+		List<TimeSeriesItem> costOfStaffTimeSeries = new ArrayList<TimeSeriesItem>();
+		costOfStaffTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 4), 50.0));
+		costOfStaffTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 1), 60.0));
+		
+		MultiPeriodAccountingFigure costOfStaff = new MultiPeriodAccountingFigure();
+		costOfStaff.setIsHistoric(true);
+		costOfStaff.setTimeSeries(costOfStaffTimeSeries);
+		
+		request.setCostOfStaff(costOfStaff);
+		
+		//Act
+		Set<ConstraintViolation<ScenarioPostRequestDto>> violations = validator.validate(request);
+		
+		//Assert
+		assertTrue(violations.size() > 0);
+	}
+	
+	@Test
+	public void validation_historicSeriesTooShort_violationsExist() throws Exception {
+		//Arrange
+		ScenarioPostRequestDto request = this.validRequest;
+		
+		List<TimeSeriesItem> interestOnLiabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
+		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 1), 60.0));
+		
+		request.getInterestOnLiabilities().setTimeSeries(interestOnLiabilitiesTimeSeries);
+		
+		//Act
+		Set<ConstraintViolation<ScenarioPostRequestDto>> violations = validator.validate(request);
+		
+		//Assert
+		assertTrue(violations.size() > 0);
+	}
+	
+	@Test
+	public void validation_historicSeriesNotAlignedTooLate_violationsExist() throws Exception {
+		//Arrange
+		ScenarioPostRequestDto request = this.validRequest;
+		
+		List<TimeSeriesItem> interestOnLiabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
+		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 1), 60.0));
+		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 2), 60.0));
+		
+		request.getInterestOnLiabilities().setTimeSeries(interestOnLiabilitiesTimeSeries);
+		
+		//Act
+		Set<ConstraintViolation<ScenarioPostRequestDto>> violations = validator.validate(request);
+		
+		//Assert
+		assertTrue(violations.size() > 0);
+	}
+	
+	@Test
+	public void validation_historicSeriesNotAlignedTooEarly_violationsExist() throws Exception {
+		//Arrange
+		ScenarioPostRequestDto request = this.validRequest;
+		
+		List<TimeSeriesItem> interestOnLiabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
+		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 4), 60.0));
+		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 3), 60.0));
+		
+		request.getInterestOnLiabilities().setTimeSeries(interestOnLiabilitiesTimeSeries);
+		
+		//Act
+		Set<ConstraintViolation<ScenarioPostRequestDto>> violations = validator.validate(request);
+		
+		//Assert
+		assertTrue(violations.size() > 0);
+	}
+	
+	@Test
+	public void validation_futureSeriesTooShort_violationsExist() throws Exception {
+		//Arrange
+		ScenarioPostRequestDto request = this.validRequest;
+		
+		List<TimeSeriesItem> freeCashFlowsTimeSeries = new ArrayList<TimeSeriesItem>();
+		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 4), 50.0));
+		
+		List<TimeSeriesItem> liabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
+		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 3), 50.0));
+
+		List<TimeSeriesItem> interestOnLiabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
+		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 4), 50.0));
+		
+		MultiPeriodAccountingFigure freeCashFlows = new MultiPeriodAccountingFigure();
+		freeCashFlows.setIsHistoric(false);
+		freeCashFlows.setTimeSeries(freeCashFlowsTimeSeries);
+		
+		MultiPeriodAccountingFigure liabilities = new MultiPeriodAccountingFigure();
+		liabilities.setIsHistoric(false);
+		liabilities.setTimeSeries(liabilitiesTimeSeries);
+		
+		MultiPeriodAccountingFigure interestOnLiabilities = new MultiPeriodAccountingFigure();
+		interestOnLiabilities.setIsHistoric(false);
+		interestOnLiabilities.setTimeSeries(interestOnLiabilitiesTimeSeries);
+		
+		request.setFreeCashFlows(freeCashFlows);
+		request.setInterestOnLiabilities(interestOnLiabilities);
+		request.setLiabilities(liabilities);
+		
+		//Act
+		Set<ConstraintViolation<ScenarioPostRequestDto>> violations = validator.validate(request);
+		
+		//Assert
+		assertTrue(violations.size() > 0);
+	}
+	
+	@Test
+	public void validation_futureSeriesNotAlignedTooEarly_violationsExist() throws Exception {
+		//Arrange
+		ScenarioPostRequestDto request = this.validRequest;
+		
+		List<TimeSeriesItem> freeCashFlowsTimeSeries = new ArrayList<TimeSeriesItem>();
+		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 1), 60.0));
+		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 2), 60.0));
+		
+		List<TimeSeriesItem> liabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
+		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 3), 50.0));
+		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 4), 50.0));
+		
+		List<TimeSeriesItem> interestOnLiabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
+		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 1), 60.0));
+		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 2), 60.0));
+		
+		MultiPeriodAccountingFigure freeCashFlows = new MultiPeriodAccountingFigure();
+		freeCashFlows.setIsHistoric(false);
+		freeCashFlows.setTimeSeries(freeCashFlowsTimeSeries);
+		
+		MultiPeriodAccountingFigure liabilities = new MultiPeriodAccountingFigure();
+		liabilities.setIsHistoric(false);
+		liabilities.setTimeSeries(liabilitiesTimeSeries);
+		
+		MultiPeriodAccountingFigure interestOnLiabilities = new MultiPeriodAccountingFigure();
+		interestOnLiabilities.setIsHistoric(false);
+		interestOnLiabilities.setTimeSeries(interestOnLiabilitiesTimeSeries);
+		
+		request.setFreeCashFlows(freeCashFlows);
+		request.setInterestOnLiabilities(interestOnLiabilities);
+		request.setLiabilities(liabilities);
+		
+		//Act
+		Set<ConstraintViolation<ScenarioPostRequestDto>> violations = validator.validate(request);
+
+		//Assert
+		assertTrue(violations.size() > 0);
+	}
+	
+	@Test
+	public void validation_futureSeriesTooLong_violationsExist() throws Exception {
+		//Arrange
+		ScenarioPostRequestDto request = this.validRequest;
+		
+		List<TimeSeriesItem> freeCashFlowsTimeSeries = new ArrayList<TimeSeriesItem>();
+		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 4), 50.0));
+		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 1), 60.0));
+		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 2), 60.0));
+		
+		List<TimeSeriesItem> liabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
+		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 3), 50.0));
+		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 4), 50.0));
+		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 1), 60.0));
+		
+		List<TimeSeriesItem> interestOnLiabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
+		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 4), 50.0));
+		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 1), 60.0));
+		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 2), 60.0));
+		
+		MultiPeriodAccountingFigure freeCashFlows = new MultiPeriodAccountingFigure();
+		freeCashFlows.setIsHistoric(false);
+		freeCashFlows.setTimeSeries(freeCashFlowsTimeSeries);
+		
+		MultiPeriodAccountingFigure liabilities = new MultiPeriodAccountingFigure();
+		liabilities.setIsHistoric(false);
+		liabilities.setTimeSeries(liabilitiesTimeSeries);
+		
+		MultiPeriodAccountingFigure interestOnLiabilities = new MultiPeriodAccountingFigure();
+		interestOnLiabilities.setIsHistoric(false);
+		interestOnLiabilities.setTimeSeries(interestOnLiabilitiesTimeSeries);
+		
+		request.setFreeCashFlows(freeCashFlows);
+		request.setInterestOnLiabilities(interestOnLiabilities);
+		request.setLiabilities(liabilities);
+		
+		//Act
+		Set<ConstraintViolation<ScenarioPostRequestDto>> violations = validator.validate(request);
+
+		//Assert
+		assertTrue(violations.size() > 0);
+	}
+	
+	@Test
+	public void validation_futureSeriesNotAlignedTooLate_violationsExist() throws Exception {
+		//Arrange
+		ScenarioPostRequestDto request = this.validRequest;
+		
+		List<TimeSeriesItem> freeCashFlowsTimeSeries = new ArrayList<TimeSeriesItem>();
+		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 1), 60.0));
+		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 2), 60.0));
+		
+		List<TimeSeriesItem> liabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
+		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 1), 50.0));
+		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 2), 50.0));
+		
+		List<TimeSeriesItem> interestOnLiabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
+		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 1), 60.0));
+		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 2), 60.0));
+		
+		MultiPeriodAccountingFigure freeCashFlows = new MultiPeriodAccountingFigure();
+		freeCashFlows.setIsHistoric(false);
+		freeCashFlows.setTimeSeries(freeCashFlowsTimeSeries);
+		
+		MultiPeriodAccountingFigure liabilities = new MultiPeriodAccountingFigure();
+		liabilities.setIsHistoric(false);
+		liabilities.setTimeSeries(liabilitiesTimeSeries);
+		
+		MultiPeriodAccountingFigure interestOnLiabilities = new MultiPeriodAccountingFigure();
+		interestOnLiabilities.setIsHistoric(false);
+		interestOnLiabilities.setTimeSeries(interestOnLiabilitiesTimeSeries);
+		
+		request.setFreeCashFlows(freeCashFlows);
+		request.setInterestOnLiabilities(interestOnLiabilities);
+		request.setLiabilities(liabilities);
+		
+		//Act
+		Set<ConstraintViolation<ScenarioPostRequestDto>> violations = validator.validate(request);
+
+		//Assert
+		assertTrue(violations.size() > 0);
+	}
+	
+	@Test
+	public void validation_futureAndHistoricSeriesAlignedDateFormatYear_notViolationsExist() throws Exception {
+		//Arrange
+		ScenarioPostRequestDto request = new ScenarioPostRequestDto();
+		request.setScenarioName("xyz");
+		request.setScenarioDescription("xyz");
+		request.setPeriods(4);
+		request.setBusinessTaxRate(50.0);
+		request.setCorporateTaxRate(50.0);
+		request.setSolidaryTaxRate(50.0);
+		request.setCostOfEquity(50.0);
+	
+		List<TimeSeriesItem> freeCashFlowsTimeSeries = new ArrayList<TimeSeriesItem>();
+		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000), 50.0));
+		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001), 60.0));
+		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2002), 60.0));
+		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2003), 60.0));
+		
+		List<TimeSeriesItem> liabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
+		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(1999), 50.0));
+		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000), 60.0));
+		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001), 50.0));
+		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2002), 60.0));
+		
+		List<TimeSeriesItem> interestOnLiabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
+		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(1996), 50.0));
+		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(1997), 60.0));
+		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(1998), 50.0));
+		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(1999), 60.0));
+		
+		MultiPeriodAccountingFigure freeCashFlows = new MultiPeriodAccountingFigure();
+		freeCashFlows.setIsHistoric(false);
+		freeCashFlows.setTimeSeries(freeCashFlowsTimeSeries);
+		
+		MultiPeriodAccountingFigure liabilities = new MultiPeriodAccountingFigure();
+		liabilities.setIsHistoric(false);
+		liabilities.setTimeSeries(liabilitiesTimeSeries);
+		
+		MultiPeriodAccountingFigure interestOnLiabilities = new MultiPeriodAccountingFigure();
+		interestOnLiabilities.setIsHistoric(true);
+		interestOnLiabilities.setTimeSeries(interestOnLiabilitiesTimeSeries);
+		
+		request.setFreeCashFlows(freeCashFlows);
+		request.setInterestOnLiabilities(interestOnLiabilities);
+		request.setLiabilities(liabilities);
+		
+		//Act
+		Set<ConstraintViolation<ScenarioPostRequestDto>> violations = validator.validate(request);
+
+		//Assert
+		assertTrue(violations.isEmpty());
+	}
+	
+	@Test
+	public void validation_futureAndHistoricSeriesAlignedDateFormatYearQuarter1_notViolationsExist() throws Exception {
+		//Arrange
+		ScenarioPostRequestDto request = new ScenarioPostRequestDto();
+		request.setScenarioName("xyz");
+		request.setScenarioDescription("xyz");
+		request.setPeriods(4);
+		request.setBusinessTaxRate(50.0);
+		request.setCorporateTaxRate(50.0);
+		request.setSolidaryTaxRate(50.0);
+		request.setCostOfEquity(50.0);
+	
+		List<TimeSeriesItem> freeCashFlowsTimeSeries = new ArrayList<TimeSeriesItem>();
+		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(1999, 4), 50.0));
+		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 1), 60.0));
+		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 2), 60.0));
+		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 3), 60.0));
+		
+		List<TimeSeriesItem> liabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
+		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(1999, 4), 50.0));
+		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 1), 60.0));
+		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 2), 50.0));
+		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 3), 60.0));
+		
+		List<TimeSeriesItem> interestOnLiabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
+		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 4), 50.0));
+		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 1), 60.0));
+		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 2), 50.0));
+		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 3), 60.0));
+		
+		MultiPeriodAccountingFigure freeCashFlows = new MultiPeriodAccountingFigure();
+		freeCashFlows.setIsHistoric(true);
+		freeCashFlows.setTimeSeries(freeCashFlowsTimeSeries);
+		
+		MultiPeriodAccountingFigure liabilities = new MultiPeriodAccountingFigure();
+		liabilities.setIsHistoric(true);
+		liabilities.setTimeSeries(liabilitiesTimeSeries);
+		
+		MultiPeriodAccountingFigure interestOnLiabilities = new MultiPeriodAccountingFigure();
+		interestOnLiabilities.setIsHistoric(false);
+		interestOnLiabilities.setTimeSeries(interestOnLiabilitiesTimeSeries);
+		
+		request.setFreeCashFlows(freeCashFlows);
+		request.setInterestOnLiabilities(interestOnLiabilities);
+		request.setLiabilities(liabilities);
+		
+		//Act
+		Set<ConstraintViolation<ScenarioPostRequestDto>> violations = validator.validate(request);
+
+		//Assert
+		assertTrue(violations.isEmpty());
+	}
+	
+	@Test
+	public void validation_futureAndHistoricSeriesAlignedDateFormatYearQuarter2_notViolationsExist() throws Exception {
+		//Arrange
+		ScenarioPostRequestDto request = new ScenarioPostRequestDto();
+		request.setScenarioName("xyz");
+		request.setScenarioDescription("xyz");
+		request.setPeriods(2);
+		request.setBusinessTaxRate(50.0);
+		request.setCorporateTaxRate(50.0);
+		request.setSolidaryTaxRate(50.0);
+		request.setCostOfEquity(50.0);
+				
+		List<TimeSeriesItem> liabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
+		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 1), 50.0));
+		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 2), 50.0));
+		MultiPeriodAccountingFigure liabilities = new MultiPeriodAccountingFigure();
+		liabilities.setIsHistoric(false);
+		liabilities.setTimeSeries(liabilitiesTimeSeries);
+		
+		List<TimeSeriesItem> interestOnLiabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
+		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 2), 50.0));
+		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 3), 50.0));
+		MultiPeriodAccountingFigure interestOnLiabilities = new MultiPeriodAccountingFigure();
+		interestOnLiabilities.setIsHistoric(false);
+		interestOnLiabilities.setTimeSeries(interestOnLiabilitiesTimeSeries);
+		
+		List<TimeSeriesItem> depreciationTimeSeries = new ArrayList<TimeSeriesItem>();
+		depreciationTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 2), 50.0));
+		depreciationTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 3), 50.0));
+		MultiPeriodAccountingFigure depreciation = new MultiPeriodAccountingFigure();
+		depreciation.setIsHistoric(false);
+		depreciation.setTimeSeries(depreciationTimeSeries);
+		
+		List<TimeSeriesItem> additionalIncomeTimeSeries = new ArrayList<TimeSeriesItem>();
+		additionalIncomeTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 2), 50.0));
+		additionalIncomeTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 3), 50.0));
+		MultiPeriodAccountingFigure additionalIncome = new MultiPeriodAccountingFigure();
+		additionalIncome.setIsHistoric(false);
+		additionalIncome.setTimeSeries(additionalIncomeTimeSeries);
+		
+		List<TimeSeriesItem> additionalCostsTimeSeries = new ArrayList<TimeSeriesItem>();
+		additionalCostsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(1999, 4), 50.0));
+		additionalCostsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 1), 50.0));
+		MultiPeriodAccountingFigure additionalCosts = new MultiPeriodAccountingFigure();
+		additionalCosts.setIsHistoric(true);
+		additionalCosts.setTimeSeries(additionalCostsTimeSeries);
+		
+		List<TimeSeriesItem> investmentsTimeSeries = new ArrayList<TimeSeriesItem>();
+		investmentsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 2), 50.0));
+		investmentsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 3), 50.0));
+		MultiPeriodAccountingFigure investments = new MultiPeriodAccountingFigure();
+		investments.setIsHistoric(false);
+		investments.setTimeSeries(investmentsTimeSeries);
+		
+		List<TimeSeriesItem> divestmentsTimeSeries = new ArrayList<TimeSeriesItem>();
+		divestmentsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 2), 50.0));
+		divestmentsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 3), 50.0));
+		MultiPeriodAccountingFigure divestments = new MultiPeriodAccountingFigure();
+		divestments.setIsHistoric(false);
+		divestments.setTimeSeries(divestmentsTimeSeries);
+		
+		List<TimeSeriesItem> revenueTimeSeries = new ArrayList<TimeSeriesItem>();
+		revenueTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 2), 50.0));
+		revenueTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 3), 50.0));
+		MultiPeriodAccountingFigure revenue = new MultiPeriodAccountingFigure();
+		revenue.setIsHistoric(false);
+		revenue.setTimeSeries(revenueTimeSeries);
+		
+		List<TimeSeriesItem> costOfMaterialTimeSeries = new ArrayList<TimeSeriesItem>();
+		costOfMaterialTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(1999, 4), 50.0));
+		costOfMaterialTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 1), 50.0));
+		MultiPeriodAccountingFigure costOfMaterial = new MultiPeriodAccountingFigure();
+		costOfMaterial.setIsHistoric(true);
+		costOfMaterial.setTimeSeries(costOfMaterialTimeSeries);
+		
+		List<TimeSeriesItem> costOfStaffTimeSeries = new ArrayList<TimeSeriesItem>();
+		costOfStaffTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(1999, 4), 50.0));
+		costOfStaffTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 1), 50.0));
+		MultiPeriodAccountingFigure costOfStaff = new MultiPeriodAccountingFigure();
+		costOfStaff.setIsHistoric(true);
+		costOfStaff.setTimeSeries(costOfStaffTimeSeries);
+		
+		request.setLiabilities(liabilities);
+		request.setInterestOnLiabilities(interestOnLiabilities);
+		request.setAdditionalCosts(additionalCosts);
+		request.setAdditionalIncome(additionalIncome);
+		request.setCostOfMaterial(costOfMaterial);
+		request.setCostOfStaff(costOfStaff);
+		request.setDepreciation(depreciation);
+		request.setDivestments(divestments);
+		request.setInvestments(investments);
+		request.setRevenue(revenue);
+		
+		//Act
+		Set<ConstraintViolation<ScenarioPostRequestDto>> violations = validator.validate(request);
+		System.out.println(violations);
+		
+		//Assert
+		assertTrue(violations.isEmpty());
 	}
 	
 }

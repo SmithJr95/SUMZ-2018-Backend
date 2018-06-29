@@ -28,6 +28,11 @@ public class IsValidTimeSeriesRangesValidator implements ConstraintValidator<IsV
 		TimeSeriesItemDate basisDate = null;
 		
 		for(int i = 0; i < historicMultiPeriodAccountingFigures.size(); i++) {
+			
+			if(historicMultiPeriodAccountingFigures.get(i).getTimeSeries().size() < 2) {
+				return false;
+			}
+			
 			TimeSeriesItemDate maxDate = historicMultiPeriodAccountingFigures.get(i).getMaxDate();
 			if(maxDate == null) {
 				return false;
