@@ -11,6 +11,18 @@ public class FTECalculationTest {
 	
 	@Test
 	public void test() {
+		
+		
+		FTECalculationService fteCalculation = new FTECalculationService();
+		
+		assertEquals(220, fteCalculation.calculateFlowToEquity(202.52, 500.0, 112.0, 100.0, 0.26325), 0.1);
+		
+		
+		
+		
+		
+		
+		
 		/**
 		 * @param proceeds = Einzahlungen
 		 * @param payments = Auszahlungen 
@@ -24,16 +36,16 @@ public class FTECalculationTest {
 		 * @param previousForeignCapital --> foreign capital at the end of the previous period
 		 * @param foreignCapital --> foreign capital at the end of the relevant period
 		 */
-		FTECalculationService FTECalculationTest = new FTECalculationService(2000,1431.41,280,0.14,0.15,0.055, 280, 0, 112, 400, 500);
-		
-		//Test Taxshield	
-		assertEquals(29.48, FTECalculationTest.getTaxShield(), 0.01);
-		
-		//Test Total Cash Flow
-		assertEquals(232, FTECalculationTest.getTotalCF(), 0.01);
-		
-		//Test Flow to Equity 
-		assertEquals(220, FTECalculationTest.getFlowToEquity(), 0.01);
+//		FTECalculationService FTECalculationTest = new FTECalculationService(2000,1431.41,280,0.14,0.15,0.055, 280, 0, 112, 400, 500);
+//		
+//		//Test Taxshield	
+//		assertEquals(29.48, FTECalculationTest.getTaxShield(), 0.01);
+//		
+//		//Test Total Cash Flow
+//		assertEquals(232, FTECalculationTest.getTotalCF(), 0.01);
+//		
+//		//Test Flow to Equity 
+//		assertEquals(220, FTECalculationTest.getFlowToEquity(), 0.01);
 		
 	}
 

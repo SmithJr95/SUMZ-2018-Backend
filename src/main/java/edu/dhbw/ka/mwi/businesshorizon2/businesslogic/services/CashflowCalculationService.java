@@ -7,15 +7,15 @@ public class CashflowCalculationService {
 	private double 
 	proceeds, 
 	payments, 
-	deprication,  
+	depreciation,  
 	investments, 
-	proceedsFromDeinvestments, 
-	foreignCapital;
+	divestments, 
+	liabilities;
 	
 	private final double
-	BUSINESS_TAX, 
-	CORPORATION_TAX, 
-	SOLIDARY_TAX;
+	BUSINESS_TAX_RATE, 
+	CORPORATE_TAX_RATE, 
+	SOLIDARY_TAX_RATE;
 	
 	
 
@@ -29,24 +29,24 @@ public class CashflowCalculationService {
 	/**
 	 * @param proceeds = Einzahlungen
 	 * @param payments = Auszahlungen 
-	 * @param deprication = Abschreibung
-	 * @param businessTax = Gewerbesteuersatz
-	 * @param corporationTax = Körperschaftssteuersatz
-	 * @param solidaryTax = Solidaritätszuschlag
+	 * @param depreciation = Abschreibung
+	 * @param businessTaxRate = Gewerbesteuersatz
+	 * @param corporateTax = Körperschaftssteuersatz
+	 * @param solidaryTaxRate = Solidaritätszuschlag
 	 * @param interest = gezahlte Zinsen (absolut)
 	 * @param investments = getätigte Investitionen
-	 * @param proceedsFromDeinvestments = Einzahlungen aus Desinvestitionen
+	 * @param divestments = Einzahlungen aus Desinvestitionen
 	 */
-	public CashflowCalculationService(double proceeds, double payments, double deprication, double businessTax, double corporationTax, double solidaryTax, double investments, double proceedsFromDeinvestments){
+	public CashflowCalculationService(double proceeds, double payments, double depreciation, double businessTaxRate, double corporateTaxRate, double solidaryTaxRate, double investments, double divestments){
 		
 		this.proceeds = proceeds;
 		this.payments = payments;
-		this.deprication = deprication;
-		this.BUSINESS_TAX = businessTax;
-		this.CORPORATION_TAX = corporationTax;
-		this.SOLIDARY_TAX = solidaryTax;
+		this.depreciation = depreciation;
+		this.BUSINESS_TAX_RATE = businessTaxRate;
+		this.CORPORATE_TAX_RATE = corporateTaxRate;
+		this.SOLIDARY_TAX_RATE = solidaryTaxRate;
 		this.investments = investments;
-		this.proceedsFromDeinvestments = proceedsFromDeinvestments;
+		this.divestments = divestments;
 
 
 		
@@ -73,12 +73,12 @@ public class CashflowCalculationService {
 		double cf =calculateCF(proceeds, payments);
 		
 		// 2. operating cashflow
-		double ebit = calculateEBIT(cf, deprication);
-		double absoluteTax = calculateAbsoluteTax(ebit);
-		double operatingCF = calculateOperatingCF(cf, absoluteTax);
+		double ebit = calculateEBIT(cf, depreciation);
+		double absoluteTaxWithoutLiabilities = calculateAbsoluteTaxWithoutLiabilities(ebit);
+		double operatingCF = calculateOperatingCF(cf, absoluteTaxWithoutLiabilities);
 		
 		// 3. free cashflow
-		double fcf = operatingCF - (investments - proceedsFromDeinvestments);
+		double fcf = operatingCF - (investments - divestments);
 		
 		this.cf = cf;
 		this.operatingCF = operatingCF;
@@ -96,9 +96,9 @@ public class CashflowCalculationService {
 	}
 	
 	
-	private double calculateOperatingCF(double cf, double absoluteTax) {
+	private double calculateOperatingCF(double cf, double absoluteTaxWithoutLiabilities) {
 				
-		double operatingCF = cf - absoluteTax;
+		double operatingCF = cf - absoluteTaxWithoutLiabilities;
 		return operatingCF;
 				
 	}
@@ -107,21 +107,21 @@ public class CashflowCalculationService {
 	
 	// calculate absolute value of taxes to pay
 	// CAUTION: This method is based on the assumption that the company is fully financed without foreign capital
-	protected double calculateAbsoluteTax(double ebit){
+	protected double calculateAbsoluteTaxWithoutLiabilities(double ebit){
 		
 
 		//double absouluteBusinessTax = (ebit + interest / 4) * businessTax;
-		double absouluteBusinessTax = (ebit) * BUSINESS_TAX;
-		double absoluteCorporationTax = (CORPORATION_TAX * (1 + SOLIDARY_TAX)) * ebit;
-		return absouluteBusinessTax + absoluteCorporationTax;
+		double absouluteBusinessTax = (ebit) * BUSINESS_TAX_RATE;
+		double absoluteCorporateTax = (CORPORATE_TAX_RATE * (1 + SOLIDARY_TAX_RATE)) * ebit;
+		return absouluteBusinessTax + absoluteCorporateTax;
 		
 			
 	}
 	
 
 	
-	public double calculateEBIT(double cf, double deprication){
-		return cf - deprication;
+	public double calculateEBIT(double cf, double depreciation){
+		return cf - depreciation;
 	}
 	
 	
@@ -164,8 +164,8 @@ public class CashflowCalculationService {
 
 
 
-	public double getDeprication() {
-		return deprication;
+	public double getDepreciation() {
+		return depreciation;
 	}
 
 
@@ -173,15 +173,15 @@ public class CashflowCalculationService {
 
 
 
-	public void setDeprication(double deprication) {
-		this.deprication = deprication;
+	public void setDepreciation(double depreciation) {
+		this.depreciation = depreciation;
 		runCashflowCalculation();
 	}
 
 
 
-	public double getBusinessTax() {
-		return BUSINESS_TAX;
+	public double getBusinessTaxRate() {
+		return BUSINESS_TAX_RATE;
 	}
 
 
@@ -190,8 +190,8 @@ public class CashflowCalculationService {
 
 
 
-	public double getCorporationTax() {
-		return CORPORATION_TAX;
+	public double getCorporateTaxRate() {
+		return CORPORATE_TAX_RATE;
 	}
 
 
@@ -199,8 +199,8 @@ public class CashflowCalculationService {
 
 
 
-	public double getSolidaryTax() {
-		return SOLIDARY_TAX;
+	public double getSolidaryTaxRate() {
+		return SOLIDARY_TAX_RATE;
 	}
 
 
@@ -227,8 +227,8 @@ public class CashflowCalculationService {
 
 
 
-	public double getProceedsFromDeinvestments() {
-		return proceedsFromDeinvestments;
+	public double getDivestments() {
+		return divestments;
 	}
 
 
@@ -236,8 +236,8 @@ public class CashflowCalculationService {
 
 
 
-	public void setProceedsFromDeinvestments(double proceedsFromDeinvestments) {
-		this.proceedsFromDeinvestments = proceedsFromDeinvestments;
+	public void setDivestments(double divestments) {
+		this.divestments = divestments;
 		runCashflowCalculation();
 	}
 
@@ -246,8 +246,8 @@ public class CashflowCalculationService {
 
 
 
-	public double getForeignCapital() {
-		return foreignCapital;
+	public double getLiabilities() {
+		return liabilities;
 	}
 
 
@@ -255,8 +255,8 @@ public class CashflowCalculationService {
 
 
 
-	public void setForeignCapital(double foreignCapital) {
-		this.foreignCapital = foreignCapital;
+	public void setLiabilities(double liabilities) {
+		this.liabilities = liabilities;
 		runCashflowCalculation();
 	}
 
