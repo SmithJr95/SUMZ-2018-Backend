@@ -57,7 +57,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     
     @Bean 
     public TokenEnhancer customTokenEnhancer() {
-        return new CustomTokenEnhancer();
+        return new CustomTokenEnhancerConfig();
     }
 
 	@Override
