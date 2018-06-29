@@ -48,8 +48,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
               .passwordEncoder(new BCryptPasswordEncoder(encodingStrength));
    }
 
-   @Override
-   protected void configure(HttpSecurity http) throws Exception {
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
       http
               .sessionManagement()
               .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -75,11 +75,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
    }
 
    @Bean
-   @Primary //Making this primary to avoid any accidental duplication with another token service instance of the same name
+   @Primary 
    public DefaultTokenServices tokenServices() {
       DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
       defaultTokenServices.setTokenStore(tokenStore());
       defaultTokenServices.setSupportRefreshToken(true);
       return defaultTokenServices;
    }
+   
+   public Integer getEncodingStrength() {
+	   return encodingStrength;
+   }
+	
+	public void setEncodingStrength(Integer encodingStrength) {
+		this.encodingStrength = encodingStrength;
+	}
 }

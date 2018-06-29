@@ -12,10 +12,12 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
+import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 
 @Entity
-@Table(name = "app_user")
-public class UserDao {
+@Table(name = "appUser")
+public class UserDao{
+	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -26,17 +28,30 @@ public class UserDao {
 
     @Column(name = "password")
     private String password;
+    
+    @Column(name = "isActive")
+    private Boolean isActive;
 
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_role", joinColumns
+	@ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "userRole", joinColumns
             = @JoinColumn(name = "user_id",
             referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id",
                     referencedColumnName = "id"))
     private List<RoleDao> roles;
 
-    public Long getId() {
+	public UserDao(Long id, String email, String password, List<RoleDao> roles, boolean isActive) {
+		this.id = id;
+		this.email = email; 
+		this.password = password; 
+		this.roles = roles; 
+		this.isActive = isActive;
+	}
+	
+	public UserDao() {
+	}
+
+	public Long getId() {
         return id;
     }
 
@@ -67,4 +82,12 @@ public class UserDao {
     public void setRoles(List<RoleDao> roles) {
         this.roles = roles;
     }
+    
+    public Boolean getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(Boolean isActive) {
+		this.isActive = isActive;
+	}
 }

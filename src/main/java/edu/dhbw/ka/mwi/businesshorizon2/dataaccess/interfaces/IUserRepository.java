@@ -7,4 +7,6 @@ import edu.dhbw.ka.mwi.businesshorizon2.models.daos.UserDao;
 
 public interface IUserRepository extends CrudRepository<UserDao, Long> {
 	UserDao findByEmail(String s);
+	
+	//void activateUser(UserActivationToken)
 }

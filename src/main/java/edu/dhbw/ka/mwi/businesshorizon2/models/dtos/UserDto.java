@@ -11,14 +11,18 @@ public class UserDto {
     private String password;
     private List<RoleDao> roles;
     
-    public UserDto(Long id, String email, String password, List<RoleDao> roles) {
+    public UserDto(Long id, String email, String password, List<RoleDao> roles, Boolean isActive) {
     	this.id = id;
     	this.email = email;
     	this.password = password;
     	this.roles = roles;
     }
+    
+    public UserDto() {
+    	
+    }
 
-    public Long getId() {
+  	public Long getId() {
         return id;
     }
 
