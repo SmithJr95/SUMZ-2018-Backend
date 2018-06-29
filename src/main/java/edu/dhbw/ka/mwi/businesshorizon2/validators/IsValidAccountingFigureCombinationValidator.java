@@ -1,8 +1,13 @@
 package edu.dhbw.ka.mwi.businesshorizon2.validators;
 
+import java.util.EnumSet;
+import java.util.List;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
+import edu.dhbw.ka.mwi.businesshorizon2.models.common.MultiPeriodAccountingFigure;
+import edu.dhbw.ka.mwi.businesshorizon2.models.common.MultiPeriodAccountingFigureNames;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioPostRequestDto;
 
 public class IsValidAccountingFigureCombinationValidator implements ConstraintValidator<IsValidAccountingFigureCombination, ScenarioPostRequestDto> {
@@ -10,43 +15,35 @@ public class IsValidAccountingFigureCombinationValidator implements ConstraintVa
 	@Override
 	public boolean isValid(ScenarioPostRequestDto arg0, ConstraintValidatorContext arg1) {
 		
-		boolean additionalIncomeIsNull = arg0.getAdditionalIncome() == null;
-		boolean additionalCostsIsNull = arg0.getAdditionalCosts() == null;;
-		boolean investmentsIsNull = arg0.getInvestments() == null;
-		boolean divestmentsIsNull = arg0.getDivestments() == null;
-		boolean revenueIsNull = arg0.getRevenue() == null;
-		boolean costOfMaterialisNull = arg0.getCostOfMaterial() == null;
-		boolean costOfStaffIsNull = arg0.getCostOfStaff() == null;
-		boolean liabilitiesIsNull = arg0.getLiabilities() == null;
-		boolean freeCashFlowsIsNull = arg0.getFreeCashFlows() == null;
-		boolean interestOnLiabilitiesIsNull = arg0.getInterestOnLiabilities() == null;
-		boolean depreciationIsNull = arg0.getDepreciation() == null;
+		EnumSet<MultiPeriodAccountingFigureNames> validCombination1 = EnumSet.of(
+				MultiPeriodAccountingFigureNames.Liabilities,
+				MultiPeriodAccountingFigureNames.FreeCashFlows,
+				MultiPeriodAccountingFigureNames.InterestOnLiabilities);
 		
-		if (!liabilitiesIsNull 
-				&& !freeCashFlowsIsNull 
-				&& !interestOnLiabilitiesIsNull
-				&& depreciationIsNull
-				&& additionalIncomeIsNull
-				&& additionalCostsIsNull
-				&& investmentsIsNull
-				&& divestmentsIsNull
-				&& revenueIsNull
-				&& costOfMaterialisNull
-				&& costOfStaffIsNull)
-			return true;
+		EnumSet<MultiPeriodAccountingFigureNames> validCombination2 = EnumSet.of(
+				MultiPeriodAccountingFigureNames.Liabilities,
+				MultiPeriodAccountingFigureNames.InterestOnLiabilities,
+				MultiPeriodAccountingFigureNames.AdditionalCosts,
+				MultiPeriodAccountingFigureNames.AdditionalIncome,
+				MultiPeriodAccountingFigureNames.CostOfMaterial,
+				MultiPeriodAccountingFigureNames.CostOfStaff,
+				MultiPeriodAccountingFigureNames.Depreciation,
+				MultiPeriodAccountingFigureNames.Divestments,
+				MultiPeriodAccountingFigureNames.Investments,
+				MultiPeriodAccountingFigureNames.Revenue);
 		
-		if (!liabilitiesIsNull 
-				&& freeCashFlowsIsNull 
-				&& !interestOnLiabilitiesIsNull
-				&& !depreciationIsNull
-				&& !additionalIncomeIsNull
-				&& !additionalCostsIsNull
-				&& !investmentsIsNull
-				&& !divestmentsIsNull
-				&& !revenueIsNull
-				&& !costOfMaterialisNull
-				&& !costOfStaffIsNull)
+		List<MultiPeriodAccountingFigure> multiPeriodAccountingFigures = arg0.getAllMultiPeriodAccountingFigures();
+		multiPeriodAccountingFigures.removeIf(x -> x == null);
+		
+		EnumSet<MultiPeriodAccountingFigureNames> actualCombination = EnumSet.noneOf(MultiPeriodAccountingFigureNames.class);
+		for (MultiPeriodAccountingFigure figure : multiPeriodAccountingFigures) {
+			actualCombination.add(figure.getFigureName());
+		}
+		
+		if(actualCombination.equals(validCombination1) || actualCombination.equals(validCombination2)) {
 			return true;
+		}
+		
 		
 		return false;
 	}

@@ -94,7 +94,7 @@ public class ScenarioPostRequestDto {
 	public void setScenarioName(String name) { this.scenarioName = name; }
 	
 	public String getScenarioDescription() { return scenarioDescription; }
-	public void getScenarioDescription(String description) { this.scenarioDescription = description; }
+	public void setScenarioDescription(String description) { this.scenarioDescription = description; }
 	
 	public int getPeriods() { return periods; }
 	public void setPeriods(int periods) { this.periods = periods; }
