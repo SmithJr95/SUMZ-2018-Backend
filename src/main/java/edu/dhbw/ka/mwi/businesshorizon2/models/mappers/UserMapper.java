@@ -8,7 +8,7 @@ import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.UserDto;
 
 public class UserMapper {
 	public static UserDao mapToDao(UserDto userDto) {
-		throw new UnsupportedOperationException();
+		return new UserDao(userDto.getId(), userDto.getEmail(), userDto.getPassword(), userDto.getRoles(), false);
 	}
 	
 	public static List<UserDto> mapToDto(List<UserDao> userDao){
@@ -20,6 +20,6 @@ public class UserMapper {
 	}
 	
 	public static UserDto mapToDto(UserDao uDao) {
-		return new UserDto(uDao.getId(), uDao.getEmail(), uDao.getPassword(), uDao.getRoles());
+		return new UserDto(uDao.getId(), uDao.getEmail(), uDao.getPassword(), uDao.getRoles(), uDao.getIsActive());
 	}
 }

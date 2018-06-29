@@ -16,6 +16,8 @@ import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.services.AppUserDetailsService;
 
@@ -89,5 +91,84 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .checkTokenAccess("isAuthenticated()")
                 .allowFormAuthenticationForClients();
     }
+    
+	public String getClientId() {
+		return clientId;
+	}
 
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
+	}
+
+	public String getClientSecret() {
+		return clientSecret;
+	}
+
+	public void setClientSecret(String clientSecret) {
+		this.clientSecret = clientSecret;
+	}
+
+	public String getGrantType() {
+		return grantType;
+	}
+
+	public void setGrantType(String grantType) {
+		this.grantType = grantType;
+	}
+
+	public String getScopeRead() {
+		return scopeRead;
+	}
+
+	public void setScopeRead(String scopeRead) {
+		this.scopeRead = scopeRead;
+	}
+
+	public String getScopeWrite() {
+		return scopeWrite;
+	}
+
+	public void setScopeWrite(String scopeWrite) {
+		this.scopeWrite = scopeWrite;
+	}
+
+	public String getResourceIds() {
+		return resourceIds;
+	}
+
+	public void setResourceIds(String resourceIds) {
+		this.resourceIds = resourceIds;
+	}
+
+	public TokenStore getTokenStore() {
+		return tokenStore;
+	}
+
+	public void setTokenStore(TokenStore tokenStore) {
+		this.tokenStore = tokenStore;
+	}
+
+	public JwtAccessTokenConverter getAccessTokenConverter() {
+		return accessTokenConverter;
+	}
+
+	public void setAccessTokenConverter(JwtAccessTokenConverter accessTokenConverter) {
+		this.accessTokenConverter = accessTokenConverter;
+	}
+
+	public AuthenticationManager getAuthenticationManager() {
+		return authenticationManager;
+	}
+
+	public void setAuthenticationManager(AuthenticationManager authenticationManager) {
+		this.authenticationManager = authenticationManager;
+	}
+
+	public AppUserDetailsService getUserDetailsService() {
+		return userDetailsService;
+	}
+
+	public void setUserDetailsService(AppUserDetailsService userDetailsService) {
+		this.userDetailsService = userDetailsService;
+	}  
 }
