@@ -1,17 +1,24 @@
 package edu.dhbw.ka.mwi.businesshorizon2.businesslogic.services;
 
+import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.IFTECalculationService;
 
-
-
-public class FTECalculationService{
+public class FTECalculationService implements IFTECalculationService{
 	
 
-	public double calculateFlowToEquity(double freeCashFlow, double liabilities, double interestOnLiabilities, double changesOnLiabilities,  
+	/**
+	 * @param freeCashFlow
+	 * @param liabilities
+	 * @param previousLiabilities
+	 * @param interestOnLiabilities
+	 * @param effectiveTaxRate
+	 * @return
+	 */
+	public double calculateFlowToEquity(double freeCashFlow, double liabilities, double previousLiabilities, double interestOnLiabilities,  
 			double effectiveTaxRate) {
 
 		double taxShield = effectiveTaxRate * interestOnLiabilities;
 		double totalCashFlow = freeCashFlow + taxShield;
-		double flowToEquity = totalCashFlow - interestOnLiabilities + changesOnLiabilities;
+		double flowToEquity = totalCashFlow - interestOnLiabilities + (liabilities - previousLiabilities);
 		return flowToEquity; 
 	}
 }
