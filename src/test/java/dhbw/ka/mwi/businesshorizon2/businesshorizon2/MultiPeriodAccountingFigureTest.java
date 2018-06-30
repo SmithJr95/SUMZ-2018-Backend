@@ -2,6 +2,7 @@ package dhbw.ka.mwi.businesshorizon2.businesshorizon2;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -133,5 +134,33 @@ public class MultiPeriodAccountingFigureTest {
 		assertEquals(expectedMaxDate1, actualMaxDate1);	
 		assertEquals(expectedMaxDate2, actualMaxDate2);	
 	}
-
+	
+	@Test
+	public void getTimeSeriesAmountsSortedAscByDate_dateFormatYear_returnsSortedAmounts(){
+		//Arrange
+		MultiPeriodAccountingFigure figure = new MultiPeriodAccountingFigure();
+		
+		List<TimeSeriesItem> items = new ArrayList<TimeSeriesItem>();
+		
+		TimeSeriesItem tsi1 = new TimeSeriesItem(new TimeSeriesItemDate(2000, 3), 70.0);
+		TimeSeriesItem tsi2 = new TimeSeriesItem(new TimeSeriesItemDate(2000, 1), 50.0);
+		TimeSeriesItem tsi3 = new TimeSeriesItem(new TimeSeriesItemDate(2000, 2), 60.0);
+		TimeSeriesItem tsi4 = new TimeSeriesItem(new TimeSeriesItemDate(2000, 4), 80.0);
+		
+		items.add(tsi1);
+		items.add(tsi2);
+		items.add(tsi3);
+		items.add(tsi4);
+		
+		figure.setTimeSeries(items);
+		
+		//Act
+		List<Double> amounts = figure.getTimeSeriesAmountsSortedAscByDate();
+		
+		//Assert
+		assertEquals(tsi2.getAmount(), amounts.get(0));
+		assertEquals(tsi3.getAmount(), amounts.get(1));
+		assertEquals(tsi1.getAmount(), amounts.get(2));
+		assertEquals(tsi4.getAmount(), amounts.get(3));
+	}
 }

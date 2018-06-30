@@ -7,6 +7,8 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import edu.dhbw.ka.mwi.businesshorizon2.comparators.TimeSeriesItemByDateComparator;
+
 public class MultiPeriodAccountingFigure {
 	
 	@NotNull(message="isHistoric must not be null.")
@@ -88,6 +90,24 @@ public class MultiPeriodAccountingFigure {
 		}
 		
 		return true;
+	}
+	
+	public List<Double> getTimeSeriesAmountsSortedAscByDate() {
+		if(this.timeSeries == null) {
+			throw new UnsupportedOperationException();
+		}
+		
+		this.timeSeries.sort(new TimeSeriesItemByDateComparator());
+		
+		List<Double> amounts = new ArrayList<Double>();
+		
+		for (int i = 0; i < this.timeSeries.size(); i++) {
+			if(this.timeSeries.get(i).getAmount() != null) {
+				amounts.add(this.timeSeries.get(i).getAmount());
+			}
+		}
+		
+		return amounts;
 	}
 	
 	@Override
