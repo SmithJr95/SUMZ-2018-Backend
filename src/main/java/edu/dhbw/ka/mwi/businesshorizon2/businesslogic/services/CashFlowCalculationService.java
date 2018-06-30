@@ -1,6 +1,8 @@
 package edu.dhbw.ka.mwi.businesshorizon2.businesslogic.services;
 
-public class CashflowCalculationService {
+import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.ICashFlowCalculationService;
+
+public class CashFlowCalculationService implements ICashFlowCalculationService {
 	
 	/**
 	 * @param revenue
@@ -23,13 +25,11 @@ public class CashflowCalculationService {
 		double payments = costOfMaterial + costOfStaff + additionalCosts;
 		
 		double cashFlow = proceeds - payments;
-		System.out.println("CF: "+cashFlow);
+
 		double absoluteTaxes = (cashFlow - depreciation) * (businessTaxRate + (corporateTaxRate * (1 + solidaryTaxRate)));
 		double operatingCashFlow = cashFlow - absoluteTaxes;
-		System.out.println("operating CF: "+ operatingCashFlow);
-		double freeCashFlow = operatingCashFlow - (investments - divestments);
 		
-		System.out.println("Free CF:" + freeCashFlow);
+		double freeCashFlow = operatingCashFlow - (investments - divestments);
 		return freeCashFlow;
 	}
 	
