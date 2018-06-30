@@ -1,13 +1,13 @@
 package edu.dhbw.ka.mwi.businesshorizon2.controllers;
 
-
-
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -47,6 +47,19 @@ public class UserController {
 	@RequestMapping(value = "/activate/{token}", method = RequestMethod.GET)
 	public void activateUser(@PathVariable("token") String token) throws JsonParseException, JsonMappingException, IOException{
 		userService.activateUser(token);
+	}
+	
+	@RequestMapping(value = "/forgot", method = RequestMethod.POST)
+	public void passwordForgot(@RequestBody String email) throws NoSuchAlgorithmException, MessagingException, IOException {
+		userService.resetUserPassword(email);
+	}
+	
+	@RequestMapping(value = "/forgot/{token}", method = RequestMethod.GET)
+	public void passwordForgot(@PathVariable("token") String token, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		System.out.println(request.getContextPath());
+		response.sendRedirect(request.getContextPath() + token);
+
+		//response.sendRedirect("http://google.de");
 	}
 	
 }

@@ -10,6 +10,7 @@ import java.util.List;
 import javax.mail.MessagingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,7 @@ import edu.dhbw.ka.mwi.businesshorizon2.dataaccess.interfaces.IUserRepository;
 import edu.dhbw.ka.mwi.businesshorizon2.models.daos.UserActivationTokenDao;
 import edu.dhbw.ka.mwi.businesshorizon2.models.daos.RoleDao;
 import edu.dhbw.ka.mwi.businesshorizon2.models.daos.UserDao;
+import edu.dhbw.ka.mwi.businesshorizon2.models.daos.UserPasswordResetTokenDao;
 
 @Service
 public class UserService implements IUserService {
@@ -35,6 +37,9 @@ public class UserService implements IUserService {
     
     @Autowired 
     UserActivationService userActivationService;
+    
+    @Autowired 
+    UserPasswordResetService userPasswordResetService; 
     
     @Autowired 
     EmailService emailService;
@@ -78,7 +83,7 @@ public class UserService implements IUserService {
 		link = "http://localhost:8080/user/activate/" + link;
 		
 		emailService.sendEmail(
-				"matthias.kugel@gmx.de", 
+				"sumz1718@gmx.de", 
 				user.getEmail(), 
 				"TEST", 
 				"<a href=\"" + link + "\">test</a>");
@@ -101,14 +106,36 @@ public class UserService implements IUserService {
 		Boolean tokenIsValid 		= token.equals(tokenFromDB);
 		Boolean tokenIsUnexpired 	= token.getExpirationDate().isAfter(LocalDateTime.now());
 		Boolean userIsInactive 		= !user.getIsActive();
-		
-		System.out.println(tokenIsValid.toString() + tokenIsUnexpired + userIsInactive);
-		
+
 		if (tokenIsValid && tokenIsUnexpired && userIsInactive) {
 			user.setIsActive(true);
 			userRepository.save(user);
+		}		
+	}
+	
+	@Override 
+	public String resetUserPassword(String email) throws NoSuchAlgorithmException, JsonProcessingException, MessagingException{
+		UserDao user = userRepository.findByEmail(email);
+		
+		if (user == null){
+			throw new UsernameNotFoundException("User does not exist.");
 		}
 		
+		UserPasswordResetTokenDao userToken = userPasswordResetService.createUserPasswordResetToken(user);
 		
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.findAndRegisterModules();
+		String token = objectMapper.writeValueAsString(userToken); 
+		
+		token 		= Base64.getEncoder().encodeToString(token.getBytes());
+		String link = "http://localhost:8080/user/forgot/" + token;
+		
+		emailService.sendEmail(
+				"sumz1718@gmx.de", 
+				user.getEmail(), 
+				"TEST", 
+				"<a href=\"" + link + "\">test</a>");
+		
+		return token;
 	}
 }

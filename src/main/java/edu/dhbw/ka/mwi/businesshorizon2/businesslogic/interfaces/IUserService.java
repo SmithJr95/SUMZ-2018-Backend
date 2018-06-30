@@ -22,4 +22,6 @@ public interface IUserService {
 	UserDao addUser(UserDao user) throws MessagingException, JsonProcessingException, NoSuchAlgorithmException, UnsupportedEncodingException;
 
 	void activateUser(String token) throws JsonParseException, JsonMappingException, IOException;
+
+	String resetUserPassword(String email) throws NoSuchAlgorithmException, JsonProcessingException, MessagingException;
 }
