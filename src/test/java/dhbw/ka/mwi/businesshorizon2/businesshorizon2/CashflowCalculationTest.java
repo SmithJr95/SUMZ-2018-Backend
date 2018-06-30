@@ -16,33 +16,31 @@ public class CashflowCalculationTest {
 	@Test
 	public void test(){
 		/**
-		 * @param proceeds = Einzahlungen
-		 * @param payments = Auszahlungen 
-		 * @param depreciation = Abschreibung
-		 * @param businessTaxRate = Gewerbesteuersatz
-		 * @param corporateTax = Körperschaftssteuersatz
-		 * @param solidaryTaxRate = Solidaritätszuschlag
-		 * @param interest = gezahlte Zinsen (absolut)
-		 * @param investments = getätigte Investitionen
-		 * @param divestments = Einzahlungen aus Desinvestitionen
+		 * @param revenue
+		 * @param additionalIncome
+		 * @param costOfMaterial
+		 * @param costOfStaff
+		 * @param additionalCosts
+		 * @param depreciation
+		 * @param businessTaxRate
+		 * @param corporateTaxRate
+		 * @param solidaryTaxRate
+		 * @param investments
+		 * @param divestments
+		 * @return
 		 */
-		CashflowCalculationService cashflowCalculation = new CashflowCalculationService(2000.0, 1431.41, 280.0, 0.14, 0.15, 0.055, 280.0, 0.0);
-		
+		CashflowCalculationService cashflowCalculation = new CashflowCalculationService();
+		// 2000.0, 1431.41, 280.0, 0.14, 0.15, 0.055, 280.0, 0.0
 		
 		// Test Cashflow
-		assertEquals(568.59, cashflowCalculation.getCf(), 0.1);
+		assertEquals(202.52, cashflowCalculation.calculateFreeCashFlow(2000.0, 0, 1431.41, 0, 0, 280.0, 0.14, 0.15, 0.055, 280.0, 0.0), 0.1);
 		
-		// Test EBIT calc.
-		assertEquals(288.59, cashflowCalculation.calculateEBIT(568.59, 280), 0.1);
-		System.out.println(cashflowCalculation.calculateEBIT(568.59, 280));
+		assertEquals(202.52, cashflowCalculation.calculateFreeCashFlow(0, 2000, 0, 1431.41, 0, 280, 0.14, 0.15, 0.055, 300, 20), 0.1);
 		
+		assertEquals(202.52, cashflowCalculation.calculateFreeCashFlow(1500, 500, 0, 0, 1431.41, 280, 0.14, 0.15, 0.055, 300, 20), 0.1);
 		
-		// Test operating Cashflow
-		assertEquals(482.52, cashflowCalculation.getOperatingCF(), 0.1);
-		//Test free Cashflow
-		assertEquals(202.52, cashflowCalculation.getFreeCF(), 0.1);
+		assertEquals(138.61, cashflowCalculation.calculateFreeCashFlow(2200, 0, 1459.98, 0, 0, 400, 0.14, 0.15, 0.055, 500, 0), 0.1);
 
-		
 	}
 	
 	
