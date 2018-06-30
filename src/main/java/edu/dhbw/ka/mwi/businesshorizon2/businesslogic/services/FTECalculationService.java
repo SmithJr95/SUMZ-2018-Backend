@@ -22,4 +22,4 @@ public class FTECalculationService implements IFTECalculationService{
 		return flowToEquity; 
 	}
 }
-	
+
