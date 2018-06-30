@@ -30,7 +30,7 @@ public class CompanyValuationService implements ICompanyValuationService {
 		companyValue = presentValueOfCashflows + capitalStructureEffect - liabilities[0];
 
 		return new ApvCompanyValuationResult(companyValue, presentValueOfCashflows + capitalStructureEffect,
-				liabilities[0], 0, 0);
+				liabilities[0], presentValueOfCashflows, capitalStructureEffect);
 
 	}
 
