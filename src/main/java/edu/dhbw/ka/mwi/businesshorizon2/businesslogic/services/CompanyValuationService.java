@@ -12,7 +12,7 @@ public class CompanyValuationService implements ICompanyValuationService {
 		double companyValue = 0;
 		double presentValueOfCashflows = 0;
 		double capitalStructureEffect = 0;
-
+ 
 		for (int i = 0; i < cashflows.length - 1; i++) {
 			presentValueOfCashflows += (cashflows[i] / Math.pow((1 + equityInterest), i + 1));
 
