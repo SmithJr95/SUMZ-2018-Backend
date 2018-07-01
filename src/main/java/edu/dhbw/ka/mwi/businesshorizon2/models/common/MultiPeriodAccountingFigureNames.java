@@ -12,4 +12,5 @@ public enum MultiPeriodAccountingFigureNames {
 	CostOfStaff,
 	Liabilities,
 	FreeCashFlows,
+	FlowToEquity
 }

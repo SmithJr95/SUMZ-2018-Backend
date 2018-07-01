@@ -1,10 +1,13 @@
 package edu.dhbw.ka.mwi.businesshorizon2.businesslogic.services;
 
+import org.springframework.stereotype.Service;
+
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.ICompanyValuationService;
 import edu.dhbw.ka.mwi.businesshorizon2.models.common.ApvCompanyValuationResult;
 import edu.dhbw.ka.mwi.businesshorizon2.models.common.FcfCompanyValuationResult;
 import edu.dhbw.ka.mwi.businesshorizon2.models.common.FteCompanyValuationResult;
 
+@Service
 public class CompanyValuationService implements ICompanyValuationService {
 
 	public ApvCompanyValuationResult performApvCompanyValuation(double[] freeCashFlow, double[] liabilities,

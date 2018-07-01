@@ -1,7 +1,10 @@
 package edu.dhbw.ka.mwi.businesshorizon2.businesslogic.services;
 
+import org.springframework.stereotype.Service;
+
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.IFTECalculationService;
 
+@Service
 public class FTECalculationService implements IFTECalculationService{
 	
 

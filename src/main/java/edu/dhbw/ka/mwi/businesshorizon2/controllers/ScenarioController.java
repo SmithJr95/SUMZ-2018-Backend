@@ -18,7 +18,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.ICompanyValuationService;
+import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.IFTECalculationService;
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.IScenarioService;
+import edu.dhbw.ka.mwi.businesshorizon2.models.common.ApvCompanyValuationResult;
 import edu.dhbw.ka.mwi.businesshorizon2.models.common.MultiPeriodAccountingFigure;
 import edu.dhbw.ka.mwi.businesshorizon2.models.common.MultiPeriodAccountingFigureNames;
 import edu.dhbw.ka.mwi.businesshorizon2.models.common.PredictionRequestTimeSeries;
@@ -32,6 +35,12 @@ import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioPostRequestDto;
 public class ScenarioController {
 	//@Autowired
 	//private IScenarioService scenarioService;
+	
+	@Autowired
+	private IFTECalculationService fteCalculationService;
+	
+	@Autowired
+	private ICompanyValuationService companyValuationService;
 	
 	@RequestMapping(method = RequestMethod.POST)
 	public void createScenario(@RequestBody @Valid ScenarioPostRequestDto scenario) {
@@ -110,21 +119,44 @@ public class ScenarioController {
 		if(isValuationStochastic && freeCashFlowsProvided) {
 			
 			List<Double> companyValues = new ArrayList<Double>();
-			for (int i = 1; i <= numSamples; i++) {
+			for (int sampleNum = 1; sampleNum <= numSamples; sampleNum++) {
 				
 				List<Double> freeCashFlows = deterministicAccountingFigures.containsKey(MultiPeriodAccountingFigureNames.FreeCashFlows) 
 						? deterministicAccountingFigures.get(MultiPeriodAccountingFigureNames.FreeCashFlows)
-						: stochasticAccountingFigures.get(MultiPeriodAccountingFigureNames.FreeCashFlows).get(i);
+						: stochasticAccountingFigures.get(MultiPeriodAccountingFigureNames.FreeCashFlows).get(sampleNum);
 						
 				List<Double> interestOnLiabilities = deterministicAccountingFigures.containsKey(MultiPeriodAccountingFigureNames.InterestOnLiabilities)
 						? deterministicAccountingFigures.get(MultiPeriodAccountingFigureNames.InterestOnLiabilities)
-						: stochasticAccountingFigures.get(MultiPeriodAccountingFigureNames.InterestOnLiabilities).get(i);
+						: stochasticAccountingFigures.get(MultiPeriodAccountingFigureNames.InterestOnLiabilities).get(sampleNum);
 						
-				List<Double> liabilites = deterministicAccountingFigures.containsKey(MultiPeriodAccountingFigureNames.Liabilities)
+				List<Double> liabilities = deterministicAccountingFigures.containsKey(MultiPeriodAccountingFigureNames.Liabilities)
 						? deterministicAccountingFigures.get(MultiPeriodAccountingFigureNames.Liabilities)
-						: stochasticAccountingFigures.get(MultiPeriodAccountingFigureNames.Liabilities).get(i);
+						: stochasticAccountingFigures.get(MultiPeriodAccountingFigureNames.Liabilities).get(sampleNum);
 						
-				//double fte = 
+				
+				List<Double> ftes = new ArrayList<Double>();
+						
+				for (int periodNum = 0; periodNum < scenario.getPeriods(); periodNum++) {
+					double fte;
+					
+					if(periodNum == scenario.getPeriods() - 1) {
+						fte = fteCalculationService.calculateFlowToEquity(freeCashFlows.get(periodNum), liabilities.get(periodNum), liabilities.get(periodNum), interestOnLiabilities.get(periodNum), effectiveTaxRate);
+					}
+					else {
+						fte = fteCalculationService.calculateFlowToEquity(freeCashFlows.get(periodNum), liabilities.get(periodNum + 1), liabilities.get(periodNum), interestOnLiabilities.get(periodNum), effectiveTaxRate);
+					}
+					
+					ftes.add(fte);
+				}
+				
+				if(!stochasticAccountingFigures.containsKey(MultiPeriodAccountingFigureNames.FlowToEquity)) {
+					stochasticAccountingFigures.put(MultiPeriodAccountingFigureNames.FlowToEquity, new HashMap<Integer, List<Double>>());
+				}
+				
+				stochasticAccountingFigures.get(MultiPeriodAccountingFigureNames.FlowToEquity).put(sampleNum, ftes);
+				
+				ApvCompanyValuationResult apvResult = companyValuationService.performApvCompanyValuation(freeCashFlow, liabilities, equityInterest, interestOnLiabilities.get(sampleNum), effectiveTaxRate);
+				
 			}
 		}
 		
