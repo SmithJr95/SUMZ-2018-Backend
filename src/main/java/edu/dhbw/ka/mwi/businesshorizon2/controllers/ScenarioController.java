@@ -22,6 +22,7 @@ import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.IScenarioServic
 import edu.dhbw.ka.mwi.businesshorizon2.models.common.MultiPeriodAccountingFigure;
 import edu.dhbw.ka.mwi.businesshorizon2.models.common.MultiPeriodAccountingFigureNames;
 import edu.dhbw.ka.mwi.businesshorizon2.models.common.PredictionRequestTimeSeries;
+import edu.dhbw.ka.mwi.businesshorizon2.models.common.PredictionResponseTimeSeries;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.PredictionRequestDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.PredictionResponseDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioPostRequestDto;
@@ -35,6 +36,8 @@ public class ScenarioController {
 	@RequestMapping(method = RequestMethod.POST)
 	public void createScenario(@RequestBody @Valid ScenarioPostRequestDto scenario) {
 		//System.out.println(scenario);
+		
+		final Integer numSamples = 5;
 		
 		HashMap<MultiPeriodAccountingFigureNames, List<Double>> deterministicAccountingFigures = 
 				new HashMap<MultiPeriodAccountingFigureNames, List<Double>>();
@@ -75,7 +78,7 @@ public class ScenarioController {
 				timeSeries.add(new PredictionRequestTimeSeries(figure.getFigureName(), figure.getTimeSeriesAmountsSortedAscByDate().toArray(amountsArr)));
 			}
 				
-			PredictionRequestDto request = new PredictionRequestDto(timeSeries, scenario.getPeriods(), 5);
+			PredictionRequestDto request = new PredictionRequestDto(timeSeries, scenario.getPeriods(), numSamples);
 			
 			System.out.println("-----------------------REQUEST-----------------------");
 			System.out.println(request);
@@ -89,7 +92,41 @@ public class ScenarioController {
 				
 			System.out.println("-----------------------RESPONSE-----------------------");
 			System.out.println(result);
+			
+			for (PredictionResponseTimeSeries ts : result.getTimeSeries()) {
+				MultiPeriodAccountingFigureNames name = MultiPeriodAccountingFigureNames.valueOf(ts.getId());
+				stochasticAccountingFigures.put(name, new HashMap<Integer, List<Double>>());
+				
+				for (int i = 0; i < numSamples; i++) {
+					stochasticAccountingFigures.get(name).put(i + 1, Arrays.asList(ts.getValues()[i]));
+				}				
+			}
+			
+			for (MultiPeriodAccountingFigureNames key : stochasticAccountingFigures.keySet()) {
+				System.out.println(stochasticAccountingFigures.get(key));
+			}
 		}	
+		
+		if(isValuationStochastic && freeCashFlowsProvided) {
+			
+			List<Double> companyValues = new ArrayList<Double>();
+			for (int i = 1; i <= numSamples; i++) {
+				
+				List<Double> freeCashFlows = deterministicAccountingFigures.containsKey(MultiPeriodAccountingFigureNames.FreeCashFlows) 
+						? deterministicAccountingFigures.get(MultiPeriodAccountingFigureNames.FreeCashFlows)
+						: stochasticAccountingFigures.get(MultiPeriodAccountingFigureNames.FreeCashFlows).get(i);
+						
+				List<Double> interestOnLiabilities = deterministicAccountingFigures.containsKey(MultiPeriodAccountingFigureNames.InterestOnLiabilities)
+						? deterministicAccountingFigures.get(MultiPeriodAccountingFigureNames.InterestOnLiabilities)
+						: stochasticAccountingFigures.get(MultiPeriodAccountingFigureNames.InterestOnLiabilities).get(i);
+						
+				List<Double> liabilites = deterministicAccountingFigures.containsKey(MultiPeriodAccountingFigureNames.Liabilities)
+						? deterministicAccountingFigures.get(MultiPeriodAccountingFigureNames.Liabilities)
+						: stochasticAccountingFigures.get(MultiPeriodAccountingFigureNames.Liabilities).get(i);
+						
+				//double fte = 
+			}
+		}
 		
 		
 	} 
