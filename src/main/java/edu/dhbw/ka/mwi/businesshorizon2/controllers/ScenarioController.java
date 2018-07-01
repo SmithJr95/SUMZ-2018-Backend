@@ -18,9 +18,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.IAccountingFigureCalculationsService;
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.ICompanyValuationService;
-import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.IFTECalculationService;
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.IScenarioService;
+import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.ITimeSeriesPredictionService;
 import edu.dhbw.ka.mwi.businesshorizon2.models.common.ApvCompanyValuationResult;
 import edu.dhbw.ka.mwi.businesshorizon2.models.common.MultiPeriodAccountingFigure;
 import edu.dhbw.ka.mwi.businesshorizon2.models.common.MultiPeriodAccountingFigureNames;
@@ -37,10 +38,13 @@ public class ScenarioController {
 	//private IScenarioService scenarioService;
 	
 	@Autowired
-	private IFTECalculationService fteCalculationService;
+	private IAccountingFigureCalculationsService accountingService;
 	
 	@Autowired
 	private ICompanyValuationService companyValuationService;
+	
+	@Autowired
+	private ITimeSeriesPredictionService predictionService;
 	
 	@RequestMapping(method = RequestMethod.POST)
 	public void createScenario(@RequestBody @Valid ScenarioPostRequestDto scenario) {
@@ -62,6 +66,7 @@ public class ScenarioController {
 		
 		boolean isValuationStochastic = !historicAccountingFigures.isEmpty();
 		boolean freeCashFlowsProvided = false;
+		double effectiveTaxRate = accountingService.calculateEffectiveTaxRate(scenario.getBusinessTaxRate(), scenario.getCorporateTaxRate(), scenario.getSolidaryTaxRate());
 		
 		for (MultiPeriodAccountingFigure figure : nonHistoricAccountingFigures) {
 			deterministicAccountingFigures.put(figure.getFigureName(), figure.getTimeSeriesAmountsSortedAscByDate());
@@ -80,43 +85,11 @@ public class ScenarioController {
 		}
 		
 		if(isValuationStochastic) {
-			List<PredictionRequestTimeSeries> timeSeries = new ArrayList<PredictionRequestTimeSeries>();
-			Double[] amountsArr = new Double[historicAccountingFigures.size()];
-			
-			for (MultiPeriodAccountingFigure figure : historicAccountingFigures) {
-				timeSeries.add(new PredictionRequestTimeSeries(figure.getFigureName(), figure.getTimeSeriesAmountsSortedAscByDate().toArray(amountsArr)));
-			}
-				
-			PredictionRequestDto request = new PredictionRequestDto(timeSeries, scenario.getPeriods(), numSamples);
-			
-			System.out.println("-----------------------REQUEST-----------------------");
-			System.out.println(request);
-			
-			String uri = "http://localhost:5000/predict";
-			
-			RestTemplate restTemplate = new RestTemplate();
-			HttpEntity<PredictionRequestDto> x = new HttpEntity<>(request);
-			
-			PredictionResponseDto result = restTemplate.postForObject(uri, x, PredictionResponseDto.class);
-				
-			System.out.println("-----------------------RESPONSE-----------------------");
-			System.out.println(result);
-			
-			for (PredictionResponseTimeSeries ts : result.getTimeSeries()) {
-				MultiPeriodAccountingFigureNames name = MultiPeriodAccountingFigureNames.valueOf(ts.getId());
-				stochasticAccountingFigures.put(name, new HashMap<Integer, List<Double>>());
-				
-				for (int i = 0; i < numSamples; i++) {
-					stochasticAccountingFigures.get(name).put(i + 1, Arrays.asList(ts.getValues()[i]));
-				}				
-			}
-			
-			for (MultiPeriodAccountingFigureNames key : stochasticAccountingFigures.keySet()) {
-				System.out.println(stochasticAccountingFigures.get(key));
-			}
+			predictionService.MakePredictions(historicAccountingFigures, stochasticAccountingFigures, scenario.getPeriods(), numSamples);	
 		}	
 		
 		if(isValuationStochastic && freeCashFlowsProvided) {
+			System.out.println("isValuationStochastic && freeCashFlowsProvided");
 			
 			List<Double> companyValues = new ArrayList<Double>();
 			for (int sampleNum = 1; sampleNum <= numSamples; sampleNum++) {
@@ -133,17 +106,16 @@ public class ScenarioController {
 						? deterministicAccountingFigures.get(MultiPeriodAccountingFigureNames.Liabilities)
 						: stochasticAccountingFigures.get(MultiPeriodAccountingFigureNames.Liabilities).get(sampleNum);
 						
-				
 				List<Double> ftes = new ArrayList<Double>();
 						
 				for (int periodNum = 0; periodNum < scenario.getPeriods(); periodNum++) {
 					double fte;
 					
 					if(periodNum == scenario.getPeriods() - 1) {
-						fte = fteCalculationService.calculateFlowToEquity(freeCashFlows.get(periodNum), liabilities.get(periodNum), liabilities.get(periodNum), interestOnLiabilities.get(periodNum), effectiveTaxRate);
+						fte = accountingService.calculateFlowToEquity(freeCashFlows.get(periodNum), liabilities.get(periodNum), liabilities.get(periodNum), interestOnLiabilities.get(periodNum), effectiveTaxRate);
 					}
 					else {
-						fte = fteCalculationService.calculateFlowToEquity(freeCashFlows.get(periodNum), liabilities.get(periodNum + 1), liabilities.get(periodNum), interestOnLiabilities.get(periodNum), effectiveTaxRate);
+						fte = accountingService.calculateFlowToEquity(freeCashFlows.get(periodNum), liabilities.get(periodNum + 1), liabilities.get(periodNum), interestOnLiabilities.get(periodNum), effectiveTaxRate);
 					}
 					
 					ftes.add(fte);
@@ -155,11 +127,11 @@ public class ScenarioController {
 				
 				stochasticAccountingFigures.get(MultiPeriodAccountingFigureNames.FlowToEquity).put(sampleNum, ftes);
 				
-				ApvCompanyValuationResult apvResult = companyValuationService.performApvCompanyValuation(freeCashFlow, liabilities, equityInterest, interestOnLiabilities.get(sampleNum), effectiveTaxRate);
-				
+				//calculated company value only...
 			}
-		}
-		
-		
+			
+			//calculate apvResult, fteResult, fcfResult once from mean of all other figures
+			//calculate company value distribution from companyValues
+		}	
 	} 
 }
