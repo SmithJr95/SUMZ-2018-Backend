@@ -1,8 +1,13 @@
 package edu.dhbw.ka.mwi.businesshorizon2.businesslogic.services;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.IAccountingFigureCalculationsService;
+import edu.dhbw.ka.mwi.businesshorizon2.models.common.MultiPeriodAccountingFigureNames;
 
 @Service
 public class AccountingFigureCalculationsService implements IAccountingFigureCalculationsService {
@@ -65,5 +70,26 @@ public class AccountingFigureCalculationsService implements IAccountingFigureCal
 		double effectiveTaxRate = 0.75 * businessTaxRate + corporateTaxRate * (1 + solidaryTaxRate);
 		
 		return effectiveTaxRate;
+	}
+	
+	public List<Double> getMeanAccountingFigureValues(HashMap<MultiPeriodAccountingFigureNames, HashMap<Integer, List<Double>>> stochasticAccountingFigures, MultiPeriodAccountingFigureNames figureName, int periods) {
+		
+		List<Double> meanAccountingFigureValues = new ArrayList<Double>();
+		
+		for (int i = 0; i < periods; i++) {
+			final int j = i;
+			
+			Double meanAccountingFigureValue = stochasticAccountingFigures.get(figureName)
+					.values()
+					.stream()
+					.map(x -> x.get(j))
+					.mapToDouble(x -> x)
+					.average()
+					.getAsDouble();
+			
+			meanAccountingFigureValues.add(meanAccountingFigureValue);
+		}
+		
+		return meanAccountingFigureValues;
 	}
 }

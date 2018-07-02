@@ -1,34 +1,26 @@
 package edu.dhbw.ka.mwi.businesshorizon2.controllers;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.IAccountingFigureCalculationsService;
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.ICompanyValuationService;
-import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.IScenarioService;
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.ITimeSeriesPredictionService;
 import edu.dhbw.ka.mwi.businesshorizon2.models.common.ApvCompanyValuationResult;
+import edu.dhbw.ka.mwi.businesshorizon2.models.common.CompanyValueDistribution;
+import edu.dhbw.ka.mwi.businesshorizon2.models.common.FcfCompanyValuationResult;
+import edu.dhbw.ka.mwi.businesshorizon2.models.common.FteCompanyValuationResult;
 import edu.dhbw.ka.mwi.businesshorizon2.models.common.MultiPeriodAccountingFigure;
 import edu.dhbw.ka.mwi.businesshorizon2.models.common.MultiPeriodAccountingFigureNames;
-import edu.dhbw.ka.mwi.businesshorizon2.models.common.PredictionRequestTimeSeries;
-import edu.dhbw.ka.mwi.businesshorizon2.models.common.PredictionResponseTimeSeries;
-import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.PredictionRequestDto;
-import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.PredictionResponseDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioPostRequestDto;
 
 @RestController
@@ -123,11 +115,51 @@ public class ScenarioController {
 				
 				stochasticAccountingFigures.get(MultiPeriodAccountingFigureNames.FlowToEquity).put(sampleNum, ftes);
 				
-				//calculated company value only...
+				ApvCompanyValuationResult res = companyValuationService.performApvCompanyValuation(
+						freeCashFlows, 
+						liabilities, 
+						scenario.getEquityInterestRate(), 
+						scenario.getInterestOnLiabilitiesRate(), 
+						effectiveTaxRate);
+				
+				companyValues.add(res.getCompanyValue());
 			}
 			
-			//calculate apvResult, fteResult, fcfResult once from mean of all other figures
-			//calculate company value distribution from companyValues
+			List<Double> meanFreeCashFlows = deterministicAccountingFigures.containsKey(MultiPeriodAccountingFigureNames.FreeCashFlows) 
+					? deterministicAccountingFigures.get(MultiPeriodAccountingFigureNames.FreeCashFlows)
+					: accountingService.getMeanAccountingFigureValues(stochasticAccountingFigures, MultiPeriodAccountingFigureNames.FreeCashFlows, scenario.getPeriods());
+					
+			List<Double> meanLiabilities = deterministicAccountingFigures.containsKey(MultiPeriodAccountingFigureNames.Liabilities) 
+					? deterministicAccountingFigures.get(MultiPeriodAccountingFigureNames.Liabilities)
+					: accountingService.getMeanAccountingFigureValues(stochasticAccountingFigures, MultiPeriodAccountingFigureNames.Liabilities, scenario.getPeriods());
+					
+			List<Double> meanFlowToEquity = deterministicAccountingFigures.containsKey(MultiPeriodAccountingFigureNames.FlowToEquity) 
+					? deterministicAccountingFigures.get(MultiPeriodAccountingFigureNames.FlowToEquity)
+					: accountingService.getMeanAccountingFigureValues(stochasticAccountingFigures, MultiPeriodAccountingFigureNames.FlowToEquity, scenario.getPeriods());
+			
+			ApvCompanyValuationResult apvRes = companyValuationService.performApvCompanyValuation(
+					meanFreeCashFlows, 
+					meanLiabilities, 
+					scenario.getEquityInterestRate(), 
+					scenario.getInterestOnLiabilitiesRate(), 
+					effectiveTaxRate);
+			
+			FteCompanyValuationResult fteRes = companyValuationService.performFteCompanyValuationResult(
+					meanFlowToEquity, 
+					meanLiabilities, 
+					scenario.getEquityInterestRate(), 
+					scenario.getInterestOnLiabilitiesRate(), 
+					effectiveTaxRate);
+			
+			FcfCompanyValuationResult fcfRes = companyValuationService.performFcfCompanyValuationResult(
+					meanFreeCashFlows, 
+					meanLiabilities, 
+					scenario.getEquityInterestRate(), 
+					scenario.getInterestOnLiabilitiesRate(), 
+					effectiveTaxRate);
+			
+			//company value distribution.
+			CompanyValueDistribution companyValueDistribution = companyValuationService.getCompanyValueDistribution(companyValues);
 		}	
 	} 
 }

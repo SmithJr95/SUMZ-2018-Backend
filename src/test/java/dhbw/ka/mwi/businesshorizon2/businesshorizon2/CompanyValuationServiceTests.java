@@ -2,6 +2,9 @@ package dhbw.ka.mwi.businesshorizon2.businesshorizon2;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -11,14 +14,23 @@ import edu.dhbw.ka.mwi.businesshorizon2.models.common.FteCompanyValuationResult;
 import edu.dhbw.ka.mwi.businesshorizon2.models.common.FcfCompanyValuationResult;
 
 
-import junit.framework.TestCase;
-
 public class CompanyValuationServiceTests {
 
 	@Test
 	public void performApvCompanyValuation() {
-		double[] cashflows = new double[] { 2950.0, 2260.0, 2690.0, 4470.0 };
-		double[] liabilities = new double[] { 19000.0, 19500.0, 20000.0, 20500.0, 20500.0 };
+		List<Double> cashflows = new ArrayList<Double>();
+		cashflows.add(2950.0);
+		cashflows.add(2260.0);
+		cashflows.add(2690.0);
+		cashflows.add(4470.0);
+		
+		List<Double> liabilities = new ArrayList<Double>();
+		liabilities.add(19000.0);
+		liabilities.add(19500.0);
+		liabilities.add(20000.0);
+		liabilities.add(20500.0);
+		liabilities.add(20500.0);
+		
 		double equityInterest = 0.09;
 		double outsideCapitalInterest = 0.05;
 		double corporateTax = 0.3;
@@ -28,15 +40,24 @@ public class CompanyValuationServiceTests {
 				liabilities, equityInterest, outsideCapitalInterest, corporateTax);
 
 		Assert.assertEquals(32146.0, apvCompanyValuationResult.getCompanyValue(), 0.1);
-
 	}
 	
-	
 	@Test
-	public void performFtfCompanyValuation() {
+	public void performFcfCompanyValuation() {
 
-		double[] cashflows = { 2950, 2260, 2690, 4470 };
-		double[] liabilities = { 19000, 19500, 20000, 20500, 20500 };
+		List<Double> cashflows = new ArrayList<Double>();
+		cashflows.add(2950.0);
+		cashflows.add(2260.0);
+		cashflows.add(2690.0);
+		cashflows.add(4470.0);
+		
+		List<Double> liabilities = new ArrayList<Double>();
+		liabilities.add(19000.0);
+		liabilities.add(19500.0);
+		liabilities.add(20000.0);
+		liabilities.add(20500.0);
+		liabilities.add(20500.0);
+		
 		double corporateTax = 0.3;
 		double equityInterest = 0.09;
 		double outsideCapitalInterest = 0.05;
@@ -51,8 +72,20 @@ public class CompanyValuationServiceTests {
 
 	@Test
 	public void performFteCompanyValuation() {
-		double[] cashflows = new double[] { 124.34, 134.51, 166.02, 120.00 };
-		double[] liabilities = new double[] { 1260.0, 1320.0, 1330.0, 1400.0, 1400.0 };
+		
+		List<Double> cashflows = new ArrayList<Double>();
+		cashflows.add(124.34);
+		cashflows.add(134.51);
+		cashflows.add(166.02);
+		cashflows.add(120.0);
+		
+		List<Double> liabilities = new ArrayList<Double>();
+		liabilities.add(1260.0);
+		liabilities.add(1320.0);
+		liabilities.add(1330.0);
+		liabilities.add(1400.0);
+		liabilities.add(1400.0);
+		
 		double equityInterest = 0.09969137;
 		double outsideCapitalInterest = 0.08;
 		double corporateTax = 0.26325;
