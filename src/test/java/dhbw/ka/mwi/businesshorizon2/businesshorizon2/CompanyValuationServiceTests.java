@@ -31,7 +31,7 @@ public class CompanyValuationServiceTests {
 
 	}
 	
-	/*
+	
 	@Test
 	public void performFtfCompanyValuation() {
 
@@ -42,12 +42,12 @@ public class CompanyValuationServiceTests {
 		double outsideCapitalInterest = 0.05;
 		CompanyValuationService valuationService = new CompanyValuationService();
 
-		FcfCompanyValuationResult fcfCompanyValuationResult = valuationService.performFcfCompanyValuationResult(cashflows, liabilities, corporateTax, equityInterest,
-				outsideCapitalInterest);
+		FcfCompanyValuationResult fcfCompanyValuationResult = valuationService.performFcfCompanyValuationResult(cashflows, liabilities, equityInterest,
+				outsideCapitalInterest, corporateTax);
 
 		Assert.assertEquals(32146.0,fcfCompanyValuationResult.getCompanyValue(), 0.1);
 	}
-	*/
+	
 
 	@Test
 	public void performFteCompanyValuation() {
