@@ -57,8 +57,8 @@ public class ScenarioPostRequestDto {
 	@DecimalMax(value="1000.0", message="costOfEquity must be >=0 and <=1000.")
 	private Double costOfEquity;
 	
-	@Valid
-	private MultiPeriodAccountingFigure interestOnLiabilities;
+	@NotNull(message = "interestOnLiabilitiesRate must not be null.")
+	private Double interestOnLiabilitiesRate;
 	
 	@Valid
 	private MultiPeriodAccountingFigure depreciation;
