@@ -98,10 +98,6 @@ public class ScenarioController {
 						? deterministicAccountingFigures.get(MultiPeriodAccountingFigureNames.FreeCashFlows)
 						: stochasticAccountingFigures.get(MultiPeriodAccountingFigureNames.FreeCashFlows).get(sampleNum);
 						
-				List<Double> interestOnLiabilities = deterministicAccountingFigures.containsKey(MultiPeriodAccountingFigureNames.InterestOnLiabilities)
-						? deterministicAccountingFigures.get(MultiPeriodAccountingFigureNames.InterestOnLiabilities)
-						: stochasticAccountingFigures.get(MultiPeriodAccountingFigureNames.InterestOnLiabilities).get(sampleNum);
-						
 				List<Double> liabilities = deterministicAccountingFigures.containsKey(MultiPeriodAccountingFigureNames.Liabilities)
 						? deterministicAccountingFigures.get(MultiPeriodAccountingFigureNames.Liabilities)
 						: stochasticAccountingFigures.get(MultiPeriodAccountingFigureNames.Liabilities).get(sampleNum);
@@ -112,10 +108,10 @@ public class ScenarioController {
 					double fte;
 					
 					if(periodNum == scenario.getPeriods() - 1) {
-						fte = accountingService.calculateFlowToEquity(freeCashFlows.get(periodNum), liabilities.get(periodNum), liabilities.get(periodNum), interestOnLiabilities.get(periodNum), effectiveTaxRate);
+						fte = accountingService.calculateFlowToEquity(freeCashFlows.get(periodNum), liabilities.get(periodNum), liabilities.get(periodNum), scenario.getInterestOnLiabilitiesRate(), effectiveTaxRate);
 					}
 					else {
-						fte = accountingService.calculateFlowToEquity(freeCashFlows.get(periodNum), liabilities.get(periodNum + 1), liabilities.get(periodNum), interestOnLiabilities.get(periodNum), effectiveTaxRate);
+						fte = accountingService.calculateFlowToEquity(freeCashFlows.get(periodNum), liabilities.get(periodNum + 1), liabilities.get(periodNum), scenario.getInterestOnLiabilitiesRate(), effectiveTaxRate);
 					}
 					
 					ftes.add(fte);
