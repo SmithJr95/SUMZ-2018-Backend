@@ -1,5 +1,6 @@
 package edu.dhbw.ka.mwi.businesshorizon2.businesslogic.services;
 
+import java.util.Map;
 import java.util.Properties;
 
 import javax.mail.MessagingException;
@@ -7,10 +8,13 @@ import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.IEmailService;
 import edu.dhbw.ka.mwi.businesshorizon2.config.EmailConfig;
@@ -23,6 +27,8 @@ public class EmailService implements IEmailService {
     
 	@Autowired
 	JavaMailSender mailSender;
+	
+	@Autowired SpringTemplateEngine templateEngine;
 	
 	@Bean
 	public JavaMailSender getJavaMailSender() {
@@ -43,17 +49,24 @@ public class EmailService implements IEmailService {
 	    return mailSender;
 	}
 	
-	public void sendEmail(String from, String to, String subject, String body) throws MessagingException {
+	public void sendEmail(String from, String to, String subject, String template, Map vars) throws MessagingException {
 		MimeMessage msg = mailSender.createMimeMessage();
 		MimeMessageHelper msgHelper = new MimeMessageHelper(msg, false, "utf-8");
-		msgHelper.setText(body, true);
+		
+		Context context = new Context();
+        context.setVariables(vars);
+        String html = templateEngine.process(template, context);
+        
+		msgHelper.addAttachment("logo.png", new ClassPathResource("logo.png"));
+		msgHelper.setText(html, true);
 
 		msgHelper.setFrom(from);
 		msgHelper.setTo(to);
 		msgHelper.setSubject(subject);
-		msgHelper.setText(body);
+	
+		msg.setContent(html, "text/html");
 		
-		msg.setContent(body, "text/html");
+		
 		mailSender.send(msg);		
 	}
 
