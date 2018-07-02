@@ -30,7 +30,8 @@ public class CompanyValuationServiceTests {
 		Assert.assertEquals(32146.0, apvCompanyValuationResult.getCompanyValue(), 0.1);
 
 	}
-
+	
+	/*
 	@Test
 	public void performFtfCompanyValuation() {
 
@@ -46,6 +47,7 @@ public class CompanyValuationServiceTests {
 
 		Assert.assertEquals(32146.0,fcfCompanyValuationResult.getCompanyValue(), 0.1);
 	}
+	*/
 
 	@Test
 	public void performFteCompanyValuation() {
