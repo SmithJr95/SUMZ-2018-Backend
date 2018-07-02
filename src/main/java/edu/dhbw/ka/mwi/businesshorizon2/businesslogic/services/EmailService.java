@@ -1,14 +1,21 @@
 package edu.dhbw.ka.mwi.businesshorizon2.businesslogic.services;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Properties;
 
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -28,7 +35,8 @@ public class EmailService implements IEmailService {
 	@Autowired
 	JavaMailSender mailSender;
 	
-	@Autowired SpringTemplateEngine templateEngine;
+	@Autowired 
+	SpringTemplateEngine templateEngine;
 	
 	@Bean
 	public JavaMailSender getJavaMailSender() {
@@ -49,24 +57,33 @@ public class EmailService implements IEmailService {
 	    return mailSender;
 	}
 	
-	public void sendEmail(String from, String to, String subject, String template, Map vars) throws MessagingException {
+	public void sendEmail(String from, String to, String subject, String template, Map<String, Object> vars) throws MessagingException, IOException {
 		MimeMessage msg = mailSender.createMimeMessage();
-		MimeMessageHelper msgHelper = new MimeMessageHelper(msg, false, "utf-8");
-		
+		MimeMessageHelper msgHelper = new MimeMessageHelper(msg, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());       
+
 		Context context = new Context();
         context.setVariables(vars);
+        
         String html = templateEngine.process(template, context);
         
-		msgHelper.addAttachment("logo.png", new ClassPathResource("logo.png"));
-		msgHelper.setText(html, true);
+        Multipart multipart = new MimeMultipart();
+        
+        MimeBodyPart messageBodyPart = new MimeBodyPart();
+        messageBodyPart.setContent(html, "text/html");
+        
+        MimeBodyPart attachPart = new MimeBodyPart();
+        
+        attachPart.attachFile("src/main/resources/email-templates/logo.png");
+        
+        multipart.addBodyPart(attachPart);
+        multipart.addBodyPart(messageBodyPart);
 
 		msgHelper.setFrom(from);
 		msgHelper.setTo(to);
 		msgHelper.setSubject(subject);
-	
-		msg.setContent(html, "text/html");
 		
-		
+		msg.setContent(multipart);
+			
 		mailSender.send(msg);		
 	}
 

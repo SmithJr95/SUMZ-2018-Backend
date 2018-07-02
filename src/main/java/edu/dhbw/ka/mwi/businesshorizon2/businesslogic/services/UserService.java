@@ -6,7 +6,10 @@ import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import javax.mail.MessagingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,11 +97,17 @@ public class UserService implements IUserService {
 		link = Base64.getEncoder().encodeToString(link.getBytes());
 		link = "http://localhost:8080/users/activate/" + link;
 		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("email", user.getEmail());
+		map.put("link", link);
+		map.put("imageResourceName", "logo.png");
+		
 		emailService.sendEmail(
 				"sumz1718@gmx.de", 
 				user.getEmail(), 
-				"TEST", 
-				"<a href=\"" + link + "\">test</a>");
+				"Ihre Registrierung bei business horizon", 
+				"activation",
+				map);
 				
 		return userResult;
 	}
@@ -146,11 +155,7 @@ public class UserService implements IUserService {
 		token 		= Base64.getEncoder().encodeToString(token.getBytes());
 		String link = "http://localhost:8080/users/forgot/" + token;
 		
-		emailService.sendEmail(
-				"sumz1718@gmx.de", 
-				user.getEmail(), 
-				"TEST", 
-				"<a href=\"" + link + "\">test</a>");
+
 		
 		return token;
 	}
