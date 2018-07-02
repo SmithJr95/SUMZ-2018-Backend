@@ -36,5 +36,5 @@ CREATE TABLE userPasswordResetToken (
   expirationDate datetime NOT NULL, 
   key varchar(255) not null,
   PRIMARY KEY (id), 
-  CONSTRAINT FK_UsrePasswordResetTokenUser FOREIGN KEY (userId) REFERENCES appUser(id)
+  CONSTRAINT FK_UserPasswordResetTokenUser FOREIGN KEY (userId) REFERENCES appUser(id)
 );

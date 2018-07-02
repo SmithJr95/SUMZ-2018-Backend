@@ -13,15 +13,21 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 import edu.dhbw.ka.mwi.businesshorizon2.models.daos.UserActivationTokenDao;
 import edu.dhbw.ka.mwi.businesshorizon2.models.daos.UserDao;
+import edu.dhbw.ka.mwi.businesshorizon2.models.daos.UserPasswordResetTokenDao;
 
 public interface IUserService {
 	public List<UserDao> findAllUsers();
     
     public UserDao findByEmail(String s);
 
-	UserDao addUser(UserDao user) throws MessagingException, JsonProcessingException, NoSuchAlgorithmException, UnsupportedEncodingException;
+	UserDao addUser(UserDao user) throws MessagingException, JsonProcessingException, NoSuchAlgorithmException, UnsupportedEncodingException, Exception;
 
 	void activateUser(String token) throws JsonParseException, JsonMappingException, IOException;
 
-	String resetUserPassword(String email) throws NoSuchAlgorithmException, JsonProcessingException, MessagingException;
+	UserPasswordResetTokenDao checkPasswordResetToken(String token) throws JsonParseException, JsonMappingException, IOException, Exception;
+
+	String requestUserPasswordReset(String email)
+			throws NoSuchAlgorithmException, JsonProcessingException, MessagingException, Exception;
+
+	void resetUserPassword(UserDao user, String tokenStr) throws JsonParseException, JsonMappingException, IOException, Exception;
 }

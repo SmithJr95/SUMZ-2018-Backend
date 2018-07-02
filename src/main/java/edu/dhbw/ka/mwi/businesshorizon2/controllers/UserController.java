@@ -23,11 +23,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.services.UserService;
+import edu.dhbw.ka.mwi.businesshorizon2.models.daos.UserDao;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.UserDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.mappers.UserMapper;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 public class UserController {
 	
 	@Autowired
@@ -40,26 +41,46 @@ public class UserController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public UserDto addUser(@RequestBody UserDto userDto) throws MessagingException, JsonProcessingException, NoSuchAlgorithmException, UnsupportedEncodingException{
+	public UserDto addUser(@RequestBody UserDto userDto) throws Exception{
 		return UserMapper.mapToDto(userService.addUser(UserMapper.mapToDao(userDto)));
 	}
 	
 	@RequestMapping(value = "/activate/{token}", method = RequestMethod.GET)
-	public void activateUser(@PathVariable("token") String token) throws JsonParseException, JsonMappingException, IOException{
+	public void activateUser(@PathVariable("token") String token, HttpServletRequest request, HttpServletResponse response) throws JsonParseException, JsonMappingException, IOException{
 		userService.activateUser(token);
+		
+		String redirectURL = request.getRequestURL().toString();
+		redirectURL = redirectURL.replaceAll(request.getRequestURI(), "");
+		redirectURL = redirectURL + "/login";
+		
+		response.sendRedirect(redirectURL);
 	}
 	
 	@RequestMapping(value = "/forgot", method = RequestMethod.POST)
-	public void passwordForgot(@RequestBody String email) throws NoSuchAlgorithmException, MessagingException, IOException {
-		userService.resetUserPassword(email);
+	public void passwordForgot(@RequestBody UserDto user) throws Exception {
+		userService.requestUserPasswordReset(UserMapper.mapToDao(user).getEmail());
 	}
 	
 	@RequestMapping(value = "/forgot/{token}", method = RequestMethod.GET)
-	public void passwordForgot(@PathVariable("token") String token, HttpServletRequest request, HttpServletResponse response) throws IOException {
-		System.out.println(request.getContextPath());
-		response.sendRedirect(request.getContextPath() + token);
-
-		//response.sendRedirect("http://google.de");
+	public void checkPasswordResetToken(@PathVariable("token") String token, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		String redirectURL = request.getRequestURL().toString();
+		redirectURL = redirectURL.replaceAll(request.getRequestURI(), "");
+		redirectURL = redirectURL + "/users/reset/" + token;
+		
+		userService.checkPasswordResetToken(token);
+		
+		response.sendRedirect(redirectURL + token);
 	}
 	
+	@RequestMapping(value = "/reset/{token}", method = RequestMethod.POST)
+	public void resetPassword(@PathVariable("token") String token, @RequestBody UserDto userDto) throws Exception {
+		UserDao user = UserMapper.mapToDao(userDto); 
+		userService.resetUserPassword(user, token);
+	}
+	
+	@RequestMapping(value = "/reset/{token}", method = RequestMethod.GET)
+	public void resetPassword() {
+		
+	}
 }
