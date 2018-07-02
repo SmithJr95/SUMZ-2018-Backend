@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -71,9 +72,11 @@ public class EmailService implements IEmailService {
         MimeBodyPart messageBodyPart = new MimeBodyPart();
         messageBodyPart.setContent(html, "text/html");
         
+        Resource resource = new ClassPathResource("/email-templates/logo.png");
+        
         MimeBodyPart attachPart = new MimeBodyPart();
         
-        attachPart.attachFile("src/main/resources/email-templates/logo.png");
+        attachPart.attachFile(resource.getFile());
         
         multipart.addBodyPart(attachPart);
         multipart.addBodyPart(messageBodyPart);
