@@ -17,12 +17,10 @@ public class IsValidAccountingFigureCombinationValidator implements ConstraintVa
 		
 		EnumSet<MultiPeriodAccountingFigureNames> validCombination1 = EnumSet.of(
 				MultiPeriodAccountingFigureNames.Liabilities,
-				MultiPeriodAccountingFigureNames.FreeCashFlows,
-				MultiPeriodAccountingFigureNames.InterestOnLiabilities);
+				MultiPeriodAccountingFigureNames.FreeCashFlows);
 		
 		EnumSet<MultiPeriodAccountingFigureNames> validCombination2 = EnumSet.of(
 				MultiPeriodAccountingFigureNames.Liabilities,
-				MultiPeriodAccountingFigureNames.InterestOnLiabilities,
 				MultiPeriodAccountingFigureNames.AdditionalCosts,
 				MultiPeriodAccountingFigureNames.AdditionalIncome,
 				MultiPeriodAccountingFigureNames.CostOfMaterial,

@@ -39,10 +39,11 @@ public class ScenarioPostRequestDtoTest {
 		request.setScenarioName("xyz");
 		request.setScenarioDescription("xyz");
 		request.setPeriods(2);
-		request.setBusinessTaxRate(50.0);
-		request.setCorporateTaxRate(50.0);
-		request.setSolidaryTaxRate(50.0);
-		request.setCostOfEquity(50.0);
+		request.setBusinessTaxRate(0.5);
+		request.setCorporateTaxRate(0.5);
+		request.setSolidaryTaxRate(0.5);
+		request.setEquityInterestRate(0.5);
+		request.setInterestOnLiabilitiesRate(0.3);
 	
 		List<TimeSeriesItem> freeCashFlowsTimeSeries = new ArrayList<TimeSeriesItem>();
 		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 4), 50.0));
@@ -64,12 +65,7 @@ public class ScenarioPostRequestDtoTest {
 		liabilities.setIsHistoric(true);
 		liabilities.setTimeSeries(liabilitiesTimeSeries);
 		
-		MultiPeriodAccountingFigure interestOnLiabilities = new MultiPeriodAccountingFigure();
-		interestOnLiabilities.setIsHistoric(true);
-		interestOnLiabilities.setTimeSeries(interestOnLiabilitiesTimeSeries);
-		
 		request.setFreeCashFlows(freeCashFlows);
-		request.setInterestOnLiabilities(interestOnLiabilities);
 		request.setLiabilities(liabilities);
 		
 		this.validRequest = request;
@@ -205,6 +201,45 @@ public class ScenarioPostRequestDtoTest {
 	}
 	
 	@Test
+	public void validation_interestOnLiabilitiesRateNull_violationsExist() throws Exception {
+		//Arrange
+		ScenarioPostRequestDto request = this.validRequest;
+		request.setInterestOnLiabilitiesRate(null);
+		
+		//Act
+		Set<ConstraintViolation<ScenarioPostRequestDto>> violations = validator.validate(request);
+		
+		//Assert
+		assertTrue(violations.size() > 0);
+	}
+	
+	@Test
+	public void validation_interestOnLiabilitiesBelowMinValue_violationsExist() throws Exception {
+		//Arrange
+		ScenarioPostRequestDto request = this.validRequest;
+		request.setInterestOnLiabilitiesRate(-0.01);
+		
+		//Act
+		Set<ConstraintViolation<ScenarioPostRequestDto>> violations = validator.validate(request);
+		
+		//Assert
+		assertTrue(violations.size() > 0);
+	}
+	
+	@Test
+	public void validation_interestOnLiabilitiesAboveMaxValue_violationsExist() throws Exception {
+		//Arrange
+		ScenarioPostRequestDto request = this.validRequest;
+		request.setInterestOnLiabilitiesRate(1.01);
+		
+		//Act
+		Set<ConstraintViolation<ScenarioPostRequestDto>> violations = validator.validate(request);
+		
+		//Assert
+		assertTrue(violations.size() > 0);
+	}
+	
+	@Test
 	public void validation_businessTaxRateNull_violationsExist() throws Exception {
 		//Arrange
 		ScenarioPostRequestDto request = this.validRequest;
@@ -221,7 +256,7 @@ public class ScenarioPostRequestDtoTest {
 	public void validation_businessTaxRateLessThanMinValue_violationsExist() throws Exception {
 		//Arrange
 		ScenarioPostRequestDto request = this.validRequest;
-		request.setBusinessTaxRate(-1.0);
+		request.setBusinessTaxRate(-0.1);
 		
 		//Act
 		Set<ConstraintViolation<ScenarioPostRequestDto>> violations = validator.validate(request);
@@ -234,7 +269,7 @@ public class ScenarioPostRequestDtoTest {
 	public void validation_businessTaxRateGreaterThanMaxValue_violationsExist() throws Exception {
 		//Arrange
 		ScenarioPostRequestDto request = this.validRequest;
-		request.setBusinessTaxRate(100.01);
+		request.setBusinessTaxRate(1.01);
 		
 		//Act
 		Set<ConstraintViolation<ScenarioPostRequestDto>> violations = validator.validate(request);
@@ -260,7 +295,7 @@ public class ScenarioPostRequestDtoTest {
 	public void validation_corporateTaxRateLessThanMinValue_violationsExist() throws Exception {
 		//Arrange
 		ScenarioPostRequestDto request = this.validRequest;
-		request.setCorporateTaxRate(-1.0);
+		request.setCorporateTaxRate(-0.1);
 		
 		//Act
 		Set<ConstraintViolation<ScenarioPostRequestDto>> violations = validator.validate(request);
@@ -273,7 +308,7 @@ public class ScenarioPostRequestDtoTest {
 	public void validation_corporateTaxRateGreaterThanMaxValue_violationsExist() throws Exception {
 		//Arrange
 		ScenarioPostRequestDto request = this.validRequest;
-		request.setCorporateTaxRate(100.01);
+		request.setCorporateTaxRate(1.01);
 		
 		//Act
 		Set<ConstraintViolation<ScenarioPostRequestDto>> violations = validator.validate(request);
@@ -299,7 +334,7 @@ public class ScenarioPostRequestDtoTest {
 	public void validation_solidaryTaxRateLessThanMinValue_violationsExist() throws Exception {
 		//Arrange
 		ScenarioPostRequestDto request = this.validRequest;
-		request.setSolidaryTaxRate(-1.0);
+		request.setSolidaryTaxRate(-0.1);
 		
 		//Act
 		Set<ConstraintViolation<ScenarioPostRequestDto>> violations = validator.validate(request);
@@ -312,7 +347,7 @@ public class ScenarioPostRequestDtoTest {
 	public void validation_solidaryTaxRateGreaterThanMaxValue_violationsExist() throws Exception {
 		//Arrange
 		ScenarioPostRequestDto request = this.validRequest;
-		request.setSolidaryTaxRate(100.01);
+		request.setSolidaryTaxRate(1.01);
 		
 		//Act
 		Set<ConstraintViolation<ScenarioPostRequestDto>> violations = validator.validate(request);
@@ -322,10 +357,10 @@ public class ScenarioPostRequestDtoTest {
 	}
 	
 	@Test
-	public void validation_costOfEquityNull_violationsExist() throws Exception {
+	public void validation_equityInterestRateNull_violationsExist() throws Exception {
 		//Arrange
 		ScenarioPostRequestDto request = this.validRequest;
-		request.setCostOfEquity(null);
+		request.setEquityInterestRate(null);
 		
 		//Act
 		Set<ConstraintViolation<ScenarioPostRequestDto>> violations = validator.validate(request);
@@ -335,10 +370,10 @@ public class ScenarioPostRequestDtoTest {
 	}
 	
 	@Test
-	public void validation_costOfEquityLessThanMinValue_violationsExist() throws Exception {
+	public void validation_equityInterestRateLessThanMinValue_violationsExist() throws Exception {
 		//Arrange
 		ScenarioPostRequestDto request = this.validRequest;
-		request.setCostOfEquity(-1.0);
+		request.setEquityInterestRate(-0.11);
 		
 		//Act
 		Set<ConstraintViolation<ScenarioPostRequestDto>> violations = validator.validate(request);
@@ -348,10 +383,10 @@ public class ScenarioPostRequestDtoTest {
 	}
 	
 	@Test
-	public void validation_costOfEquityGreaterThanMaxValue_violationsExist() throws Exception {
+	public void validation_equityInterestRateGreaterThanMaxValue_violationsExist() throws Exception {
 		//Arrange
 		ScenarioPostRequestDto request = this.validRequest;
-		request.setCostOfEquity(1000.01);
+		request.setEquityInterestRate(1.01);
 		
 		//Act
 		Set<ConstraintViolation<ScenarioPostRequestDto>> violations = validator.validate(request);
@@ -495,14 +530,9 @@ public class ScenarioPostRequestDtoTest {
 		List<TimeSeriesItem> liabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
 		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(1999), 50.0));
 		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001), 60.0));
-
-		List<TimeSeriesItem> interestOnLiabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
-		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000), 50.0));
-		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001), 60.0));
 		
 		request.getFreeCashFlows().setTimeSeries(freeCashFlowsTimeSeries);
 		request.getLiabilities().setTimeSeries(liabilitiesTimeSeries);
-		request.getInterestOnLiabilities().setTimeSeries(interestOnLiabilitiesTimeSeries);
 		
 		//Act
 		Set<ConstraintViolation<ScenarioPostRequestDto>> violations = validator.validate(request);
@@ -556,10 +586,10 @@ public class ScenarioPostRequestDtoTest {
 		//Arrange
 		ScenarioPostRequestDto request = this.validRequest;
 		
-		List<TimeSeriesItem> interestOnLiabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
-		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 1), 60.0));
+		List<TimeSeriesItem> freeCashFlowsTimeSeries = new ArrayList<TimeSeriesItem>();
+		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 1), 60.0));
 		
-		request.getInterestOnLiabilities().setTimeSeries(interestOnLiabilitiesTimeSeries);
+		request.getFreeCashFlows().setTimeSeries(freeCashFlowsTimeSeries);
 		
 		//Act
 		Set<ConstraintViolation<ScenarioPostRequestDto>> violations = validator.validate(request);
@@ -573,11 +603,11 @@ public class ScenarioPostRequestDtoTest {
 		//Arrange
 		ScenarioPostRequestDto request = this.validRequest;
 		
-		List<TimeSeriesItem> interestOnLiabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
-		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 1), 60.0));
-		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 2), 60.0));
+		List<TimeSeriesItem> freeCashFlowsTimeSeries = new ArrayList<TimeSeriesItem>();
+		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 1), 60.0));
+		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 2), 60.0));
 		
-		request.getInterestOnLiabilities().setTimeSeries(interestOnLiabilitiesTimeSeries);
+		request.getFreeCashFlows().setTimeSeries(freeCashFlowsTimeSeries);
 		
 		//Act
 		Set<ConstraintViolation<ScenarioPostRequestDto>> violations = validator.validate(request);
@@ -591,11 +621,11 @@ public class ScenarioPostRequestDtoTest {
 		//Arrange
 		ScenarioPostRequestDto request = this.validRequest;
 		
-		List<TimeSeriesItem> interestOnLiabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
-		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 4), 60.0));
-		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 3), 60.0));
+		List<TimeSeriesItem> freeCashFlowsTimeSeries = new ArrayList<TimeSeriesItem>();
+		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 4), 60.0));
+		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 3), 60.0));
 		
-		request.getInterestOnLiabilities().setTimeSeries(interestOnLiabilitiesTimeSeries);
+		request.getFreeCashFlows().setTimeSeries(freeCashFlowsTimeSeries);
 		
 		//Act
 		Set<ConstraintViolation<ScenarioPostRequestDto>> violations = validator.validate(request);
@@ -614,9 +644,6 @@ public class ScenarioPostRequestDtoTest {
 		
 		List<TimeSeriesItem> liabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
 		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 3), 50.0));
-
-		List<TimeSeriesItem> interestOnLiabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
-		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 4), 50.0));
 		
 		MultiPeriodAccountingFigure freeCashFlows = new MultiPeriodAccountingFigure();
 		freeCashFlows.setIsHistoric(false);
@@ -626,12 +653,7 @@ public class ScenarioPostRequestDtoTest {
 		liabilities.setIsHistoric(false);
 		liabilities.setTimeSeries(liabilitiesTimeSeries);
 		
-		MultiPeriodAccountingFigure interestOnLiabilities = new MultiPeriodAccountingFigure();
-		interestOnLiabilities.setIsHistoric(false);
-		interestOnLiabilities.setTimeSeries(interestOnLiabilitiesTimeSeries);
-		
 		request.setFreeCashFlows(freeCashFlows);
-		request.setInterestOnLiabilities(interestOnLiabilities);
 		request.setLiabilities(liabilities);
 		
 		//Act
@@ -654,10 +676,6 @@ public class ScenarioPostRequestDtoTest {
 		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 3), 50.0));
 		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 4), 50.0));
 		
-		List<TimeSeriesItem> interestOnLiabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
-		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 1), 60.0));
-		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 2), 60.0));
-		
 		MultiPeriodAccountingFigure freeCashFlows = new MultiPeriodAccountingFigure();
 		freeCashFlows.setIsHistoric(false);
 		freeCashFlows.setTimeSeries(freeCashFlowsTimeSeries);
@@ -666,12 +684,7 @@ public class ScenarioPostRequestDtoTest {
 		liabilities.setIsHistoric(false);
 		liabilities.setTimeSeries(liabilitiesTimeSeries);
 		
-		MultiPeriodAccountingFigure interestOnLiabilities = new MultiPeriodAccountingFigure();
-		interestOnLiabilities.setIsHistoric(false);
-		interestOnLiabilities.setTimeSeries(interestOnLiabilitiesTimeSeries);
-		
 		request.setFreeCashFlows(freeCashFlows);
-		request.setInterestOnLiabilities(interestOnLiabilities);
 		request.setLiabilities(liabilities);
 		
 		//Act
@@ -696,11 +709,6 @@ public class ScenarioPostRequestDtoTest {
 		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 4), 50.0));
 		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 1), 60.0));
 		
-		List<TimeSeriesItem> interestOnLiabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
-		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 4), 50.0));
-		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 1), 60.0));
-		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 2), 60.0));
-		
 		MultiPeriodAccountingFigure freeCashFlows = new MultiPeriodAccountingFigure();
 		freeCashFlows.setIsHistoric(false);
 		freeCashFlows.setTimeSeries(freeCashFlowsTimeSeries);
@@ -709,12 +717,7 @@ public class ScenarioPostRequestDtoTest {
 		liabilities.setIsHistoric(false);
 		liabilities.setTimeSeries(liabilitiesTimeSeries);
 		
-		MultiPeriodAccountingFigure interestOnLiabilities = new MultiPeriodAccountingFigure();
-		interestOnLiabilities.setIsHistoric(false);
-		interestOnLiabilities.setTimeSeries(interestOnLiabilitiesTimeSeries);
-		
 		request.setFreeCashFlows(freeCashFlows);
-		request.setInterestOnLiabilities(interestOnLiabilities);
 		request.setLiabilities(liabilities);
 		
 		//Act
@@ -737,10 +740,6 @@ public class ScenarioPostRequestDtoTest {
 		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 1), 50.0));
 		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 2), 50.0));
 		
-		List<TimeSeriesItem> interestOnLiabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
-		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 1), 60.0));
-		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 2), 60.0));
-		
 		MultiPeriodAccountingFigure freeCashFlows = new MultiPeriodAccountingFigure();
 		freeCashFlows.setIsHistoric(false);
 		freeCashFlows.setTimeSeries(freeCashFlowsTimeSeries);
@@ -749,12 +748,7 @@ public class ScenarioPostRequestDtoTest {
 		liabilities.setIsHistoric(false);
 		liabilities.setTimeSeries(liabilitiesTimeSeries);
 		
-		MultiPeriodAccountingFigure interestOnLiabilities = new MultiPeriodAccountingFigure();
-		interestOnLiabilities.setIsHistoric(false);
-		interestOnLiabilities.setTimeSeries(interestOnLiabilitiesTimeSeries);
-		
 		request.setFreeCashFlows(freeCashFlows);
-		request.setInterestOnLiabilities(interestOnLiabilities);
 		request.setLiabilities(liabilities);
 		
 		//Act
@@ -771,11 +765,12 @@ public class ScenarioPostRequestDtoTest {
 		request.setScenarioName("xyz");
 		request.setScenarioDescription("xyz");
 		request.setPeriods(4);
-		request.setBusinessTaxRate(50.0);
-		request.setCorporateTaxRate(50.0);
-		request.setSolidaryTaxRate(50.0);
-		request.setCostOfEquity(50.0);
-	
+		request.setBusinessTaxRate(0.5);
+		request.setCorporateTaxRate(0.5);
+		request.setSolidaryTaxRate(0.5);
+		request.setEquityInterestRate(0.5);
+		request.setInterestOnLiabilitiesRate(0.5);
+		
 		List<TimeSeriesItem> freeCashFlowsTimeSeries = new ArrayList<TimeSeriesItem>();
 		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000), 50.0));
 		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001), 60.0));
@@ -788,12 +783,6 @@ public class ScenarioPostRequestDtoTest {
 		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001), 50.0));
 		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2002), 60.0));
 		
-		List<TimeSeriesItem> interestOnLiabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
-		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(1996), 50.0));
-		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(1997), 60.0));
-		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(1998), 50.0));
-		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(1999), 60.0));
-		
 		MultiPeriodAccountingFigure freeCashFlows = new MultiPeriodAccountingFigure();
 		freeCashFlows.setIsHistoric(false);
 		freeCashFlows.setTimeSeries(freeCashFlowsTimeSeries);
@@ -802,12 +791,7 @@ public class ScenarioPostRequestDtoTest {
 		liabilities.setIsHistoric(false);
 		liabilities.setTimeSeries(liabilitiesTimeSeries);
 		
-		MultiPeriodAccountingFigure interestOnLiabilities = new MultiPeriodAccountingFigure();
-		interestOnLiabilities.setIsHistoric(true);
-		interestOnLiabilities.setTimeSeries(interestOnLiabilitiesTimeSeries);
-		
 		request.setFreeCashFlows(freeCashFlows);
-		request.setInterestOnLiabilities(interestOnLiabilities);
 		request.setLiabilities(liabilities);
 		
 		//Act
@@ -824,11 +808,12 @@ public class ScenarioPostRequestDtoTest {
 		request.setScenarioName("xyz");
 		request.setScenarioDescription("xyz");
 		request.setPeriods(4);
-		request.setBusinessTaxRate(50.0);
-		request.setCorporateTaxRate(50.0);
-		request.setSolidaryTaxRate(50.0);
-		request.setCostOfEquity(50.0);
-	
+		request.setBusinessTaxRate(0.5);
+		request.setCorporateTaxRate(0.5);
+		request.setSolidaryTaxRate(0.5);
+		request.setEquityInterestRate(0.5);
+		request.setInterestOnLiabilitiesRate(0.5);
+		
 		List<TimeSeriesItem> freeCashFlowsTimeSeries = new ArrayList<TimeSeriesItem>();
 		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(1999, 4), 50.0));
 		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 1), 60.0));
@@ -841,12 +826,6 @@ public class ScenarioPostRequestDtoTest {
 		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 2), 50.0));
 		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 3), 60.0));
 		
-		List<TimeSeriesItem> interestOnLiabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
-		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 4), 50.0));
-		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 1), 60.0));
-		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 2), 50.0));
-		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 3), 60.0));
-		
 		MultiPeriodAccountingFigure freeCashFlows = new MultiPeriodAccountingFigure();
 		freeCashFlows.setIsHistoric(true);
 		freeCashFlows.setTimeSeries(freeCashFlowsTimeSeries);
@@ -855,12 +834,7 @@ public class ScenarioPostRequestDtoTest {
 		liabilities.setIsHistoric(true);
 		liabilities.setTimeSeries(liabilitiesTimeSeries);
 		
-		MultiPeriodAccountingFigure interestOnLiabilities = new MultiPeriodAccountingFigure();
-		interestOnLiabilities.setIsHistoric(false);
-		interestOnLiabilities.setTimeSeries(interestOnLiabilitiesTimeSeries);
-		
 		request.setFreeCashFlows(freeCashFlows);
-		request.setInterestOnLiabilities(interestOnLiabilities);
 		request.setLiabilities(liabilities);
 		
 		//Act
@@ -877,10 +851,11 @@ public class ScenarioPostRequestDtoTest {
 		request.setScenarioName("xyz");
 		request.setScenarioDescription("xyz");
 		request.setPeriods(2);
-		request.setBusinessTaxRate(50.0);
-		request.setCorporateTaxRate(50.0);
-		request.setSolidaryTaxRate(50.0);
-		request.setCostOfEquity(50.0);
+		request.setBusinessTaxRate(0.5);
+		request.setCorporateTaxRate(0.5);
+		request.setSolidaryTaxRate(0.5);
+		request.setEquityInterestRate(0.5);
+		request.setInterestOnLiabilitiesRate(0.5);
 				
 		List<TimeSeriesItem> liabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
 		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 1), 50.0));
@@ -888,13 +863,6 @@ public class ScenarioPostRequestDtoTest {
 		MultiPeriodAccountingFigure liabilities = new MultiPeriodAccountingFigure();
 		liabilities.setIsHistoric(false);
 		liabilities.setTimeSeries(liabilitiesTimeSeries);
-		
-		List<TimeSeriesItem> interestOnLiabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
-		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 2), 50.0));
-		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 3), 50.0));
-		MultiPeriodAccountingFigure interestOnLiabilities = new MultiPeriodAccountingFigure();
-		interestOnLiabilities.setIsHistoric(false);
-		interestOnLiabilities.setTimeSeries(interestOnLiabilitiesTimeSeries);
 		
 		List<TimeSeriesItem> depreciationTimeSeries = new ArrayList<TimeSeriesItem>();
 		depreciationTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 2), 50.0));
@@ -953,7 +921,6 @@ public class ScenarioPostRequestDtoTest {
 		costOfStaff.setTimeSeries(costOfStaffTimeSeries);
 		
 		request.setLiabilities(liabilities);
-		request.setInterestOnLiabilities(interestOnLiabilities);
 		request.setAdditionalCosts(additionalCosts);
 		request.setAdditionalIncome(additionalIncome);
 		request.setCostOfMaterial(costOfMaterial);

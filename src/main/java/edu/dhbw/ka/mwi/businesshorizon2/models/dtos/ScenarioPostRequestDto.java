@@ -38,26 +38,28 @@ public class ScenarioPostRequestDto {
 	private Integer periods;
 	
 	@NotNull(message = "businessTaxRate must not be null.")
-	@DecimalMin(value="0.0", message="businessTaxRate must be >=0 and <=100.")
-	@DecimalMax(value="100.0", message="businessTaxRate must be >= 0 and <=100.")
+	@DecimalMin(value="0.0", message="businessTaxRate must be >=0 and <=1.0.")
+	@DecimalMax(value="1.0", message="businessTaxRate must be >=0 and <=1.0.")
 	private Double businessTaxRate;
 	
 	@NotNull(message = "corporateTaxRate must not be null.")
-	@DecimalMin(value="0.0", message="corporateTaxRate must be >=0 and <=100.")
-	@DecimalMax(value="100.0", message="corporateTaxRate must be >=0 and <=100.")
+	@DecimalMin(value="0.0", message="corporateTaxRate must be >=0 and <=1.0.")
+	@DecimalMax(value="1.0", message="corporateTaxRate must be >=0 and <=1.0.")
 	private Double corporateTaxRate;
 	
 	@NotNull(message = "solidaryTaxRate must not be null.")
-	@DecimalMin(value="0.0", message="solidaryTaxRate must be >=0 and <=100.")
-	@DecimalMax(value="100.0", message="solidaryTaxRate must be >=0 and <=100.")
+	@DecimalMin(value="0.0", message="solidaryTaxRate must be >=0 and <=1.0.")
+	@DecimalMax(value="1.0", message="solidaryTaxRate must be >=0 and <=1.0.")
 	private Double solidaryTaxRate;
 	
 	@NotNull(message = "costOfEquity must not be null.")
-	@DecimalMin(value="0.0", message="costOfEquity must be >=0 and <=1000.")
-	@DecimalMax(value="1000.0", message="costOfEquity must be >=0 and <=1000.")
-	private Double costOfEquity;
+	@DecimalMin(value="-0.1", message="costOfEquity must be >=-0.1 and <=1.0.")
+	@DecimalMax(value="1.0", message="costOfEquity must be >=-0.1 and <=1.0.")
+	private Double equityInterestRate;
 	
 	@NotNull(message = "interestOnLiabilitiesRate must not be null.")
+	@DecimalMin(value="0.0", message="interestOnLiabilitiesRate must be >=0.0 and <=1.0.")
+	@DecimalMax(value="1.0", message="interestOnLiabilitiesRate must be >=0.0 and <=1.0.")
 	private Double interestOnLiabilitiesRate;
 	
 	@Valid
@@ -108,8 +110,8 @@ public class ScenarioPostRequestDto {
 	public Double getSolidaryTaxRate() { return solidaryTaxRate; }
 	public void setSolidaryTaxRate(Double solidaryTaxRate) { this.solidaryTaxRate = solidaryTaxRate; }
 	
-	public Double getCostOfEquity() { return costOfEquity; }
-	public void setCostOfEquity(Double costOfEquity) { this.costOfEquity = costOfEquity; }
+	public Double getEquityInterestRate() { return equityInterestRate; }
+	public void setEquityInterestRate(Double equityInterestRate) { this.equityInterestRate = equityInterestRate; }
 	
 	public MultiPeriodAccountingFigure getRevenue() { return revenue; }
 	public void setRevenue(MultiPeriodAccountingFigure revenue) {
@@ -141,11 +143,8 @@ public class ScenarioPostRequestDto {
 		this.additionalCosts.setFigureName(MultiPeriodAccountingFigureNames.AdditionalCosts);
 	}
 	
-	public MultiPeriodAccountingFigure getInterestOnLiabilities() { return interestOnLiabilities; }
-	public void setInterestOnLiabilities(MultiPeriodAccountingFigure interestOnLiabilites) { 
-		this.interestOnLiabilities = interestOnLiabilites; 
-		this.interestOnLiabilities.setFigureName(MultiPeriodAccountingFigureNames.InterestOnLiabilities);
-	}
+	public Double getInterestOnLiabilitiesRate() { return interestOnLiabilitiesRate; }
+	public void setInterestOnLiabilitiesRate(Double interestOnLiabilitiesRate) { this.interestOnLiabilitiesRate = interestOnLiabilitiesRate; }
 	
 	public MultiPeriodAccountingFigure getInvestments() { return investments; }
 	public void setInvestments(MultiPeriodAccountingFigure investments) { 
@@ -180,7 +179,6 @@ public class ScenarioPostRequestDto {
 	public List<MultiPeriodAccountingFigure> getAllMultiPeriodAccountingFigures(){
 		List<MultiPeriodAccountingFigure> multiPeriodAccountingFigures = new ArrayList<MultiPeriodAccountingFigure>();
 		
-		multiPeriodAccountingFigures.add(this.interestOnLiabilities);
 		multiPeriodAccountingFigures.add(this.depreciation);
 		multiPeriodAccountingFigures.add(this.additionalIncome);
 		multiPeriodAccountingFigures.add(this.additionalCosts);
@@ -228,12 +226,12 @@ public class ScenarioPostRequestDto {
 		sb.append(this.solidaryTaxRate);
 		sb.append(", ");
 		sb.append(newLine);
-		sb.append("Cost Of Equity: ");
-		sb.append(this.costOfEquity);
+		sb.append("Equity Interest Rate: ");
+		sb.append(this.equityInterestRate);
 		sb.append(", ");
 		sb.append(newLine);
-		sb.append("Interest On Liabilites: ");
-		sb.append(this.interestOnLiabilities != null ? this.interestOnLiabilities : "");
+		sb.append("Interest On Liabilites Rate: ");
+		sb.append(this.interestOnLiabilitiesRate != null ? this.interestOnLiabilitiesRate : "");
 		sb.append(", ");
 		sb.append(newLine);
 		sb.append("Additional Income: ");
