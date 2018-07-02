@@ -49,9 +49,9 @@ public class AccountingFigureCalculationsService implements IAccountingFigureCal
 	public double calculateFlowToEquity(double freeCashFlow, double liabilities, double previousLiabilities, double interestOnLiabilities,  
 			double effectiveTaxRate) {
 
-		double taxShield = effectiveTaxRate * interestOnLiabilities;
+		double taxShield = effectiveTaxRate * interestOnLiabilities * liabilities;
 		double totalCashFlow = freeCashFlow + taxShield;
-		double flowToEquity = totalCashFlow - interestOnLiabilities + (liabilities - previousLiabilities);
+		double flowToEquity = totalCashFlow - (interestOnLiabilities * liabilities) + (liabilities - previousLiabilities);
 		
 		return flowToEquity; 
 	}	

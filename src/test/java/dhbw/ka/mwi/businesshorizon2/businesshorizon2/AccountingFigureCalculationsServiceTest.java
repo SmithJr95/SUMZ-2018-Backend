@@ -37,9 +37,9 @@ public class AccountingFigureCalculationsServiceTest {
 		double expectedRes = 220.0;
 		
 		double freeCashFlow = 202.52;
-		double liabilities = 500.0;
-		double previousLiabilities = 400.0;
-		double interestOnLiabilities = 112.0;  
+		double liabilities = 1400.00;
+		double previousLiabilities = 1300.00;
+		double interestOnLiabilities = 0.08;  
 		double effectiveTaxRate =0.26325;
 		
 		//Act
