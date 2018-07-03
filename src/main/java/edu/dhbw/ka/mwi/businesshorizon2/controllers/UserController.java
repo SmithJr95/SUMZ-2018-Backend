@@ -41,8 +41,9 @@ public class UserController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public UserDto addUser(@RequestBody UserDto userDto) throws Exception{
-		return UserMapper.mapToDto(userService.addUser(UserMapper.mapToDao(userDto)));
+	public UserDto addUser(@RequestBody UserDto userDto, HttpServletRequest request) throws Exception{
+		String host = request.getRequestURL().toString();
+		return UserMapper.mapToDto(userService.addUser(UserMapper.mapToDao(userDto), host));
 	}
 	
 	@RequestMapping(value = "/activate/{token}", method = RequestMethod.GET)
@@ -57,8 +58,8 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/forgot", method = RequestMethod.POST)
-	public void passwordForgot(@RequestBody UserDto user) throws Exception {
-		userService.requestUserPasswordReset(UserMapper.mapToDao(user).getEmail());
+	public void passwordForgot(@RequestBody UserDto user, HttpServletRequest request) throws Exception {
+		userService.requestUserPasswordReset(UserMapper.mapToDao(user).getEmail(), request.getRequestURL().toString());
 	}
 	
 	@RequestMapping(value = "/forgot/{token}", method = RequestMethod.GET)

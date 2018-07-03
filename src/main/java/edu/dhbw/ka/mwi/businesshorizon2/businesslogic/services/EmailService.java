@@ -6,6 +6,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.URLDataSource;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.internet.MimeBodyPart;
@@ -17,6 +20,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.mail.MailSender;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -72,11 +76,21 @@ public class EmailService implements IEmailService {
         MimeBodyPart messageBodyPart = new MimeBodyPart();
         messageBodyPart.setContent(html, "text/html");
         
-        Resource resource = new ClassPathResource("/email-templates/logo.png");
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        if (classLoader == null) {
+            classLoader = MailSender.class.getClassLoader();
+        }
+        
+        DataSource ds = new URLDataSource(classLoader.getResource("/email-templates/logo.png"));
+        
+        //Resource resource = new ClassPathResource("/email-templates/logo.png");
         
         MimeBodyPart attachPart = new MimeBodyPart();
+        attachPart.setDataHandler(new DataHandler(ds));
+        attachPart.setHeader("logo.png", "logo.png");
+        attachPart.setFileName("logo.png");
         
-        attachPart.attachFile(resource.getFile());
+        //attachPart.attachFile(resource.getFile());
         
         multipart.addBodyPart(attachPart);
         multipart.addBodyPart(messageBodyPart);

@@ -20,14 +20,15 @@ public interface IUserService {
     
     public UserDao findByEmail(String s);
 
-	UserDao addUser(UserDao user) throws MessagingException, JsonProcessingException, NoSuchAlgorithmException, UnsupportedEncodingException, Exception;
-
 	void activateUser(String token) throws JsonParseException, JsonMappingException, IOException;
 
 	UserPasswordResetTokenDao checkPasswordResetToken(String token) throws JsonParseException, JsonMappingException, IOException, Exception;
 
-	String requestUserPasswordReset(String email)
-			throws NoSuchAlgorithmException, JsonProcessingException, MessagingException, Exception;
-
 	void resetUserPassword(UserDao user, String tokenStr) throws JsonParseException, JsonMappingException, IOException, Exception;
+
+	UserDao addUser(UserDao user, String host) throws Exception;
+
+	String requestUserPasswordReset(String email, String host) throws Exception;
+
+	String encodePassword(String password);
 }

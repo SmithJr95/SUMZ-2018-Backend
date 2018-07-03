@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.IUserService;
+import edu.dhbw.ka.mwi.businesshorizon2.config.EmailConfig;
 import edu.dhbw.ka.mwi.businesshorizon2.config.SecurityConfig;
 import edu.dhbw.ka.mwi.businesshorizon2.dataaccess.interfaces.IRoleRepository;
 import edu.dhbw.ka.mwi.businesshorizon2.dataaccess.interfaces.IUserActivationTokenRepository;
@@ -38,6 +39,9 @@ public class UserService implements IUserService {
 	
     @Autowired 
     SecurityConfig securityConfig;
+    
+    @Autowired
+    EmailConfig emailConfig;
     
     @Autowired 
     UserActivationService userActivationService;
@@ -71,7 +75,7 @@ public class UserService implements IUserService {
 	}
 	
 	@Override
-	public UserDao addUser(UserDao user) throws Exception {
+	public UserDao addUser(UserDao user, String host) throws Exception {
 		
 		UserDao userFromDB = userRepository.findByEmail(user.getEmail());
 		
@@ -95,7 +99,7 @@ public class UserService implements IUserService {
 		String link = objectMapper.writeValueAsString(userToken); 
 		
 		link = Base64.getEncoder().encodeToString(link.getBytes());
-		link = "http://localhost:8080/users/activate/" + link;
+		link = host + "/activate/" + link;
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("email", user.getEmail());
@@ -103,7 +107,7 @@ public class UserService implements IUserService {
 		map.put("imageResourceName", "logo.png");
 		
 		emailService.sendEmail(
-				"sumz1718@gmx.de", 
+				emailConfig.getUsername(), 
 				user.getEmail(), 
 				"Ihre Registrierung bei business horizon", 
 				"activation",
@@ -131,11 +135,13 @@ public class UserService implements IUserService {
 		if (tokenIsValid && tokenIsUnexpired && userIsInactive) {
 			user.setIsActive(true);
 			userRepository.save(user);
+			userActivationTokenRepository.delete(tokenFromDB);
 		}		
+		
 	}
 	
 	@Override 
-	public String requestUserPasswordReset(String email) throws Exception{
+	public String requestUserPasswordReset(String email, String host) throws Exception{
 		UserDao user = userRepository.findByEmail(email);
 		
 		if (user == null){
@@ -153,9 +159,19 @@ public class UserService implements IUserService {
 		String token = objectMapper.writeValueAsString(userToken); 
 		
 		token 		= Base64.getEncoder().encodeToString(token.getBytes());
-		String link = "http://localhost:8080/users/forgot/" + token;
+		String link = host + "/" + token;
 		
-
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("email", user.getEmail());
+		map.put("link", link);
+		map.put("imageResourceName", "logo.png");
+		
+		emailService.sendEmail(
+				emailConfig.getUsername(), 
+				user.getEmail(), 
+				"Zurücksetzen Ihres Passworts bei business horizon", 
+				"password-reset",
+				map);
 		
 		return token;
 	}
@@ -199,9 +215,11 @@ public class UserService implements IUserService {
 		UserDao userFromDB = userRepository.findById(token.getUserId()).get();	
 		userFromDB.setPassword(encodePassword(user.getPassword()));
 		userRepository.save(userFromDB);
+		userPasswordResetTokenRepository.delete(token);
 		
 	}
 	
+	@Override
 	public String encodePassword(String password) {
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(securityConfig.getEncodingStrength());
 		return (passwordEncoder.encode(password));
