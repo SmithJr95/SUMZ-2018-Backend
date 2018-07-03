@@ -2,6 +2,7 @@ package edu.dhbw.ka.mwi.businesshorizon2.businesslogic.services;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -98,7 +99,7 @@ public class UserService implements IUserService {
 		objectMapper.findAndRegisterModules();
 		String link = objectMapper.writeValueAsString(userToken); 
 		
-		link = Base64.getEncoder().encodeToString(link.getBytes());
+		link = Base64.getEncoder().encodeToString(link.getBytes(StandardCharsets.UTF_8));
 		link = host + "/activate/" + link;
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -158,8 +159,8 @@ public class UserService implements IUserService {
 		objectMapper.findAndRegisterModules();
 		String token = objectMapper.writeValueAsString(userToken); 
 		
-		token 		= Base64.getEncoder().encodeToString(token.getBytes());
-		String link = host + "/" + token;
+		token 		= Base64.getEncoder().encodeToString(token.getBytes(StandardCharsets.UTF_8));
+		String link = host + "/users/reset/" + token;
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("email", user.getEmail());

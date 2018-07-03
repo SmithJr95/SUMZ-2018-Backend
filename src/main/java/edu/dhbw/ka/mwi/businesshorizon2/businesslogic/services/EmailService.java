@@ -1,7 +1,7 @@
 package edu.dhbw.ka.mwi.businesshorizon2.businesslogic.services;
 
-import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Properties;
@@ -17,10 +17,6 @@ import javax.mail.internet.MimeMultipart;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-import org.springframework.mail.MailSender;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -76,24 +72,14 @@ public class EmailService implements IEmailService {
         MimeBodyPart messageBodyPart = new MimeBodyPart();
         messageBodyPart.setContent(html, "text/html");
         
-       ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        if (classLoader == null) {
-            classLoader = MailSender.class.getClassLoader();
-        }
+        multipart.addBodyPart(messageBodyPart);
         
-        /*         DataSource ds = new URLDataSource(classLoader.getResource("/email-templates/logo.png"));
-        
-        MimeBodyPart attachPart = new MimeBodyPart();
-        attachPart.setDataHandler(new DataHandler(ds));
-        attachPart.setHeader("logo.png", "logo.png");
-        attachPart.setFileName("logo.png");
-        
-        multipart.addBodyPart(attachPart);*/
-        
+        DataSource ds = new URLDataSource(new URL("classpath:/email-templates/logo.png"));
+
         messageBodyPart = new MimeBodyPart();
-        DataSource ds = new URLDataSource(classLoader.getResource("/email-templates/logo.png"));
         messageBodyPart.setDataHandler(new DataHandler(ds));
-        messageBodyPart.setHeader("logo.png", "logo.png");
+        messageBodyPart.setHeader("Content-ID", "<logo.png>");
+        messageBodyPart.setFileName("logo.png");
         
         multipart.addBodyPart(messageBodyPart);
 
