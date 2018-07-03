@@ -76,23 +76,25 @@ public class EmailService implements IEmailService {
         MimeBodyPart messageBodyPart = new MimeBodyPart();
         messageBodyPart.setContent(html, "text/html");
         
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+       ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         if (classLoader == null) {
             classLoader = MailSender.class.getClassLoader();
         }
         
-        DataSource ds = new URLDataSource(classLoader.getResource("/email-templates/logo.png"));
-        
-        //Resource resource = new ClassPathResource("/email-templates/logo.png");
+        /*         DataSource ds = new URLDataSource(classLoader.getResource("/email-templates/logo.png"));
         
         MimeBodyPart attachPart = new MimeBodyPart();
         attachPart.setDataHandler(new DataHandler(ds));
         attachPart.setHeader("logo.png", "logo.png");
         attachPart.setFileName("logo.png");
         
-        //attachPart.attachFile(resource.getFile());
+        multipart.addBodyPart(attachPart);*/
         
-        multipart.addBodyPart(attachPart);
+        messageBodyPart = new MimeBodyPart();
+        DataSource ds = new URLDataSource(classLoader.getResource("/email-templates/logo.png"));
+        messageBodyPart.setDataHandler(new DataHandler(ds));
+        messageBodyPart.setHeader("logo.png", "logo.png");
+        
         multipart.addBodyPart(messageBodyPart);
 
 		msgHelper.setFrom(from);
