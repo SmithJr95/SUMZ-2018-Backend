@@ -36,9 +36,9 @@ public class UserController {
 	private UserService userService;
 	
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public UserDto addUser(@RequestBody @Valid UserDto userDto, HttpServletRequest request) throws Exception{
+	public void addUser(@RequestBody @Valid UserDto userDto, HttpServletRequest request) throws Exception{
 		String host = request.getRequestURL().toString();
-		return UserMapper.mapToDto(userService.addUser(UserMapper.mapToDao(userDto), host));
+		userService.addUser(UserMapper.mapToDao(userDto), host);
 	}
 	
 	@RequestMapping(value = "/activate/{token}", method = RequestMethod.GET)
