@@ -29,7 +29,6 @@ public class CompanyValuationServiceTests {
 		liabilities.add(19500.0);
 		liabilities.add(20000.0);
 		liabilities.add(20500.0);
-		liabilities.add(20500.0);
 		
 		double equityInterest = 0.09;
 		double outsideCapitalInterest = 0.05;
@@ -55,7 +54,6 @@ public class CompanyValuationServiceTests {
 		liabilities.add(19000.0);
 		liabilities.add(19500.0);
 		liabilities.add(20000.0);
-		liabilities.add(20500.0);
 		liabilities.add(20500.0);
 		
 		double corporateTax = 0.3;
@@ -83,7 +81,6 @@ public class CompanyValuationServiceTests {
 		liabilities.add(1260.0);
 		liabilities.add(1320.0);
 		liabilities.add(1330.0);
-		liabilities.add(1400.0);
 		liabilities.add(1400.0);
 		
 		double equityInterest = 0.09969137;

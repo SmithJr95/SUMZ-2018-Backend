@@ -19,6 +19,9 @@ public class CompanyValuationService implements ICompanyValuationService {
 		double companyValue = 0;
 		double presentValueOfCashflows = 0;
 		double capitalStructureEffect = 0;
+		
+		Double duplicateLast = liabilities.get(liabilities.size() - 1); 
+		liabilities.add(duplicateLast);
 
 		for (int i = 0; i < freeCashFlow.size() - 1; i++) {
 			presentValueOfCashflows += (freeCashFlow.get(i) / Math.pow((1 + equityInterest), i + 1));
@@ -43,6 +46,9 @@ public class CompanyValuationService implements ICompanyValuationService {
 
 	public FcfCompanyValuationResult performFcfCompanyValuationResult(List<Double> freeCashFlow, List<Double> liabilities,
 			 double equityInterest, double interestOnLiabilities, double effectiveTaxRate) {
+		
+		Double duplicateLast = liabilities.get(liabilities.size() - 1); 
+		liabilities.add(duplicateLast);
 		
 		double companyValue = 0;
 		double marketValueTotalAssets = 0;
@@ -99,6 +105,10 @@ public class CompanyValuationService implements ICompanyValuationService {
 
 	public FteCompanyValuationResult performFteCompanyValuationResult(List<Double> flowToEquity, List<Double> liabilities,
 			double equityInterest, double interestOnLiabilities, double effectiveTaxRate) {
+		
+		Double duplicateLast = liabilities.get(liabilities.size() - 1); 
+		liabilities.add(duplicateLast);
+		
 		double companyValue = 0;
 		double[] equity = new double[liabilities.size()];
 		double[] adjustedEquityInterest = new double[flowToEquity.size()];
