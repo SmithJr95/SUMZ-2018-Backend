@@ -36,18 +36,6 @@ public class ScenarioPostRequestDtoTest {
 	@Autowired
     private Validator validator;
 	
-	@Autowired
-	private IsContinuousTimeSeriesValidator isContinuousTimeSeriesValidator;
-	
-	@Autowired
-	private IsDateFormatConsistentValidator isDateFormatConsistentValidator;
-	
-	@Autowired
-	private IsValidAccountingFigureCombinationValidator isValidAccountingFigureCombinationValidator;
-	
-	@Autowired
-	private IsValidTimeSeriesRangesValidator isValidTimeSeriesRangesValidator;
-	
 	private ScenarioPostRequestDto validRequest;
 	
 	@Before

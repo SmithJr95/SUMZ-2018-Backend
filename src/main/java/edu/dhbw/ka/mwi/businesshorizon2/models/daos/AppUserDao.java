@@ -44,6 +44,10 @@ public class AppUserDao{
 
 	public AppUserDao() { }
 
+	public AppUserDao(String appUserPassword) {
+		this.appUserPassword = appUserPassword;
+	}
+	
 	public AppUserDao(Long appUserId, String email, String appUserPassword, List<AppRoleDao> appRoles, boolean isActive) {
 		this.appUserId = appUserId;
 		this.email = email; 

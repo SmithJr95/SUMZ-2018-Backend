@@ -27,6 +27,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.IUserService;
 import edu.dhbw.ka.mwi.businesshorizon2.config.EmailConfig;
 import edu.dhbw.ka.mwi.businesshorizon2.config.SecurityConfig;
+import edu.dhbw.ka.mwi.businesshorizon2.dataaccess.interfaces.IAppRoleRepository;
+import edu.dhbw.ka.mwi.businesshorizon2.dataaccess.interfaces.IAppUserRepository;
+import edu.dhbw.ka.mwi.businesshorizon2.dataaccess.interfaces.IUserActivationTokenRepository;
+import edu.dhbw.ka.mwi.businesshorizon2.dataaccess.interfaces.IUserPasswordResetTokenRepository;
+import edu.dhbw.ka.mwi.businesshorizon2.models.daos.AppRoleDao;
+import edu.dhbw.ka.mwi.businesshorizon2.models.daos.AppUserDao;
+import edu.dhbw.ka.mwi.businesshorizon2.models.daos.UserActivationTokenDao;
+import edu.dhbw.ka.mwi.businesshorizon2.models.daos.UserPasswordResetTokenDao;
 
 
 @Service
@@ -80,7 +88,7 @@ public class UserService implements IUserService {
 			throw new Exception(String.format("Es existiert schon ein Benutzerkonto für die Email-Adresse %s. Bitte wählen Sie eine andere Email-Adresse.", s));
 		}
 		
-		user.setPassword(encodePassword(user.getPassword()));
+		user.setPassword(encodePassword(user.getAppUserPassword()));
 		
 		ArrayList<AppRoleDao> roles = new ArrayList<AppRoleDao>();
 	
@@ -122,7 +130,7 @@ public class UserService implements IUserService {
 		objectMapper.findAndRegisterModules();
 		UserActivationTokenDao token = objectMapper.readValue(tokenStr, UserActivationTokenDao.class);
 		
-		UserActivationTokenDao tokenFromDB = userActivationTokenRepository.findById(token.getUserActivationTokenId()).get();
+		Optional<UserActivationTokenDao> tokenFromDB = userActivationTokenRepository.findById(token.getUserActivationTokenId());
 		AppUserDao user = userRepository.findById(token.getAppUser().getAppUserId()).get();
 		
 		UserActivationTokenDao tokenFromDBObject = null;
@@ -150,7 +158,7 @@ public class UserService implements IUserService {
 	
 	@Override 
 	public String requestUserPasswordReset(String email, String host) throws Exception{
-		UserDao user = userRepository.findByEmail(email);
+		AppUserDao user = userRepository.findByEmail(email);
 		
 		if (user == null){
 			throw new UsernameNotFoundException("Das Benutzerkonto " + email + " existiert nicht.");
@@ -193,8 +201,8 @@ public class UserService implements IUserService {
 		objectMapper.findAndRegisterModules();
 		UserPasswordResetTokenDao token = objectMapper.readValue(tokenStr, UserPasswordResetTokenDao.class);
 		
-		UserPasswordResetTokenDao tokenFromDB = userPasswordResetTokenRepository.findById(token.getId()).get();
-		UserDao user = userRepository.findById(token.getUserId()).get();
+		UserPasswordResetTokenDao tokenFromDB = userPasswordResetTokenRepository.findById(token.getUserActivationTokenId()).get();
+		AppUserDao user = userRepository.findById(token.getUserActivationTokenId()).get();
 		
 		Boolean tokenIsValid 		= token.equals(tokenFromDB);
 		Boolean tokenIsUnexpired 	= token.getExpirationDate().isAfter(LocalDateTime.now());
@@ -216,12 +224,12 @@ public class UserService implements IUserService {
 	}
 	
 	@Override 
-	public void resetUserPassword(UserDao user, String tokenStr) throws Exception {
+	public void resetUserPassword(AppUserDao user, String tokenStr) throws Exception {
 		
 		UserPasswordResetTokenDao token = checkPasswordResetToken(tokenStr);
 		
-		UserDao userFromDB = userRepository.findById(token.getUserId()).get();	
-		userFromDB.setPassword(encodePassword(user.getPassword()));
+		AppUserDao userFromDB = userRepository.findById(token.getUserActivationTokenId()).get();	
+		userFromDB.setPassword(encodePassword(user.getAppUserPassword()));
 		userRepository.save(userFromDB);
 		userPasswordResetTokenRepository.delete(token);
 		
@@ -234,22 +242,22 @@ public class UserService implements IUserService {
 	}
 	
 	@Override 
-	public void updateUserPassword(UserDao oldUser, UserDao newUser, Long userID) throws Exception {
+	public void updateUserPassword(AppUserDao oldUser, AppUserDao newUser, Long userID) throws Exception {
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(securityConfig.getEncodingStrength());
 		
-		oldUser.setPassword(oldUser.getPassword());
-		newUser.setPassword(encodePassword(newUser.getPassword()));
+		oldUser.setPassword(oldUser.getAppUserPassword());
+		newUser.setPassword(encodePassword(newUser.getAppUserPassword()));
 		
-		Optional<UserDao> userFromDb = userRepository.findById(userID);
+		Optional<AppUserDao> userFromDb = userRepository.findById(userID);
 		
 		if (userFromDb.isPresent()){
 			
-			UserDao userFromDbObject = userFromDb.get();
-			Boolean oldPasswordIsCorrect = passwordEncoder.matches(oldUser.getPassword(), userFromDbObject.getPassword());
+			AppUserDao userFromDbObject = userFromDb.get();
+			Boolean oldPasswordIsCorrect = passwordEncoder.matches(oldUser.getAppUserPassword(), userFromDbObject.getAppUserPassword());
 			
 			if (oldPasswordIsCorrect){
 				
-				userFromDbObject.setPassword(newUser.getPassword());
+				userFromDbObject.setPassword(newUser.getAppUserPassword());
 				userRepository.save(userFromDbObject);
 				
 			}else {
@@ -261,15 +269,15 @@ public class UserService implements IUserService {
 	}
 	
 	@Override
-	public void deleteUser(UserDao user, Long id) throws Exception {
+	public void deleteUser(AppUserDao user, Long id) throws Exception {
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(securityConfig.getEncodingStrength());
 		
-		Optional<UserDao> userFromDb = userRepository.findById(id);
+		Optional<AppUserDao> userFromDb = userRepository.findById(id);
 		
 		if (userFromDb.isPresent()) {
 			
-			UserDao userFromDbObject = userFromDb.get();
-			Boolean passwordIsCorrect = passwordEncoder.matches(user.getPassword(), userFromDbObject.getPassword());
+			AppUserDao userFromDbObject = userFromDb.get();
+			Boolean passwordIsCorrect = passwordEncoder.matches(user.getAppUserPassword(), userFromDbObject.getAppUserPassword());
 			if (passwordIsCorrect) {
 				userRepository.delete(userFromDbObject);
 			}else {

@@ -18,7 +18,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.services.UserService;
-import edu.dhbw.ka.mwi.businesshorizon2.models.daos.UserDao;
+import edu.dhbw.ka.mwi.businesshorizon2.models.daos.AppUserDao;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.UserDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.UserPutRequestDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.mappers.UserMapper;
@@ -68,7 +68,7 @@ public class UserController {
 	
 	@RequestMapping(value = "/reset/{token}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void resetPassword(@PathVariable("token") String token, @RequestBody @Valid UserDto userDto) throws Exception {
-		UserDao user = UserMapper.mapToDao(userDto); 
+		AppUserDao user = UserMapper.mapToDao(userDto); 
 		userService.resetUserPassword(user, token);
 	}
 	
@@ -80,15 +80,15 @@ public class UserController {
 	@RequestMapping(value = "/{id}/delete", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAuthority('ADMIN_USER') or hasAuthority('STANDARD_USER')")
 	public void deleteUser(@RequestBody @Valid UserDto user, @PathVariable Long id) throws Exception {
-		UserDao userDao = UserMapper.mapToDao(user);
+		AppUserDao userDao = UserMapper.mapToDao(user);
 		userService.deleteUser(userDao, id);
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAuthority('ADMIN_USER') or hasAuthority('STANDARD_USER')")
 	public void updateUser(@RequestBody @Valid UserPutRequestDto user, @PathVariable Long id) throws Exception {
-		UserDao oldUser = UserMapper.mapPutRequestOldToDao(user);
-		UserDao newUser = UserMapper.mapPutRequestNewToDao(user);
+		AppUserDao oldUser = UserMapper.mapPutRequestOldToDao(user);
+		AppUserDao newUser = UserMapper.mapPutRequestNewToDao(user);
 		userService.updateUserPassword(oldUser, newUser, id);
 	}
 }

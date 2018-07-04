@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.IUserPasswordResetService;
 import edu.dhbw.ka.mwi.businesshorizon2.dataaccess.interfaces.IUserPasswordResetTokenRepository;
-import edu.dhbw.ka.mwi.businesshorizon2.models.daos.UserDao;
+import edu.dhbw.ka.mwi.businesshorizon2.models.daos.AppUserDao;
 import edu.dhbw.ka.mwi.businesshorizon2.models.daos.UserPasswordResetTokenDao;
 
 @Service
@@ -17,16 +17,16 @@ public class UserPasswordResetService implements IUserPasswordResetService {
 	@Autowired
 	IUserPasswordResetTokenRepository userPasswordResetTokenRepository;
 	
-	public UserPasswordResetTokenDao createUserPasswordResetToken(UserDao user) throws NoSuchAlgorithmException {
+	public UserPasswordResetTokenDao createUserPasswordResetToken(AppUserDao user) throws NoSuchAlgorithmException {
 		
-		Long userId = user.getId();
+		Long userId = user.getAppUserId();
 		
 		LocalDateTime expirationDate = LocalDateTime.now(); 
 		expirationDate = expirationDate.plusDays(1); 
 		
 		String key = "SUMZ1718";
 		key += (user.getEmail().toString());
-		key += (user.getId().toString()); 
+		key += (user.getAppUserId().toString()); 
 		key += (expirationDate.toString());	
 		
 		MessageDigest md5 = MessageDigest.getInstance("MD5");
@@ -40,7 +40,7 @@ public class UserPasswordResetService implements IUserPasswordResetService {
 		
 		key = sb.toString();
 		
-		UserPasswordResetTokenDao userPasswordResetToken = new UserPasswordResetTokenDao(userId, expirationDate, key);
+		UserPasswordResetTokenDao userPasswordResetToken = new UserPasswordResetTokenDao(user.getAppUserId(), expirationDate, key);
 		userPasswordResetToken = userPasswordResetTokenRepository.save(userPasswordResetToken);
 		
 		return userPasswordResetToken; 

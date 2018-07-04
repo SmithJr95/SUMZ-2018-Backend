@@ -5,7 +5,7 @@ import java.util.List;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
 
-import edu.dhbw.ka.mwi.businesshorizon2.models.daos.RoleDao;
+import edu.dhbw.ka.mwi.businesshorizon2.models.daos.AppRoleDao;
 
 public class UserPutRequestDto {
 
@@ -28,11 +28,11 @@ public class UserPutRequestDto {
     @Pattern(regexp = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})")
     private String newPassword;
     
-    private List<RoleDao> roles;
+    private List<AppRoleDao> roles;
     
     private Boolean isActive;
     
-    public UserPutRequestDto(Long id, String email, String passwordOld, String passwordNew, List<RoleDao> roles, Boolean isActive) {
+    public UserPutRequestDto(Long id, String email, String passwordOld, String passwordNew, List<AppRoleDao> roles, Boolean isActive) {
     	this.id = id;
     	this.email = email;
     	this.oldPassword = passwordOld;
@@ -77,11 +77,11 @@ public class UserPutRequestDto {
     	return this.newPassword = passwordNew;
     }
 
-    public List<RoleDao> getRoles() {
+    public List<AppRoleDao> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<RoleDao> roles) {
+    public void setRoles(List<AppRoleDao> roles) {
         this.roles = roles;
     }
 

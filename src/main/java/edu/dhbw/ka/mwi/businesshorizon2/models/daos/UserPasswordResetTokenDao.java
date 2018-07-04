@@ -2,6 +2,7 @@ package edu.dhbw.ka.mwi.businesshorizon2.models.daos;
 
 import java.time.LocalDateTime;
 
+import javax.jws.soap.SOAPBinding.Use;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,6 +31,14 @@ public class UserPasswordResetTokenDao {
 	
 	@Column(name = "TokenKey", columnDefinition = "nvarchar")
 	private String tokenKey;
+	
+	public UserPasswordResetTokenDao() {}
+	
+	public UserPasswordResetTokenDao(Long userPasswordResetTokenId, LocalDateTime expirationDate, String tokenKey) {
+		this.userPasswordResetTokenId = userPasswordResetTokenId;
+		this.expirationDate = expirationDate;
+		this.tokenKey = tokenKey;
+	}
 	
 	public Long getUserActivationTokenId() { return userPasswordResetTokenId; }
 

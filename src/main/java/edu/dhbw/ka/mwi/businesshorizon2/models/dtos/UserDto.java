@@ -6,6 +6,8 @@ import java.util.List;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
 
+import edu.dhbw.ka.mwi.businesshorizon2.models.daos.AppRoleDao;
+
 
 public class UserDto {
 
@@ -31,8 +33,8 @@ public class UserDto {
     	this.id = id;
     	this.email = email;
     	this.password = password;
-    	this.roles = roles;
-    	this.isActive = isActive;
+    	this.setRoles(roles);
+    	this.setIsActive(isActive);
     }
     
   	public Long getId() { return id; }
@@ -43,5 +45,23 @@ public class UserDto {
 
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
+
+	public Boolean getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(Boolean isActive) {
+		this.isActive = isActive;
+	}
+
+	public List<AppRoleDao> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<AppRoleDao> roles) {
+		this.roles = roles;
+	}
+    
+    
 
 }
