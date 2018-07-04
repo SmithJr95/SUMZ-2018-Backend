@@ -14,15 +14,20 @@ import javax.validation.Validator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import edu.dhbw.ka.mwi.businesshorizon2.App;
-import edu.dhbw.ka.mwi.businesshorizon2.models.common.MultiPeriodAccountingFigure;
-import edu.dhbw.ka.mwi.businesshorizon2.models.common.TimeSeriesItem;
-import edu.dhbw.ka.mwi.businesshorizon2.models.common.TimeSeriesItemDate;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.MultiPeriodAccountingFigureRequestDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioPostRequestDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.TimeSeriesItemDateDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.TimeSeriesItemDto;
+import edu.dhbw.ka.mwi.businesshorizon2.validators.IsContinuousTimeSeriesValidator;
+import edu.dhbw.ka.mwi.businesshorizon2.validators.IsDateFormatConsistentValidator;
+import edu.dhbw.ka.mwi.businesshorizon2.validators.IsValidAccountingFigureCombinationValidator;
+import edu.dhbw.ka.mwi.businesshorizon2.validators.IsValidTimeSeriesRangesValidator;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = App.class)
@@ -30,6 +35,18 @@ public class ScenarioPostRequestDtoTest {
 	
 	@Autowired
     private Validator validator;
+	
+	@Autowired
+	private IsContinuousTimeSeriesValidator isContinuousTimeSeriesValidator;
+	
+	@Autowired
+	private IsDateFormatConsistentValidator isDateFormatConsistentValidator;
+	
+	@Autowired
+	private IsValidAccountingFigureCombinationValidator isValidAccountingFigureCombinationValidator;
+	
+	@Autowired
+	private IsValidTimeSeriesRangesValidator isValidTimeSeriesRangesValidator;
 	
 	private ScenarioPostRequestDto validRequest;
 	
@@ -45,23 +62,23 @@ public class ScenarioPostRequestDtoTest {
 		request.setEquityInterestRate(0.5);
 		request.setInterestOnLiabilitiesRate(0.3);
 	
-		List<TimeSeriesItem> freeCashFlowsTimeSeries = new ArrayList<TimeSeriesItem>();
-		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 4), 50.0));
-		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 1), 60.0));
+		List<TimeSeriesItemDto> freeCashFlowsTimeSeries = new ArrayList<TimeSeriesItemDto>();
+		freeCashFlowsTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 4), 50.0));
+		freeCashFlowsTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2001, 1), 60.0));
 		
-		List<TimeSeriesItem> liabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
-		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 4), 50.0));
-		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 1), 60.0));
+		List<TimeSeriesItemDto> liabilitiesTimeSeries = new ArrayList<TimeSeriesItemDto>();
+		liabilitiesTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 4), 50.0));
+		liabilitiesTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2001, 1), 60.0));
 
-		List<TimeSeriesItem> interestOnLiabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
-		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 4), 50.0));
-		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 1), 60.0));
+		List<TimeSeriesItemDto> interestOnLiabilitiesTimeSeries = new ArrayList<TimeSeriesItemDto>();
+		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 4), 50.0));
+		interestOnLiabilitiesTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2001, 1), 60.0));
 		
-		MultiPeriodAccountingFigure freeCashFlows = new MultiPeriodAccountingFigure();
+		MultiPeriodAccountingFigureRequestDto freeCashFlows = new MultiPeriodAccountingFigureRequestDto();
 		freeCashFlows.setIsHistoric(true);
 		freeCashFlows.setTimeSeries(freeCashFlowsTimeSeries);
 		
-		MultiPeriodAccountingFigure liabilities = new MultiPeriodAccountingFigure();
+		MultiPeriodAccountingFigureRequestDto liabilities = new MultiPeriodAccountingFigureRequestDto();
 		liabilities.setIsHistoric(true);
 		liabilities.setTimeSeries(liabilitiesTimeSeries);
 		
@@ -504,10 +521,10 @@ public class ScenarioPostRequestDtoTest {
 		//Arrange
 		ScenarioPostRequestDto request = this.validRequest;
 		
-		List<TimeSeriesItem> liabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
-		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 4), 50.0));
-		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 2), 50.0));
-		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 1), 60.0));
+		List<TimeSeriesItemDto> liabilitiesTimeSeries = new ArrayList<TimeSeriesItemDto>();
+		liabilitiesTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 4), 50.0));
+		liabilitiesTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 2), 50.0));
+		liabilitiesTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2001, 1), 60.0));
 		
 		request.getLiabilities().setTimeSeries(liabilitiesTimeSeries);
 		
@@ -523,13 +540,13 @@ public class ScenarioPostRequestDtoTest {
 		//Arrange
 		ScenarioPostRequestDto request = this.validRequest;
 		
-		List<TimeSeriesItem> freeCashFlowsTimeSeries = new ArrayList<TimeSeriesItem>();
-		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000), 50.0));
-		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001), 60.0));
+		List<TimeSeriesItemDto> freeCashFlowsTimeSeries = new ArrayList<TimeSeriesItemDto>();
+		freeCashFlowsTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000), 50.0));
+		freeCashFlowsTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2001), 60.0));
 		
-		List<TimeSeriesItem> liabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
-		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(1999), 50.0));
-		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001), 60.0));
+		List<TimeSeriesItemDto> liabilitiesTimeSeries = new ArrayList<TimeSeriesItemDto>();
+		liabilitiesTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(1999), 50.0));
+		liabilitiesTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2001), 60.0));
 		
 		request.getFreeCashFlows().setTimeSeries(freeCashFlowsTimeSeries);
 		request.getLiabilities().setTimeSeries(liabilitiesTimeSeries);
@@ -546,9 +563,9 @@ public class ScenarioPostRequestDtoTest {
 		//Arrange
 		ScenarioPostRequestDto request = this.validRequest;
 	
-		List<TimeSeriesItem> liabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
-		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000), 50.0));
-		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001), 60.0));
+		List<TimeSeriesItemDto> liabilitiesTimeSeries = new ArrayList<TimeSeriesItemDto>();
+		liabilitiesTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000), 50.0));
+		liabilitiesTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2001), 60.0));
 		
 		request.getLiabilities().setTimeSeries(liabilitiesTimeSeries);
 		
@@ -564,11 +581,11 @@ public class ScenarioPostRequestDtoTest {
 		//Arrange
 		ScenarioPostRequestDto request = this.validRequest;
 		
-		List<TimeSeriesItem> costOfStaffTimeSeries = new ArrayList<TimeSeriesItem>();
-		costOfStaffTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 4), 50.0));
-		costOfStaffTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 1), 60.0));
+		List<TimeSeriesItemDto> costOfStaffTimeSeries = new ArrayList<TimeSeriesItemDto>();
+		costOfStaffTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 4), 50.0));
+		costOfStaffTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2001, 1), 60.0));
 		
-		MultiPeriodAccountingFigure costOfStaff = new MultiPeriodAccountingFigure();
+		MultiPeriodAccountingFigureRequestDto costOfStaff = new MultiPeriodAccountingFigureRequestDto();
 		costOfStaff.setIsHistoric(true);
 		costOfStaff.setTimeSeries(costOfStaffTimeSeries);
 		
@@ -586,8 +603,8 @@ public class ScenarioPostRequestDtoTest {
 		//Arrange
 		ScenarioPostRequestDto request = this.validRequest;
 		
-		List<TimeSeriesItem> freeCashFlowsTimeSeries = new ArrayList<TimeSeriesItem>();
-		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 1), 60.0));
+		List<TimeSeriesItemDto> freeCashFlowsTimeSeries = new ArrayList<TimeSeriesItemDto>();
+		freeCashFlowsTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2001, 1), 60.0));
 		
 		request.getFreeCashFlows().setTimeSeries(freeCashFlowsTimeSeries);
 		
@@ -603,9 +620,9 @@ public class ScenarioPostRequestDtoTest {
 		//Arrange
 		ScenarioPostRequestDto request = this.validRequest;
 		
-		List<TimeSeriesItem> freeCashFlowsTimeSeries = new ArrayList<TimeSeriesItem>();
-		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 1), 60.0));
-		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 2), 60.0));
+		List<TimeSeriesItemDto> freeCashFlowsTimeSeries = new ArrayList<TimeSeriesItemDto>();
+		freeCashFlowsTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2001, 1), 60.0));
+		freeCashFlowsTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2001, 2), 60.0));
 		
 		request.getFreeCashFlows().setTimeSeries(freeCashFlowsTimeSeries);
 		
@@ -621,9 +638,9 @@ public class ScenarioPostRequestDtoTest {
 		//Arrange
 		ScenarioPostRequestDto request = this.validRequest;
 		
-		List<TimeSeriesItem> freeCashFlowsTimeSeries = new ArrayList<TimeSeriesItem>();
-		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 4), 60.0));
-		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 3), 60.0));
+		List<TimeSeriesItemDto> freeCashFlowsTimeSeries = new ArrayList<TimeSeriesItemDto>();
+		freeCashFlowsTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 4), 60.0));
+		freeCashFlowsTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 3), 60.0));
 		
 		request.getFreeCashFlows().setTimeSeries(freeCashFlowsTimeSeries);
 		
@@ -639,17 +656,17 @@ public class ScenarioPostRequestDtoTest {
 		//Arrange
 		ScenarioPostRequestDto request = this.validRequest;
 		
-		List<TimeSeriesItem> freeCashFlowsTimeSeries = new ArrayList<TimeSeriesItem>();
-		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 4), 50.0));
+		List<TimeSeriesItemDto> freeCashFlowsTimeSeries = new ArrayList<TimeSeriesItemDto>();
+		freeCashFlowsTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 4), 50.0));
 		
-		List<TimeSeriesItem> liabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
-		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 3), 50.0));
+		List<TimeSeriesItemDto> liabilitiesTimeSeries = new ArrayList<TimeSeriesItemDto>();
+		liabilitiesTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 3), 50.0));
 		
-		MultiPeriodAccountingFigure freeCashFlows = new MultiPeriodAccountingFigure();
+		MultiPeriodAccountingFigureRequestDto freeCashFlows = new MultiPeriodAccountingFigureRequestDto();
 		freeCashFlows.setIsHistoric(false);
 		freeCashFlows.setTimeSeries(freeCashFlowsTimeSeries);
 		
-		MultiPeriodAccountingFigure liabilities = new MultiPeriodAccountingFigure();
+		MultiPeriodAccountingFigureRequestDto liabilities = new MultiPeriodAccountingFigureRequestDto();
 		liabilities.setIsHistoric(false);
 		liabilities.setTimeSeries(liabilitiesTimeSeries);
 		
@@ -668,19 +685,19 @@ public class ScenarioPostRequestDtoTest {
 		//Arrange
 		ScenarioPostRequestDto request = this.validRequest;
 		
-		List<TimeSeriesItem> freeCashFlowsTimeSeries = new ArrayList<TimeSeriesItem>();
-		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 1), 60.0));
-		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 2), 60.0));
+		List<TimeSeriesItemDto> freeCashFlowsTimeSeries = new ArrayList<TimeSeriesItemDto>();
+		freeCashFlowsTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2001, 1), 60.0));
+		freeCashFlowsTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2001, 2), 60.0));
 		
-		List<TimeSeriesItem> liabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
-		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 3), 50.0));
-		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 4), 50.0));
+		List<TimeSeriesItemDto> liabilitiesTimeSeries = new ArrayList<TimeSeriesItemDto>();
+		liabilitiesTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 3), 50.0));
+		liabilitiesTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 4), 50.0));
 		
-		MultiPeriodAccountingFigure freeCashFlows = new MultiPeriodAccountingFigure();
+		MultiPeriodAccountingFigureRequestDto freeCashFlows = new MultiPeriodAccountingFigureRequestDto();
 		freeCashFlows.setIsHistoric(false);
 		freeCashFlows.setTimeSeries(freeCashFlowsTimeSeries);
 		
-		MultiPeriodAccountingFigure liabilities = new MultiPeriodAccountingFigure();
+		MultiPeriodAccountingFigureRequestDto liabilities = new MultiPeriodAccountingFigureRequestDto();
 		liabilities.setIsHistoric(false);
 		liabilities.setTimeSeries(liabilitiesTimeSeries);
 		
@@ -699,21 +716,21 @@ public class ScenarioPostRequestDtoTest {
 		//Arrange
 		ScenarioPostRequestDto request = this.validRequest;
 		
-		List<TimeSeriesItem> freeCashFlowsTimeSeries = new ArrayList<TimeSeriesItem>();
-		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 4), 50.0));
-		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 1), 60.0));
-		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 2), 60.0));
+		List<TimeSeriesItemDto> freeCashFlowsTimeSeries = new ArrayList<TimeSeriesItemDto>();
+		freeCashFlowsTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 4), 50.0));
+		freeCashFlowsTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2001, 1), 60.0));
+		freeCashFlowsTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2001, 2), 60.0));
 		
-		List<TimeSeriesItem> liabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
-		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 3), 50.0));
-		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 4), 50.0));
-		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 1), 60.0));
+		List<TimeSeriesItemDto> liabilitiesTimeSeries = new ArrayList<TimeSeriesItemDto>();
+		liabilitiesTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 3), 50.0));
+		liabilitiesTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 4), 50.0));
+		liabilitiesTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2001, 1), 60.0));
 		
-		MultiPeriodAccountingFigure freeCashFlows = new MultiPeriodAccountingFigure();
+		MultiPeriodAccountingFigureRequestDto freeCashFlows = new MultiPeriodAccountingFigureRequestDto();
 		freeCashFlows.setIsHistoric(false);
 		freeCashFlows.setTimeSeries(freeCashFlowsTimeSeries);
 		
-		MultiPeriodAccountingFigure liabilities = new MultiPeriodAccountingFigure();
+		MultiPeriodAccountingFigureRequestDto liabilities = new MultiPeriodAccountingFigureRequestDto();
 		liabilities.setIsHistoric(false);
 		liabilities.setTimeSeries(liabilitiesTimeSeries);
 		
@@ -732,19 +749,19 @@ public class ScenarioPostRequestDtoTest {
 		//Arrange
 		ScenarioPostRequestDto request = this.validRequest;
 		
-		List<TimeSeriesItem> freeCashFlowsTimeSeries = new ArrayList<TimeSeriesItem>();
-		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 1), 60.0));
-		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 2), 60.0));
+		List<TimeSeriesItemDto> freeCashFlowsTimeSeries = new ArrayList<TimeSeriesItemDto>();
+		freeCashFlowsTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2001, 1), 60.0));
+		freeCashFlowsTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2001, 2), 60.0));
 		
-		List<TimeSeriesItem> liabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
-		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 1), 50.0));
-		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001, 2), 50.0));
+		List<TimeSeriesItemDto> liabilitiesTimeSeries = new ArrayList<TimeSeriesItemDto>();
+		liabilitiesTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2001, 1), 50.0));
+		liabilitiesTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2001, 2), 50.0));
 		
-		MultiPeriodAccountingFigure freeCashFlows = new MultiPeriodAccountingFigure();
+		MultiPeriodAccountingFigureRequestDto freeCashFlows = new MultiPeriodAccountingFigureRequestDto();
 		freeCashFlows.setIsHistoric(false);
 		freeCashFlows.setTimeSeries(freeCashFlowsTimeSeries);
 		
-		MultiPeriodAccountingFigure liabilities = new MultiPeriodAccountingFigure();
+		MultiPeriodAccountingFigureRequestDto liabilities = new MultiPeriodAccountingFigureRequestDto();
 		liabilities.setIsHistoric(false);
 		liabilities.setTimeSeries(liabilitiesTimeSeries);
 		
@@ -771,23 +788,23 @@ public class ScenarioPostRequestDtoTest {
 		request.setEquityInterestRate(0.5);
 		request.setInterestOnLiabilitiesRate(0.5);
 		
-		List<TimeSeriesItem> freeCashFlowsTimeSeries = new ArrayList<TimeSeriesItem>();
-		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000), 50.0));
-		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001), 60.0));
-		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2002), 60.0));
-		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2003), 60.0));
+		List<TimeSeriesItemDto> freeCashFlowsTimeSeries = new ArrayList<TimeSeriesItemDto>();
+		freeCashFlowsTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000), 50.0));
+		freeCashFlowsTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2001), 60.0));
+		freeCashFlowsTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2002), 60.0));
+		freeCashFlowsTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2003), 60.0));
 		
-		List<TimeSeriesItem> liabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
-		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(1999), 50.0));
-		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000), 60.0));
-		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2001), 50.0));
-		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2002), 60.0));
+		List<TimeSeriesItemDto> liabilitiesTimeSeries = new ArrayList<TimeSeriesItemDto>();
+		liabilitiesTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(1999), 50.0));
+		liabilitiesTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000), 60.0));
+		liabilitiesTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2001), 50.0));
+		liabilitiesTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2002), 60.0));
 		
-		MultiPeriodAccountingFigure freeCashFlows = new MultiPeriodAccountingFigure();
+		MultiPeriodAccountingFigureRequestDto freeCashFlows = new MultiPeriodAccountingFigureRequestDto();
 		freeCashFlows.setIsHistoric(false);
 		freeCashFlows.setTimeSeries(freeCashFlowsTimeSeries);
 		
-		MultiPeriodAccountingFigure liabilities = new MultiPeriodAccountingFigure();
+		MultiPeriodAccountingFigureRequestDto liabilities = new MultiPeriodAccountingFigureRequestDto();
 		liabilities.setIsHistoric(false);
 		liabilities.setTimeSeries(liabilitiesTimeSeries);
 		
@@ -814,23 +831,23 @@ public class ScenarioPostRequestDtoTest {
 		request.setEquityInterestRate(0.5);
 		request.setInterestOnLiabilitiesRate(0.5);
 		
-		List<TimeSeriesItem> freeCashFlowsTimeSeries = new ArrayList<TimeSeriesItem>();
-		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(1999, 4), 50.0));
-		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 1), 60.0));
-		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 2), 60.0));
-		freeCashFlowsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 3), 60.0));
+		List<TimeSeriesItemDto> freeCashFlowsTimeSeries = new ArrayList<TimeSeriesItemDto>();
+		freeCashFlowsTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(1999, 4), 50.0));
+		freeCashFlowsTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 1), 60.0));
+		freeCashFlowsTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 2), 60.0));
+		freeCashFlowsTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 3), 60.0));
 		
-		List<TimeSeriesItem> liabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
-		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(1999, 4), 50.0));
-		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 1), 60.0));
-		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 2), 50.0));
-		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 3), 60.0));
+		List<TimeSeriesItemDto> liabilitiesTimeSeries = new ArrayList<TimeSeriesItemDto>();
+		liabilitiesTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(1999, 4), 50.0));
+		liabilitiesTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 1), 60.0));
+		liabilitiesTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 2), 50.0));
+		liabilitiesTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 3), 60.0));
 		
-		MultiPeriodAccountingFigure freeCashFlows = new MultiPeriodAccountingFigure();
+		MultiPeriodAccountingFigureRequestDto freeCashFlows = new MultiPeriodAccountingFigureRequestDto();
 		freeCashFlows.setIsHistoric(true);
 		freeCashFlows.setTimeSeries(freeCashFlowsTimeSeries);
 		
-		MultiPeriodAccountingFigure liabilities = new MultiPeriodAccountingFigure();
+		MultiPeriodAccountingFigureRequestDto liabilities = new MultiPeriodAccountingFigureRequestDto();
 		liabilities.setIsHistoric(true);
 		liabilities.setTimeSeries(liabilitiesTimeSeries);
 		
@@ -857,66 +874,66 @@ public class ScenarioPostRequestDtoTest {
 		request.setEquityInterestRate(0.5);
 		request.setInterestOnLiabilitiesRate(0.5);
 				
-		List<TimeSeriesItem> liabilitiesTimeSeries = new ArrayList<TimeSeriesItem>();
-		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 1), 50.0));
-		liabilitiesTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 2), 50.0));
-		MultiPeriodAccountingFigure liabilities = new MultiPeriodAccountingFigure();
+		List<TimeSeriesItemDto> liabilitiesTimeSeries = new ArrayList<TimeSeriesItemDto>();
+		liabilitiesTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 1), 50.0));
+		liabilitiesTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 2), 50.0));
+		MultiPeriodAccountingFigureRequestDto liabilities = new MultiPeriodAccountingFigureRequestDto();
 		liabilities.setIsHistoric(false);
 		liabilities.setTimeSeries(liabilitiesTimeSeries);
 		
-		List<TimeSeriesItem> depreciationTimeSeries = new ArrayList<TimeSeriesItem>();
-		depreciationTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 2), 50.0));
-		depreciationTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 3), 50.0));
-		MultiPeriodAccountingFigure depreciation = new MultiPeriodAccountingFigure();
+		List<TimeSeriesItemDto> depreciationTimeSeries = new ArrayList<TimeSeriesItemDto>();
+		depreciationTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 2), 50.0));
+		depreciationTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 3), 50.0));
+		MultiPeriodAccountingFigureRequestDto depreciation = new MultiPeriodAccountingFigureRequestDto();
 		depreciation.setIsHistoric(false);
 		depreciation.setTimeSeries(depreciationTimeSeries);
 		
-		List<TimeSeriesItem> additionalIncomeTimeSeries = new ArrayList<TimeSeriesItem>();
-		additionalIncomeTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 2), 50.0));
-		additionalIncomeTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 3), 50.0));
-		MultiPeriodAccountingFigure additionalIncome = new MultiPeriodAccountingFigure();
+		List<TimeSeriesItemDto> additionalIncomeTimeSeries = new ArrayList<TimeSeriesItemDto>();
+		additionalIncomeTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 2), 50.0));
+		additionalIncomeTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 3), 50.0));
+		MultiPeriodAccountingFigureRequestDto additionalIncome = new MultiPeriodAccountingFigureRequestDto();
 		additionalIncome.setIsHistoric(false);
 		additionalIncome.setTimeSeries(additionalIncomeTimeSeries);
 		
-		List<TimeSeriesItem> additionalCostsTimeSeries = new ArrayList<TimeSeriesItem>();
-		additionalCostsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(1999, 4), 50.0));
-		additionalCostsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 1), 50.0));
-		MultiPeriodAccountingFigure additionalCosts = new MultiPeriodAccountingFigure();
+		List<TimeSeriesItemDto> additionalCostsTimeSeries = new ArrayList<TimeSeriesItemDto>();
+		additionalCostsTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(1999, 4), 50.0));
+		additionalCostsTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 1), 50.0));
+		MultiPeriodAccountingFigureRequestDto additionalCosts = new MultiPeriodAccountingFigureRequestDto();
 		additionalCosts.setIsHistoric(true);
 		additionalCosts.setTimeSeries(additionalCostsTimeSeries);
 		
-		List<TimeSeriesItem> investmentsTimeSeries = new ArrayList<TimeSeriesItem>();
-		investmentsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 2), 50.0));
-		investmentsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 3), 50.0));
-		MultiPeriodAccountingFigure investments = new MultiPeriodAccountingFigure();
+		List<TimeSeriesItemDto> investmentsTimeSeries = new ArrayList<TimeSeriesItemDto>();
+		investmentsTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 2), 50.0));
+		investmentsTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 3), 50.0));
+		MultiPeriodAccountingFigureRequestDto investments = new MultiPeriodAccountingFigureRequestDto();
 		investments.setIsHistoric(false);
 		investments.setTimeSeries(investmentsTimeSeries);
 		
-		List<TimeSeriesItem> divestmentsTimeSeries = new ArrayList<TimeSeriesItem>();
-		divestmentsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 2), 50.0));
-		divestmentsTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 3), 50.0));
-		MultiPeriodAccountingFigure divestments = new MultiPeriodAccountingFigure();
+		List<TimeSeriesItemDto> divestmentsTimeSeries = new ArrayList<TimeSeriesItemDto>();
+		divestmentsTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 2), 50.0));
+		divestmentsTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 3), 50.0));
+		MultiPeriodAccountingFigureRequestDto divestments = new MultiPeriodAccountingFigureRequestDto();
 		divestments.setIsHistoric(false);
 		divestments.setTimeSeries(divestmentsTimeSeries);
 		
-		List<TimeSeriesItem> revenueTimeSeries = new ArrayList<TimeSeriesItem>();
-		revenueTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 2), 50.0));
-		revenueTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 3), 50.0));
-		MultiPeriodAccountingFigure revenue = new MultiPeriodAccountingFigure();
+		List<TimeSeriesItemDto> revenueTimeSeries = new ArrayList<TimeSeriesItemDto>();
+		revenueTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 2), 50.0));
+		revenueTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 3), 50.0));
+		MultiPeriodAccountingFigureRequestDto revenue = new MultiPeriodAccountingFigureRequestDto();
 		revenue.setIsHistoric(false);
 		revenue.setTimeSeries(revenueTimeSeries);
 		
-		List<TimeSeriesItem> costOfMaterialTimeSeries = new ArrayList<TimeSeriesItem>();
-		costOfMaterialTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(1999, 4), 50.0));
-		costOfMaterialTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 1), 50.0));
-		MultiPeriodAccountingFigure costOfMaterial = new MultiPeriodAccountingFigure();
+		List<TimeSeriesItemDto> costOfMaterialTimeSeries = new ArrayList<TimeSeriesItemDto>();
+		costOfMaterialTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(1999, 4), 50.0));
+		costOfMaterialTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 1), 50.0));
+		MultiPeriodAccountingFigureRequestDto costOfMaterial = new MultiPeriodAccountingFigureRequestDto();
 		costOfMaterial.setIsHistoric(true);
 		costOfMaterial.setTimeSeries(costOfMaterialTimeSeries);
 		
-		List<TimeSeriesItem> costOfStaffTimeSeries = new ArrayList<TimeSeriesItem>();
-		costOfStaffTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(1999, 4), 50.0));
-		costOfStaffTimeSeries.add(new TimeSeriesItem(new TimeSeriesItemDate(2000, 1), 50.0));
-		MultiPeriodAccountingFigure costOfStaff = new MultiPeriodAccountingFigure();
+		List<TimeSeriesItemDto> costOfStaffTimeSeries = new ArrayList<TimeSeriesItemDto>();
+		costOfStaffTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(1999, 4), 50.0));
+		costOfStaffTimeSeries.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 1), 50.0));
+		MultiPeriodAccountingFigureRequestDto costOfStaff = new MultiPeriodAccountingFigureRequestDto();
 		costOfStaff.setIsHistoric(true);
 		costOfStaff.setTimeSeries(costOfStaffTimeSeries);
 		
@@ -937,5 +954,4 @@ public class ScenarioPostRequestDtoTest {
 		//Assert
 		assertTrue(violations.isEmpty());
 	}
-	
 }

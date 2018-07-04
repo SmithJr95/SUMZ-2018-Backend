@@ -13,18 +13,18 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import edu.dhbw.ka.mwi.businesshorizon2.config.CustomUserDetailsConfig;
-import edu.dhbw.ka.mwi.businesshorizon2.dataaccess.interfaces.IUserRepository;
-import edu.dhbw.ka.mwi.businesshorizon2.models.daos.UserDao;
+import edu.dhbw.ka.mwi.businesshorizon2.dataaccess.interfaces.IAppUserRepository;
+import edu.dhbw.ka.mwi.businesshorizon2.models.daos.AppUserDao;
 
 @Service
 public class AppUserDetailsService implements UserDetailsService {
     @Autowired
-    private IUserRepository userRepository;
+    private IAppUserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
     	
-        UserDao user = userRepository.findByEmail(s);
+        AppUserDao user = userRepository.findByEmail(s);
 
         if(user == null) {
             throw new UsernameNotFoundException(String.format("The username %s doesn't exist", s));
@@ -35,11 +35,11 @@ public class AppUserDetailsService implements UserDetailsService {
         }
 
         List<GrantedAuthority> authorities = new ArrayList<>();
-        user.getRoles().forEach(role -> {
+        user.getAppRoles().forEach(role -> {
             authorities.add(new SimpleGrantedAuthority(role.getRoleName()));
         });
 
-        UserDetails userDetails = new CustomUserDetailsConfig(user.getEmail(), user.getPassword(), authorities, user.getId());
+        UserDetails userDetails = new CustomUserDetailsConfig(user.getEmail(), user.getAppUserPassword(), authorities, user.getAppUserId());
 
         return userDetails;
     }

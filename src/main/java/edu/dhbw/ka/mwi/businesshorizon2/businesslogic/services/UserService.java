@@ -27,38 +27,32 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.IUserService;
 import edu.dhbw.ka.mwi.businesshorizon2.config.EmailConfig;
 import edu.dhbw.ka.mwi.businesshorizon2.config.SecurityConfig;
-import edu.dhbw.ka.mwi.businesshorizon2.dataaccess.interfaces.IRoleRepository;
-import edu.dhbw.ka.mwi.businesshorizon2.dataaccess.interfaces.IUserActivationTokenRepository;
-import edu.dhbw.ka.mwi.businesshorizon2.dataaccess.interfaces.IUserPasswordResetTokenRepository;
-import edu.dhbw.ka.mwi.businesshorizon2.dataaccess.interfaces.IUserRepository;
-import edu.dhbw.ka.mwi.businesshorizon2.models.daos.UserActivationTokenDao;
-import edu.dhbw.ka.mwi.businesshorizon2.models.daos.RoleDao;
-import edu.dhbw.ka.mwi.businesshorizon2.models.daos.UserDao;
-import edu.dhbw.ka.mwi.businesshorizon2.models.daos.UserPasswordResetTokenDao;
+
 
 @Service
 public class UserService implements IUserService {
 	
     @Autowired 
-    SecurityConfig securityConfig;
+    private SecurityConfig securityConfig;
     
     @Autowired
     EmailConfig emailConfig;
     
     @Autowired 
-    UserActivationService userActivationService;
+    private UserActivationService userActivationService;
     
     @Autowired 
-    UserPasswordResetService userPasswordResetService; 
+    private UserPasswordResetService userPasswordResetService; 
     
     @Autowired 
-    EmailService emailService;
+    private EmailService emailService;
+
     
     @Autowired
-    private IUserRepository userRepository;
+    private IAppUserRepository userRepository;
     
     @Autowired
-    private IRoleRepository roleRepository; 
+    private IAppRoleRepository roleRepository; 
     
     @Autowired 
     private IUserActivationTokenRepository userActivationTokenRepository;
@@ -67,19 +61,19 @@ public class UserService implements IUserService {
     private IUserPasswordResetTokenRepository userPasswordResetTokenRepository;
     
     @Override
-    public List<UserDao> findAllUsers() {
-        return (List<UserDao>)userRepository.findAll();
+    public List<AppUserDao> findAllUsers() {
+        return (List<AppUserDao>)userRepository.findAll();
     }
    
 	@Override
-	public UserDao findByEmail(String s) {
+	public AppUserDao findByEmail(String s) {
 		return userRepository.findByEmail(s);
 	}
 	
 	@Override
-	public UserDao addUser(UserDao user, String host) throws Exception {
+	public AppUserDao addUser(AppUserDao user, String host) throws Exception {
 		
-		UserDao userFromDB = userRepository.findByEmail(user.getEmail());
+		AppUserDao userFromDB = userRepository.findByEmail(user.getEmail());
 		
 		if (userFromDB != null) {
 			String s = user.getEmail();
@@ -88,11 +82,12 @@ public class UserService implements IUserService {
 		
 		user.setPassword(encodePassword(user.getPassword()));
 		
-		ArrayList<RoleDao> roles = new ArrayList<RoleDao>();
+		ArrayList<AppRoleDao> roles = new ArrayList<AppRoleDao>();
+	
 		roles.add(roleRepository.findById((long) 1).get());
-		user.setRoles(roles);
+		user.setAppRoles(roles);
 		user.setIsActive(false);
-		UserDao userResult = userRepository.save(user);
+		AppUserDao userResult = userRepository.save(user);
 		
 		UserActivationTokenDao userToken = userActivationService.createUserActivationToken(userResult);
 		
@@ -127,8 +122,8 @@ public class UserService implements IUserService {
 		objectMapper.findAndRegisterModules();
 		UserActivationTokenDao token = objectMapper.readValue(tokenStr, UserActivationTokenDao.class);
 		
-		Optional<UserActivationTokenDao> tokenFromDB = userActivationTokenRepository.findById(token.getId());
-		UserDao user = userRepository.findById(token.getUserId()).get();
+		UserActivationTokenDao tokenFromDB = userActivationTokenRepository.findById(token.getUserActivationTokenId()).get();
+		AppUserDao user = userRepository.findById(token.getAppUser().getAppUserId()).get();
 		
 		UserActivationTokenDao tokenFromDBObject = null;
 		

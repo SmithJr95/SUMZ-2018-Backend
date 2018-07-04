@@ -1,11 +1,11 @@
-package edu.dhbw.ka.mwi.businesshorizon2.models.common;
+package edu.dhbw.ka.mwi.businesshorizon2.models.dtos;
 
-public class FcfCompanyValuationResult {
+public class FcfCompanyValuationResultDto {
 	private double companyValue;
 	private double marketValueTotalAssets;
 	private double totalLiabilities;
 	
-	public FcfCompanyValuationResult(double companyValue, double marketValueTotalAssets, double totalLiabilities) {
+	public FcfCompanyValuationResultDto(double companyValue, double marketValueTotalAssets, double totalLiabilities) {
 		this.companyValue = companyValue;
 		this.marketValueTotalAssets = marketValueTotalAssets;
 		this.totalLiabilities = totalLiabilities;

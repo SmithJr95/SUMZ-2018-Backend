@@ -1,6 +1,6 @@
-package edu.dhbw.ka.mwi.businesshorizon2.models.common;
+package edu.dhbw.ka.mwi.businesshorizon2.models.dtos;
 
-public class PredictionResponseTimeSeries {
+public class PredictionResponseTimeSeriesDto {
 	private String id;
 	private Double[][] values;
 	

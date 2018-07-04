@@ -1,14 +1,15 @@
-package edu.dhbw.ka.mwi.businesshorizon2.models.common;
+package edu.dhbw.ka.mwi.businesshorizon2.models.dtos;
 
+import edu.dhbw.ka.mwi.businesshorizon2.models.common.MultiPeriodAccountingFigureNames;
 
-public class PredictionRequestTimeSeries {
+public class PredictionRequestTimeSeriesDto {
 	private String id;
 	private Double[] values;
 	
-	public PredictionRequestTimeSeries() {
+	public PredictionRequestTimeSeriesDto() {
 	}
 	
-	public PredictionRequestTimeSeries(MultiPeriodAccountingFigureNames id, Double[] values) {
+	public PredictionRequestTimeSeriesDto(MultiPeriodAccountingFigureNames id, Double[] values) {
 		this.id = id.toString();
 		this.values = values;
 	}

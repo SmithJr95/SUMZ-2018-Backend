@@ -1,4 +1,4 @@
-package edu.dhbw.ka.mwi.businesshorizon2.models.common;
+package edu.dhbw.ka.mwi.businesshorizon2.models.dtos;
 
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
@@ -6,7 +6,9 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-public class TimeSeriesItemDate implements Comparable<TimeSeriesItemDate> {
+import edu.dhbw.ka.mwi.businesshorizon2.models.common.TimeSeriesItemDateFormats;
+
+public class TimeSeriesItemDateDto implements Comparable<TimeSeriesItemDateDto> {
 	
 	@NotNull(message="year must not be null.")
 	@DecimalMin(value="1900", message="year must be >=1900 and <=2100.")
@@ -19,16 +21,16 @@ public class TimeSeriesItemDate implements Comparable<TimeSeriesItemDate> {
 	
 	private TimeSeriesItemDateFormats dateFormat;
 	
-	public TimeSeriesItemDate() {
+	public TimeSeriesItemDateDto() {
 		this.updateDateFormat();
 	}
 	
-	public TimeSeriesItemDate(Integer year) {
+	public TimeSeriesItemDateDto(Integer year) {
 		this.year = year;
 		this.updateDateFormat();
 	}
 	
-	public TimeSeriesItemDate(Integer year, Integer quarter) {
+	public TimeSeriesItemDateDto(Integer year, Integer quarter) {
 		this.year = year;
 		this.quarter = quarter;
 		this.updateDateFormat();
@@ -48,8 +50,8 @@ public class TimeSeriesItemDate implements Comparable<TimeSeriesItemDate> {
 	
 	public TimeSeriesItemDateFormats getDateFormat() { return dateFormat; }
 		
-	public TimeSeriesItemDate getNextDate(){
-		TimeSeriesItemDate nextDate = new TimeSeriesItemDate();
+	public TimeSeriesItemDateDto getNextDate(){
+		TimeSeriesItemDateDto nextDate = new TimeSeriesItemDateDto();
 		
 		if (this.dateFormat == TimeSeriesItemDateFormats.Year) {
 			nextDate.setYear(this.year + 1);
@@ -71,8 +73,8 @@ public class TimeSeriesItemDate implements Comparable<TimeSeriesItemDate> {
 		return nextDate;
 	}
 	
-	public TimeSeriesItemDate getPrevDate(){
-		TimeSeriesItemDate prevDate = new TimeSeriesItemDate();
+	public TimeSeriesItemDateDto getPrevDate(){
+		TimeSeriesItemDateDto prevDate = new TimeSeriesItemDateDto();
 		
 		if (this.dateFormat == TimeSeriesItemDateFormats.Year) {
 			prevDate.setYear(this.year - 1);
@@ -100,11 +102,11 @@ public class TimeSeriesItemDate implements Comparable<TimeSeriesItemDate> {
 			return true;
 		}
 		
-		if(!(o instanceof TimeSeriesItemDate)) {
+		if(!(o instanceof TimeSeriesItemDateDto)) {
 			return false;
 		}
 
-		TimeSeriesItemDate other = (TimeSeriesItemDate) o;
+		TimeSeriesItemDateDto other = (TimeSeriesItemDateDto) o;
 		
 		if(!this.dateFormatsEqual(other)) {
 			return false;
@@ -123,7 +125,7 @@ public class TimeSeriesItemDate implements Comparable<TimeSeriesItemDate> {
 		}
 	}
 	
-	public boolean dateFormatsEqual(TimeSeriesItemDate other) {
+	public boolean dateFormatsEqual(TimeSeriesItemDateDto other) {
 		if (other == null) {
 			throw new UnsupportedOperationException();
 		}
@@ -132,7 +134,7 @@ public class TimeSeriesItemDate implements Comparable<TimeSeriesItemDate> {
 	}
 	
 	@Override
-	public int compareTo(TimeSeriesItemDate o) {
+	public int compareTo(TimeSeriesItemDateDto o) {
 		if (!this.dateFormatsEqual(o) || this.dateFormat == TimeSeriesItemDateFormats.Invalid || o.dateFormat == TimeSeriesItemDateFormats.Invalid) {
 			throw new UnsupportedOperationException();
 		}

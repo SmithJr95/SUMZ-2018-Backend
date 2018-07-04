@@ -3,14 +3,17 @@ package edu.dhbw.ka.mwi.businesshorizon2.validators;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import edu.dhbw.ka.mwi.businesshorizon2.models.common.MultiPeriodAccountingFigure;
+import org.springframework.stereotype.Component;
+
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.MultiPeriodAccountingFigureRequestDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioPostRequestDto;
 
+@Component
 public class IsContinuousTimeSeriesValidator implements ConstraintValidator<IsContinuousTimeSeries, ScenarioPostRequestDto>{
 	
 	@Override
 	public boolean isValid(ScenarioPostRequestDto arg0, ConstraintValidatorContext arg1) {
-		for(MultiPeriodAccountingFigure accountingFigure : arg0.getAllMultiPeriodAccountingFigures()) {
+		for(MultiPeriodAccountingFigureRequestDto accountingFigure : arg0.getAllMultiPeriodAccountingFigures()) {
 			if(accountingFigure != null && accountingFigure.getTimeSeries() != null && !accountingFigure.isTimeSeriesContinuous()) {				
 				return false;
 			}

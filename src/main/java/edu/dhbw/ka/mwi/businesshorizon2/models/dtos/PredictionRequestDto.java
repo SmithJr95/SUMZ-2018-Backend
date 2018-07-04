@@ -2,26 +2,23 @@ package edu.dhbw.ka.mwi.businesshorizon2.models.dtos;
 
 import java.util.List;
 
-import edu.dhbw.ka.mwi.businesshorizon2.models.common.PredictionRequestTimeSeries;
-
 public class PredictionRequestDto {
-	private List<PredictionRequestTimeSeries> timeSeries;
+	private List<PredictionRequestTimeSeriesDto> timeSeries;
 	private Integer predSteps;
 	private Integer numSamples;
 	
-	public PredictionRequestDto() {
-	}
+	public PredictionRequestDto() { }
 	
-	public PredictionRequestDto(List<PredictionRequestTimeSeries> timeSeries, Integer predSteps, Integer numSamples) {
+	public PredictionRequestDto(List<PredictionRequestTimeSeriesDto> timeSeries, Integer predSteps, Integer numSamples) {
 		this.timeSeries = timeSeries;
 		this.predSteps = predSteps;
 		this.numSamples = numSamples;
 	}
 	
-	public List<PredictionRequestTimeSeries> getTimeSeries() {
+	public List<PredictionRequestTimeSeriesDto> getTimeSeries() {
 		return timeSeries;
 	}
-	public void setTimeSeries(List<PredictionRequestTimeSeries> timeSeries) { this.timeSeries = timeSeries; }
+	public void setTimeSeries(List<PredictionRequestTimeSeriesDto> timeSeries) { this.timeSeries = timeSeries; }
 	
 	public Integer getPredSteps() { return predSteps; }
 	public void setPredSteps(Integer predSteps) { this.predSteps = predSteps; }

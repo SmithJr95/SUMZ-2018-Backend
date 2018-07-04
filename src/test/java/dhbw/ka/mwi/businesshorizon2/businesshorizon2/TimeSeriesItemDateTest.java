@@ -6,14 +6,14 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import edu.dhbw.ka.mwi.businesshorizon2.models.common.TimeSeriesItemDate;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.TimeSeriesItemDateDto;
 
 public class TimeSeriesItemDateTest {
 	
 	@Test(expected = UnsupportedOperationException.class)
 	public void dateFormatsEqual_otherIsNull_throwsUnsupportedOperationException() {
 		//Arrange
-		TimeSeriesItemDate date = new TimeSeriesItemDate();		
+		TimeSeriesItemDateDto date = new TimeSeriesItemDateDto();		
 		
 		//Act
 		date.dateFormatsEqual(null);
@@ -22,9 +22,9 @@ public class TimeSeriesItemDateTest {
 	@Test
 	public void dateFormatsEqual_differentFormats_returnsFalse() {
 		//Arrange
-		TimeSeriesItemDate date1 = new TimeSeriesItemDate();	
-		TimeSeriesItemDate date2 = new TimeSeriesItemDate(2000);
-		TimeSeriesItemDate date3 = new TimeSeriesItemDate(2000, 1);		
+		TimeSeriesItemDateDto date1 = new TimeSeriesItemDateDto();	
+		TimeSeriesItemDateDto date2 = new TimeSeriesItemDateDto(2000);
+		TimeSeriesItemDateDto date3 = new TimeSeriesItemDateDto(2000, 1);		
 		
 		//Act
 		boolean dateFormatsEqual1 = date1.dateFormatsEqual(date2);
@@ -46,12 +46,12 @@ public class TimeSeriesItemDateTest {
 	@Test
 	public void dateFormatsEqual_equalFormats_returnsTrue() {
 		//Arrange
-		TimeSeriesItemDate date1 = new TimeSeriesItemDate();	
-		TimeSeriesItemDate date2 = new TimeSeriesItemDate(2001);
-		TimeSeriesItemDate date3 = new TimeSeriesItemDate(2000, 1);	
-		TimeSeriesItemDate date4 = new TimeSeriesItemDate();	
-		TimeSeriesItemDate date5 = new TimeSeriesItemDate(1950);
-		TimeSeriesItemDate date6 = new TimeSeriesItemDate(1981, 3);	
+		TimeSeriesItemDateDto date1 = new TimeSeriesItemDateDto();	
+		TimeSeriesItemDateDto date2 = new TimeSeriesItemDateDto(2001);
+		TimeSeriesItemDateDto date3 = new TimeSeriesItemDateDto(2000, 1);	
+		TimeSeriesItemDateDto date4 = new TimeSeriesItemDateDto();	
+		TimeSeriesItemDateDto date5 = new TimeSeriesItemDateDto(1950);
+		TimeSeriesItemDateDto date6 = new TimeSeriesItemDateDto(1981, 3);	
 		
 		//Act
 		boolean dateFormatsEqual1 = date1.dateFormatsEqual(date4);
@@ -79,7 +79,7 @@ public class TimeSeriesItemDateTest {
 	@Test(expected = UnsupportedOperationException.class)
 	public void compareTo_otherIsNull_throwsUnsupportedOperationException() {
 		//Arrange
-		TimeSeriesItemDate date = new TimeSeriesItemDate();		
+		TimeSeriesItemDateDto date = new TimeSeriesItemDateDto();		
 		
 		//Act
 		date.compareTo(null);
@@ -88,10 +88,10 @@ public class TimeSeriesItemDateTest {
 	@Test
 	public void compareTo_otherDateIsSame_returnsZero() {
 		//Arrange	
-		TimeSeriesItemDate date1 = new TimeSeriesItemDate(2001);
-		TimeSeriesItemDate date2 = new TimeSeriesItemDate(2000, 1);	
-		TimeSeriesItemDate date3 = new TimeSeriesItemDate(2001);
-		TimeSeriesItemDate date4 = new TimeSeriesItemDate(2000, 1);	
+		TimeSeriesItemDateDto date1 = new TimeSeriesItemDateDto(2001);
+		TimeSeriesItemDateDto date2 = new TimeSeriesItemDateDto(2000, 1);	
+		TimeSeriesItemDateDto date3 = new TimeSeriesItemDateDto(2001);
+		TimeSeriesItemDateDto date4 = new TimeSeriesItemDateDto(2000, 1);	
 		
 		//Act
 		int res1 = date1.compareTo(date3);
@@ -113,8 +113,8 @@ public class TimeSeriesItemDateTest {
 	@Test(expected = UnsupportedOperationException.class)
 	public void compareTo_otherDateIsInvalid_throwsUnsupportedOperationException() {
 		//Arrange	
-		TimeSeriesItemDate date1 = new TimeSeriesItemDate(2001);
-		TimeSeriesItemDate date2 = new TimeSeriesItemDate();
+		TimeSeriesItemDateDto date1 = new TimeSeriesItemDateDto(2001);
+		TimeSeriesItemDateDto date2 = new TimeSeriesItemDateDto();
 		
 		//Act
 		date1.compareTo(date2);
@@ -123,8 +123,8 @@ public class TimeSeriesItemDateTest {
 	@Test(expected = UnsupportedOperationException.class)
 	public void compareTo_thisDateIsInvalid_throwsUnsupportedOperationException() {
 		//Arrange	
-		TimeSeriesItemDate date1 = new TimeSeriesItemDate(2001);
-		TimeSeriesItemDate date2 = new TimeSeriesItemDate();
+		TimeSeriesItemDateDto date1 = new TimeSeriesItemDateDto(2001);
+		TimeSeriesItemDateDto date2 = new TimeSeriesItemDateDto();
 		
 		//Act
 		date2.compareTo(date1);
@@ -133,8 +133,8 @@ public class TimeSeriesItemDateTest {
 	@Test(expected = UnsupportedOperationException.class)
 	public void compareTo_bothDatesInvalid_throwsUnsupportedOperationException() {
 		//Arrange	
-		TimeSeriesItemDate date1 = new TimeSeriesItemDate();
-		TimeSeriesItemDate date2 = new TimeSeriesItemDate();
+		TimeSeriesItemDateDto date1 = new TimeSeriesItemDateDto();
+		TimeSeriesItemDateDto date2 = new TimeSeriesItemDateDto();
 		
 		//Act
 		date1.compareTo(date2);
@@ -143,8 +143,8 @@ public class TimeSeriesItemDateTest {
 	@Test(expected = UnsupportedOperationException.class)
 	public void compareTo_differentValidDatesFormats_throwsUnsupportedOperationException() {
 		//Arrange	
-		TimeSeriesItemDate date1 = new TimeSeriesItemDate(2000);
-		TimeSeriesItemDate date2 = new TimeSeriesItemDate(2000, 1);
+		TimeSeriesItemDateDto date1 = new TimeSeriesItemDateDto(2000);
+		TimeSeriesItemDateDto date2 = new TimeSeriesItemDateDto(2000, 1);
 		
 		//Act
 		date1.compareTo(date2);
@@ -153,10 +153,10 @@ public class TimeSeriesItemDateTest {
 	@Test
 	public void compareTo_otherDateIsBefore_returnsMinusOne() {
 		//Arrange	
-		TimeSeriesItemDate date1 = new TimeSeriesItemDate(2000);
-		TimeSeriesItemDate date2 = new TimeSeriesItemDate(2000, 4);	
-		TimeSeriesItemDate date3 = new TimeSeriesItemDate(2001);
-		TimeSeriesItemDate date4 = new TimeSeriesItemDate(2001, 1);	
+		TimeSeriesItemDateDto date1 = new TimeSeriesItemDateDto(2000);
+		TimeSeriesItemDateDto date2 = new TimeSeriesItemDateDto(2000, 4);	
+		TimeSeriesItemDateDto date3 = new TimeSeriesItemDateDto(2001);
+		TimeSeriesItemDateDto date4 = new TimeSeriesItemDateDto(2001, 1);	
 		
 		//Act
 		int res1 = date1.compareTo(date3);
@@ -170,10 +170,10 @@ public class TimeSeriesItemDateTest {
 	@Test
 	public void compareTo_otherDateIsAfter_returnsMinusOne() {
 		//Arrange	
-		TimeSeriesItemDate date1 = new TimeSeriesItemDate(2000);
-		TimeSeriesItemDate date2 = new TimeSeriesItemDate(2000, 4);	
-		TimeSeriesItemDate date3 = new TimeSeriesItemDate(2001);
-		TimeSeriesItemDate date4 = new TimeSeriesItemDate(2001, 1);	
+		TimeSeriesItemDateDto date1 = new TimeSeriesItemDateDto(2000);
+		TimeSeriesItemDateDto date2 = new TimeSeriesItemDateDto(2000, 4);	
+		TimeSeriesItemDateDto date3 = new TimeSeriesItemDateDto(2001);
+		TimeSeriesItemDateDto date4 = new TimeSeriesItemDateDto(2001, 1);	
 		
 		//Act
 		int res1 = date3.compareTo(date1);
@@ -187,7 +187,7 @@ public class TimeSeriesItemDateTest {
 	@Test
 	public void equals_otherIsNull_returnsFalse() {
 		//Arrange	
-		TimeSeriesItemDate date1 = new TimeSeriesItemDate(2000);
+		TimeSeriesItemDateDto date1 = new TimeSeriesItemDateDto(2000);
 		
 		//Act
 		boolean res = date1.equals(null);
@@ -199,7 +199,7 @@ public class TimeSeriesItemDateTest {
 	@Test
 	public void equals_otherIsObject_returnsFalse() {
 		//Arrange	
-		TimeSeriesItemDate date1 = new TimeSeriesItemDate(2000);
+		TimeSeriesItemDateDto date1 = new TimeSeriesItemDateDto(2000);
 		Object o = new Object();
 		
 		//Act
@@ -212,7 +212,7 @@ public class TimeSeriesItemDateTest {
 	@Test
 	public void equals_sameObject_returnsTrue() {
 		//Arrange	
-		TimeSeriesItemDate date1 = new TimeSeriesItemDate(2000);
+		TimeSeriesItemDateDto date1 = new TimeSeriesItemDateDto(2000);
 		
 		//Act
 		boolean res = date1.equals(date1);
@@ -224,9 +224,9 @@ public class TimeSeriesItemDateTest {
 	@Test
 	public void equals_differentDateFormats_returnsFalse() {
 		//Arrange
-		TimeSeriesItemDate date1 = new TimeSeriesItemDate();	
-		TimeSeriesItemDate date2 = new TimeSeriesItemDate(2000);
-		TimeSeriesItemDate date3 = new TimeSeriesItemDate(2000, 1);		
+		TimeSeriesItemDateDto date1 = new TimeSeriesItemDateDto();	
+		TimeSeriesItemDateDto date2 = new TimeSeriesItemDateDto(2000);
+		TimeSeriesItemDateDto date3 = new TimeSeriesItemDateDto(2000, 1);		
 		
 		//Act
 		boolean equal1 = date1.equals(date2);
@@ -248,15 +248,15 @@ public class TimeSeriesItemDateTest {
 	@Test
 	public void equals_sameDateFormatDifferentDate_returnsFalse() {
 		//Arrange
-		TimeSeriesItemDate date1 = new TimeSeriesItemDate();	
-		TimeSeriesItemDate date2 = new TimeSeriesItemDate();	
+		TimeSeriesItemDateDto date1 = new TimeSeriesItemDateDto();	
+		TimeSeriesItemDateDto date2 = new TimeSeriesItemDateDto();	
 		date2.setQuarter(1);
 		
-		TimeSeriesItemDate date3 = new TimeSeriesItemDate(2000);
-		TimeSeriesItemDate date4 = new TimeSeriesItemDate(2001);
+		TimeSeriesItemDateDto date3 = new TimeSeriesItemDateDto(2000);
+		TimeSeriesItemDateDto date4 = new TimeSeriesItemDateDto(2001);
 		
-		TimeSeriesItemDate date5 = new TimeSeriesItemDate(2000, 1);		
-		TimeSeriesItemDate date6 = new TimeSeriesItemDate(2000, 2);		
+		TimeSeriesItemDateDto date5 = new TimeSeriesItemDateDto(2000, 1);		
+		TimeSeriesItemDateDto date6 = new TimeSeriesItemDateDto(2000, 2);		
 		
 		//Act
 		boolean equal1 = date1.equals(date2);
@@ -278,19 +278,19 @@ public class TimeSeriesItemDateTest {
 	@Test
 	public void equals_sameDateFormatSameDate_returnsTrue() {
 		//Arrange
-		TimeSeriesItemDate date1 = new TimeSeriesItemDate();	
-		TimeSeriesItemDate date2 = new TimeSeriesItemDate();	
+		TimeSeriesItemDateDto date1 = new TimeSeriesItemDateDto();	
+		TimeSeriesItemDateDto date2 = new TimeSeriesItemDateDto();	
 		
-		TimeSeriesItemDate date3 = new TimeSeriesItemDate();	
+		TimeSeriesItemDateDto date3 = new TimeSeriesItemDateDto();	
 		date3.setQuarter(1);
-		TimeSeriesItemDate date4 = new TimeSeriesItemDate();	
+		TimeSeriesItemDateDto date4 = new TimeSeriesItemDateDto();	
 		date4.setQuarter(1);
 		
-		TimeSeriesItemDate date5 = new TimeSeriesItemDate(2000);
-		TimeSeriesItemDate date6 = new TimeSeriesItemDate(2000);
+		TimeSeriesItemDateDto date5 = new TimeSeriesItemDateDto(2000);
+		TimeSeriesItemDateDto date6 = new TimeSeriesItemDateDto(2000);
 		
-		TimeSeriesItemDate date7 = new TimeSeriesItemDate(2000, 2);		
-		TimeSeriesItemDate date8 = new TimeSeriesItemDate(2000, 2);		
+		TimeSeriesItemDateDto date7 = new TimeSeriesItemDateDto(2000, 2);		
+		TimeSeriesItemDateDto date8 = new TimeSeriesItemDateDto(2000, 2);		
 		
 		//Act
 		boolean equal1 = date1.equals(date2);
@@ -316,7 +316,7 @@ public class TimeSeriesItemDateTest {
 	@Test(expected = UnsupportedOperationException.class)
 	public void getNextDate_InvalidDatesFormat_throwsUnsupportedOperationException() {
 		//Arrange	
-		TimeSeriesItemDate date1 = new TimeSeriesItemDate();
+		TimeSeriesItemDateDto date1 = new TimeSeriesItemDateDto();
 		
 		//Act
 		date1.getNextDate();
@@ -325,7 +325,7 @@ public class TimeSeriesItemDateTest {
 	@Test(expected = UnsupportedOperationException.class)
 	public void getPrevDate_InvalidDatesFormat_throwsUnsupportedOperationException() {
 		//Arrange	
-		TimeSeriesItemDate date1 = new TimeSeriesItemDate();
+		TimeSeriesItemDateDto date1 = new TimeSeriesItemDateDto();
 		
 		//Act
 		date1.getPrevDate();
@@ -334,11 +334,11 @@ public class TimeSeriesItemDateTest {
 	@Test
 	public void getNextDate_dateFormatYear_returnsCorrectNextDate() {
 		//Arrange	
-		TimeSeriesItemDate date1 = new TimeSeriesItemDate(2000);
-		TimeSeriesItemDate expectedNextDate = new TimeSeriesItemDate(2001);
+		TimeSeriesItemDateDto date1 = new TimeSeriesItemDateDto(2000);
+		TimeSeriesItemDateDto expectedNextDate = new TimeSeriesItemDateDto(2001);
 		
 		//Act
-		 TimeSeriesItemDate actualNextDate = date1.getNextDate();
+		 TimeSeriesItemDateDto actualNextDate = date1.getNextDate();
 		
 		//Assert
 		 assertEquals(expectedNextDate, actualNextDate);
@@ -347,11 +347,11 @@ public class TimeSeriesItemDateTest {
 	@Test
 	public void getPrevDate_dateFormatYear_returnsCorrectPrevDate() {
 		//Arrange	
-		TimeSeriesItemDate date1 = new TimeSeriesItemDate(2000);
-		TimeSeriesItemDate expectedPrevDate = new TimeSeriesItemDate(1999);
+		TimeSeriesItemDateDto date1 = new TimeSeriesItemDateDto(2000);
+		TimeSeriesItemDateDto expectedPrevDate = new TimeSeriesItemDateDto(1999);
 		
 		//Act
-		 TimeSeriesItemDate actualPrevDate = date1.getPrevDate();
+		 TimeSeriesItemDateDto actualPrevDate = date1.getPrevDate();
 		
 		//Assert
 		 assertEquals(expectedPrevDate, actualPrevDate);
@@ -360,13 +360,13 @@ public class TimeSeriesItemDateTest {
 	@Test
 	public void getNextDate_dateFormatYearQuarter_returnsCorrectNextDate() {
 		//Arrange	
-		TimeSeriesItemDate date1 = new TimeSeriesItemDate(2000, 4);
-		TimeSeriesItemDate expectedNextDate1 = new TimeSeriesItemDate(2001, 1);
-		TimeSeriesItemDate expectedNextDate2 = new TimeSeriesItemDate(2001, 2);
+		TimeSeriesItemDateDto date1 = new TimeSeriesItemDateDto(2000, 4);
+		TimeSeriesItemDateDto expectedNextDate1 = new TimeSeriesItemDateDto(2001, 1);
+		TimeSeriesItemDateDto expectedNextDate2 = new TimeSeriesItemDateDto(2001, 2);
 		
 		//Act
-		 TimeSeriesItemDate actualNextDate1 = date1.getNextDate();
-		 TimeSeriesItemDate actualNextDate2 = actualNextDate1.getNextDate();
+		 TimeSeriesItemDateDto actualNextDate1 = date1.getNextDate();
+		 TimeSeriesItemDateDto actualNextDate2 = actualNextDate1.getNextDate();
 		
 		//Assert
 		 assertEquals(expectedNextDate1, actualNextDate1);
@@ -376,13 +376,13 @@ public class TimeSeriesItemDateTest {
 	@Test
 	public void getPrevDate_dateFormatYearQuarter_returnsCorrectPrevDate() {
 		//Arrange	
-		TimeSeriesItemDate date1 = new TimeSeriesItemDate(2000, 1);
-		TimeSeriesItemDate expectedPrevDate1 = new TimeSeriesItemDate(1999, 4);
-		TimeSeriesItemDate expectedPrevDate2 = new TimeSeriesItemDate(1999, 3);
+		TimeSeriesItemDateDto date1 = new TimeSeriesItemDateDto(2000, 1);
+		TimeSeriesItemDateDto expectedPrevDate1 = new TimeSeriesItemDateDto(1999, 4);
+		TimeSeriesItemDateDto expectedPrevDate2 = new TimeSeriesItemDateDto(1999, 3);
 		
 		//Act
-		 TimeSeriesItemDate actualPrevDate1 = date1.getPrevDate();
-		 TimeSeriesItemDate actualPrevDate2 = actualPrevDate1.getPrevDate();
+		 TimeSeriesItemDateDto actualPrevDate1 = date1.getPrevDate();
+		 TimeSeriesItemDateDto actualPrevDate2 = actualPrevDate1.getPrevDate();
 		 
 		//Assert
 		 assertEquals(expectedPrevDate1, actualPrevDate1);

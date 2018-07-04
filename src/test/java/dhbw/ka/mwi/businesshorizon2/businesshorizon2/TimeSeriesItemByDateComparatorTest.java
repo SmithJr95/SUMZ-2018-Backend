@@ -8,15 +8,15 @@ import java.util.List;
 import org.junit.Test;
 
 import edu.dhbw.ka.mwi.businesshorizon2.comparators.TimeSeriesItemByDateComparator;
-import edu.dhbw.ka.mwi.businesshorizon2.models.common.TimeSeriesItem;
-import edu.dhbw.ka.mwi.businesshorizon2.models.common.TimeSeriesItemDate;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.TimeSeriesItemDateDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.TimeSeriesItemDto;
 
 public class TimeSeriesItemByDateComparatorTest {
 	
 	@Test(expected = UnsupportedOperationException.class)
 	public void compare_otherIsNull_throwsUnsupportedOperationException() {
 		//Arrange
-		TimeSeriesItem date = new TimeSeriesItem();		
+		TimeSeriesItemDto date = new TimeSeriesItemDto();		
 		TimeSeriesItemByDateComparator comparator = new TimeSeriesItemByDateComparator();
 		
 		//Act
@@ -26,8 +26,8 @@ public class TimeSeriesItemByDateComparatorTest {
 	@Test(expected = UnsupportedOperationException.class)
 	public void compare_otherDateNull_throwsUnsupportedOperationException() {
 		//Arrange
-		TimeSeriesItem date1 = new TimeSeriesItem(new TimeSeriesItemDate(2000), 50.0);
-		TimeSeriesItem date2 = new TimeSeriesItem();
+		TimeSeriesItemDto date1 = new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000), 50.0);
+		TimeSeriesItemDto date2 = new TimeSeriesItemDto();
 		TimeSeriesItemByDateComparator comparator = new TimeSeriesItemByDateComparator();
 		
 		//Act
@@ -37,15 +37,15 @@ public class TimeSeriesItemByDateComparatorTest {
 	@Test
 	public void compare_otherDateIsSame_returnsZero() {
 		//Arrange	
-		TimeSeriesItemDate date1 = new TimeSeriesItemDate(2001);
-		TimeSeriesItemDate date2 = new TimeSeriesItemDate(2000, 1);	
-		TimeSeriesItemDate date3 = new TimeSeriesItemDate(2001);
-		TimeSeriesItemDate date4 = new TimeSeriesItemDate(2000, 1);	
+		TimeSeriesItemDateDto date1 = new TimeSeriesItemDateDto(2001);
+		TimeSeriesItemDateDto date2 = new TimeSeriesItemDateDto(2000, 1);	
+		TimeSeriesItemDateDto date3 = new TimeSeriesItemDateDto(2001);
+		TimeSeriesItemDateDto date4 = new TimeSeriesItemDateDto(2000, 1);	
 		
-		TimeSeriesItem tsi1 = new TimeSeriesItem(date1, 50.0);
-		TimeSeriesItem tsi2 = new TimeSeriesItem(date2, 50.0);
-		TimeSeriesItem tsi3 = new TimeSeriesItem(date3, 50.0);
-		TimeSeriesItem tsi4 = new TimeSeriesItem(date4, 50.0);
+		TimeSeriesItemDto tsi1 = new TimeSeriesItemDto(date1, 50.0);
+		TimeSeriesItemDto tsi2 = new TimeSeriesItemDto(date2, 50.0);
+		TimeSeriesItemDto tsi3 = new TimeSeriesItemDto(date3, 50.0);
+		TimeSeriesItemDto tsi4 = new TimeSeriesItemDto(date4, 50.0);
 		
 		TimeSeriesItemByDateComparator comparator = new TimeSeriesItemByDateComparator();
 		
@@ -67,11 +67,11 @@ public class TimeSeriesItemByDateComparatorTest {
 	@Test(expected = UnsupportedOperationException.class)
 	public void compare_otherDateIsInvalid_throwsUnsupportedOperationException() {
 		//Arrange	
-		TimeSeriesItemDate date1 = new TimeSeriesItemDate(2001);
-		TimeSeriesItemDate date2 = new TimeSeriesItemDate();
+		TimeSeriesItemDateDto date1 = new TimeSeriesItemDateDto(2001);
+		TimeSeriesItemDateDto date2 = new TimeSeriesItemDateDto();
 		
-		TimeSeriesItem tsi1 = new TimeSeriesItem(date1, 50.0);
-		TimeSeriesItem tsi2 = new TimeSeriesItem(date2, 50.0);
+		TimeSeriesItemDto tsi1 = new TimeSeriesItemDto(date1, 50.0);
+		TimeSeriesItemDto tsi2 = new TimeSeriesItemDto(date2, 50.0);
 		
 		TimeSeriesItemByDateComparator comparator = new TimeSeriesItemByDateComparator();
 		
@@ -82,11 +82,11 @@ public class TimeSeriesItemByDateComparatorTest {
 	@Test(expected = UnsupportedOperationException.class)
 	public void compare_thisDateIsInvalid_throwsUnsupportedOperationException() {
 		//Arrange	
-		TimeSeriesItemDate date1 = new TimeSeriesItemDate(2001);
-		TimeSeriesItemDate date2 = new TimeSeriesItemDate();
+		TimeSeriesItemDateDto date1 = new TimeSeriesItemDateDto(2001);
+		TimeSeriesItemDateDto date2 = new TimeSeriesItemDateDto();
 		
-		TimeSeriesItem tsi1 = new TimeSeriesItem(date1, 50.0);
-		TimeSeriesItem tsi2 = new TimeSeriesItem(date2, 50.0);
+		TimeSeriesItemDto tsi1 = new TimeSeriesItemDto(date1, 50.0);
+		TimeSeriesItemDto tsi2 = new TimeSeriesItemDto(date2, 50.0);
 
 		TimeSeriesItemByDateComparator comparator = new TimeSeriesItemByDateComparator();
 		
@@ -97,11 +97,11 @@ public class TimeSeriesItemByDateComparatorTest {
 	@Test(expected = UnsupportedOperationException.class)
 	public void compare_bothDatesInvalid_throwsUnsupportedOperationException() {
 		//Arrange
-		TimeSeriesItemDate date1 = new TimeSeriesItemDate();
-		TimeSeriesItemDate date2 = new TimeSeriesItemDate();
+		TimeSeriesItemDateDto date1 = new TimeSeriesItemDateDto();
+		TimeSeriesItemDateDto date2 = new TimeSeriesItemDateDto();
 		
-		TimeSeriesItem tsi1 = new TimeSeriesItem(date1, 50.0);
-		TimeSeriesItem tsi2 = new TimeSeriesItem(date2, 50.0);
+		TimeSeriesItemDto tsi1 = new TimeSeriesItemDto(date1, 50.0);
+		TimeSeriesItemDto tsi2 = new TimeSeriesItemDto(date2, 50.0);
 
 		TimeSeriesItemByDateComparator comparator = new TimeSeriesItemByDateComparator();
 		
@@ -112,11 +112,11 @@ public class TimeSeriesItemByDateComparatorTest {
 	@Test(expected = UnsupportedOperationException.class)
 	public void compare_differentValidDatesFormats_throwsUnsupportedOperationException() {
 		//Arrange
-		TimeSeriesItemDate date1 = new TimeSeriesItemDate(2000);
-		TimeSeriesItemDate date2 = new TimeSeriesItemDate(2000, 1);
+		TimeSeriesItemDateDto date1 = new TimeSeriesItemDateDto(2000);
+		TimeSeriesItemDateDto date2 = new TimeSeriesItemDateDto(2000, 1);
 		
-		TimeSeriesItem tsi1 = new TimeSeriesItem(date1, 50.0);
-		TimeSeriesItem tsi2 = new TimeSeriesItem(date2, 50.0);
+		TimeSeriesItemDto tsi1 = new TimeSeriesItemDto(date1, 50.0);
+		TimeSeriesItemDto tsi2 = new TimeSeriesItemDto(date2, 50.0);
 
 		TimeSeriesItemByDateComparator comparator = new TimeSeriesItemByDateComparator();
 		
@@ -127,15 +127,15 @@ public class TimeSeriesItemByDateComparatorTest {
 	@Test
 	public void compare_otherDateIsBefore_returnsMinusOne() {
 		//Arrange	
-		TimeSeriesItemDate date1 = new TimeSeriesItemDate(2000);
-		TimeSeriesItemDate date2 = new TimeSeriesItemDate(2000, 4);	
-		TimeSeriesItemDate date3 = new TimeSeriesItemDate(2001);
-		TimeSeriesItemDate date4 = new TimeSeriesItemDate(2001, 1);	
+		TimeSeriesItemDateDto date1 = new TimeSeriesItemDateDto(2000);
+		TimeSeriesItemDateDto date2 = new TimeSeriesItemDateDto(2000, 4);	
+		TimeSeriesItemDateDto date3 = new TimeSeriesItemDateDto(2001);
+		TimeSeriesItemDateDto date4 = new TimeSeriesItemDateDto(2001, 1);	
 		
-		TimeSeriesItem tsi1 = new TimeSeriesItem(date1, 50.0);
-		TimeSeriesItem tsi2 = new TimeSeriesItem(date2, 50.0);
-		TimeSeriesItem tsi3 = new TimeSeriesItem(date3, 50.0);
-		TimeSeriesItem tsi4 = new TimeSeriesItem(date4, 50.0);
+		TimeSeriesItemDto tsi1 = new TimeSeriesItemDto(date1, 50.0);
+		TimeSeriesItemDto tsi2 = new TimeSeriesItemDto(date2, 50.0);
+		TimeSeriesItemDto tsi3 = new TimeSeriesItemDto(date3, 50.0);
+		TimeSeriesItemDto tsi4 = new TimeSeriesItemDto(date4, 50.0);
 
 		TimeSeriesItemByDateComparator comparator = new TimeSeriesItemByDateComparator();
 		
@@ -151,15 +151,15 @@ public class TimeSeriesItemByDateComparatorTest {
 	@Test
 	public void compare_otherDateIsAfter_returnsMinusOne() {
 		//Arrange	
-		TimeSeriesItemDate date1 = new TimeSeriesItemDate(2000);
-		TimeSeriesItemDate date2 = new TimeSeriesItemDate(2000, 4);	
-		TimeSeriesItemDate date3 = new TimeSeriesItemDate(2001);
-		TimeSeriesItemDate date4 = new TimeSeriesItemDate(2001, 1);	
+		TimeSeriesItemDateDto date1 = new TimeSeriesItemDateDto(2000);
+		TimeSeriesItemDateDto date2 = new TimeSeriesItemDateDto(2000, 4);	
+		TimeSeriesItemDateDto date3 = new TimeSeriesItemDateDto(2001);
+		TimeSeriesItemDateDto date4 = new TimeSeriesItemDateDto(2001, 1);	
 		
-		TimeSeriesItem tsi1 = new TimeSeriesItem(date1, 50.0);
-		TimeSeriesItem tsi2 = new TimeSeriesItem(date2, 50.0);
-		TimeSeriesItem tsi3 = new TimeSeriesItem(date3, 50.0);
-		TimeSeriesItem tsi4 = new TimeSeriesItem(date4, 50.0);
+		TimeSeriesItemDto tsi1 = new TimeSeriesItemDto(date1, 50.0);
+		TimeSeriesItemDto tsi2 = new TimeSeriesItemDto(date2, 50.0);
+		TimeSeriesItemDto tsi3 = new TimeSeriesItemDto(date3, 50.0);
+		TimeSeriesItemDto tsi4 = new TimeSeriesItemDto(date4, 50.0);
 
 		TimeSeriesItemByDateComparator comparator = new TimeSeriesItemByDateComparator();
 		

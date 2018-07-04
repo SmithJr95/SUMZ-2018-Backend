@@ -6,15 +6,15 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.ICompanyValuationService;
-import edu.dhbw.ka.mwi.businesshorizon2.models.common.ApvCompanyValuationResult;
-import edu.dhbw.ka.mwi.businesshorizon2.models.common.CompanyValueDistribution;
-import edu.dhbw.ka.mwi.businesshorizon2.models.common.FcfCompanyValuationResult;
-import edu.dhbw.ka.mwi.businesshorizon2.models.common.FteCompanyValuationResult;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ApvCompanyValuationResultDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.CompanyValueDistributionDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.FcfCompanyValuationResultDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.FteCompanyValuationResultDto;
 
 @Service
 public class CompanyValuationService implements ICompanyValuationService {
 
-	public ApvCompanyValuationResult performApvCompanyValuation(List<Double> freeCashFlow, List<Double> liabilities,
+	public ApvCompanyValuationResultDto performApvCompanyValuation(List<Double> freeCashFlow, List<Double> liabilities,
 			double equityInterest, double interestOnLiabilities, double effectiveTaxRate) {
 		double companyValue = 0;
 		double presentValueOfCashflows = 0;
@@ -39,12 +39,12 @@ public class CompanyValuationService implements ICompanyValuationService {
 
 		companyValue = presentValueOfCashflows + capitalStructureEffect - liabilities.get(0);
 
-		return new ApvCompanyValuationResult(companyValue, presentValueOfCashflows + capitalStructureEffect,
+		return new ApvCompanyValuationResultDto(companyValue, presentValueOfCashflows + capitalStructureEffect,
 				liabilities.get(0), presentValueOfCashflows, capitalStructureEffect);
 
 	}
 
-	public FcfCompanyValuationResult performFcfCompanyValuationResult(List<Double> freeCashFlow, List<Double> liabilities,
+	public FcfCompanyValuationResultDto performFcfCompanyValuationResult(List<Double> freeCashFlow, List<Double> liabilities,
 			 double equityInterest, double interestOnLiabilities, double effectiveTaxRate) {
 		
 		Double duplicateLast = liabilities.get(liabilities.size() - 1); 
@@ -100,10 +100,10 @@ public class CompanyValuationService implements ICompanyValuationService {
 		}
 		
 		
-		return new FcfCompanyValuationResult(companyValue, marketValueTotalAssets, 0);
+		return new FcfCompanyValuationResultDto(companyValue, marketValueTotalAssets, 0);
 	}
 
-	public FteCompanyValuationResult performFteCompanyValuationResult(List<Double> flowToEquity, List<Double> liabilities,
+	public FteCompanyValuationResultDto performFteCompanyValuationResult(List<Double> flowToEquity, List<Double> liabilities,
 			double equityInterest, double interestOnLiabilities, double effectiveTaxRate) {
 		
 		Double duplicateLast = liabilities.get(liabilities.size() - 1); 
@@ -143,11 +143,11 @@ public class CompanyValuationService implements ICompanyValuationService {
 					/ (1 + equityInterest);
 		}
 
-		return new FteCompanyValuationResult(marketValueEquity[0]);
+		return new FteCompanyValuationResultDto(marketValueEquity[0]);
 
 	}
 	
-	public CompanyValueDistribution getCompanyValueDistribution(List<Double> companyValues) {
+	public CompanyValueDistributionDto getCompanyValueDistribution(List<Double> companyValues) {
 		
 		double mean = companyValues.stream().mapToDouble(x -> x).average().getAsDouble();
 		double standardDeviation = Math.sqrt(companyValues.stream().mapToDouble(x -> Math.pow((x - mean), 2)).sum() / companyValues.size());
@@ -170,7 +170,7 @@ public class CompanyValuationService implements ICompanyValuationService {
 			currentXValue += xInterval;
 		}
 		
-		CompanyValueDistribution distribution = new CompanyValueDistribution(xValues, yValues);
+		CompanyValueDistributionDto distribution = new CompanyValueDistributionDto(xValues, yValues);
 		
 		return distribution;
 	}

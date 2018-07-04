@@ -9,72 +9,50 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Entity
-@Table(name = "userActivationToken")
+@Entity(name = "UserActivationToken")
+@Table(name = "UserActivationToken")
 public class UserActivationTokenDao {
+	
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="UserActivationTokenId")
+    private Long userActivationTokenId;
 	
-	@Column(name = "userId")
-	private Long userId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "AppUserId")
+	private AppUserDao appUser;
 	
-	@Column(name = "expirationDate")
+	@Column(name = "ExpirationDate")
 	private LocalDateTime expirationDate; 
 	
-	@Column(name = "key")
-	private String key;
+	@Column(name = "TokenKey", columnDefinition = "nvarchar")
+	private String tokenKey;
 	
-	public UserActivationTokenDao(Long userId, LocalDateTime expirationDate, String key){
-		this.userId = userId;
-		this.expirationDate = expirationDate; 
-		this.key = key;
-	}
+	public UserActivationTokenDao() {}
 	
-	public UserActivationTokenDao() {
-		
-	}
-	
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public Long getUserId() {
-		return userId;
-	}
-
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
-
-	public LocalDateTime getExpirationDate() {
-		return expirationDate;
-	}
-
-	public void setExpirationDate(LocalDateTime expirationDate) {
+	public UserActivationTokenDao(AppUserDao appUser, LocalDateTime expirationDate, String tokenKey) {
+		this.appUser = appUser;
 		this.expirationDate = expirationDate;
+		this.tokenKey = tokenKey;
 	}
+		
+	public Long getUserActivationTokenId() { return userActivationTokenId; }
 
-	public String getKey() {
-		return key;
-	}
+	public LocalDateTime getExpirationDate() { return expirationDate; }
+	public void setExpirationDate(LocalDateTime expirationDate) { this.expirationDate = expirationDate; }
 
-	public void setKey(String key) {
-		this.key = key;
-	}
+	public String getTokenKey() { return tokenKey; }
+	public void setKey(String tokenKey) { this.tokenKey = tokenKey; }
+	
+	public AppUserDao getAppUser() { return appUser; }
+	public void setAppUser(AppUserDao appUser) { this.appUser = appUser; }
 	
 	public Boolean equals(UserActivationTokenDao userActivationToken) {
-		Boolean idEquals 				= userActivationToken.id == this.id;
-		Boolean userIdEquals 			= userActivationToken.userId == this.userId;
-		Boolean expirationDateEquals 	= userActivationToken.expirationDate.equals(this.expirationDate);
-		Boolean keyEquals				=userActivationToken.key.equals(this.key);
+		Boolean idEquals = userActivationToken.userActivationTokenId.equals(this.userActivationTokenId);
+		Boolean userIdEquals = userActivationToken.appUser.getAppUserId().equals(this.appUser.getAppUserId());
+		Boolean expirationDateEquals = userActivationToken.expirationDate.equals(this.expirationDate);
+		Boolean keyEquals = userActivationToken.tokenKey.equals(this.tokenKey);
 		
 		return idEquals && userIdEquals && expirationDateEquals && keyEquals;
-	}
-	
+	}	
 }

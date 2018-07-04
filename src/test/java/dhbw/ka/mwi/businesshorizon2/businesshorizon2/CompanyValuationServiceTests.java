@@ -9,9 +9,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.services.CompanyValuationService;
-import edu.dhbw.ka.mwi.businesshorizon2.models.common.ApvCompanyValuationResult;
-import edu.dhbw.ka.mwi.businesshorizon2.models.common.FteCompanyValuationResult;
-import edu.dhbw.ka.mwi.businesshorizon2.models.common.FcfCompanyValuationResult;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ApvCompanyValuationResultDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.FcfCompanyValuationResultDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.FteCompanyValuationResultDto;
 
 
 public class CompanyValuationServiceTests {
@@ -35,7 +35,7 @@ public class CompanyValuationServiceTests {
 		double corporateTax = 0.3;
 
 		CompanyValuationService valuationService = new CompanyValuationService();
-		ApvCompanyValuationResult apvCompanyValuationResult = valuationService.performApvCompanyValuation(cashflows,
+		ApvCompanyValuationResultDto apvCompanyValuationResult = valuationService.performApvCompanyValuation(cashflows,
 				liabilities, equityInterest, outsideCapitalInterest, corporateTax);
 
 		Assert.assertEquals(32146.0, apvCompanyValuationResult.getCompanyValue(), 0.1);
@@ -61,7 +61,7 @@ public class CompanyValuationServiceTests {
 		double outsideCapitalInterest = 0.05;
 		CompanyValuationService valuationService = new CompanyValuationService();
 
-		FcfCompanyValuationResult fcfCompanyValuationResult = valuationService.performFcfCompanyValuationResult(cashflows, liabilities, equityInterest,
+		FcfCompanyValuationResultDto fcfCompanyValuationResult = valuationService.performFcfCompanyValuationResult(cashflows, liabilities, equityInterest,
 				outsideCapitalInterest, corporateTax);
 
 		Assert.assertEquals(32146.0,fcfCompanyValuationResult.getCompanyValue(), 0.1);
@@ -88,7 +88,7 @@ public class CompanyValuationServiceTests {
 		double corporateTax = 0.26325;
 
 		CompanyValuationService valuationService = new CompanyValuationService();
-		FteCompanyValuationResult fteCompanyValuationResult = valuationService.performFteCompanyValuationResult(
+		FteCompanyValuationResultDto fteCompanyValuationResult = valuationService.performFteCompanyValuationResult(
 				cashflows, liabilities, equityInterest, outsideCapitalInterest, corporateTax);
 
 		Assert.assertEquals(1055.24, fteCompanyValuationResult.getCompanyValue(), 0.1);
