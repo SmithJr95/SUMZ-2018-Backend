@@ -7,7 +7,7 @@ import javax.validation.constraints.Pattern;
 
 import edu.dhbw.ka.mwi.businesshorizon2.models.daos.RoleDao;
 
-public class UserDto {
+public class UserPutRequestDto {
 
     private Long id;
     
@@ -19,21 +19,29 @@ public class UserDto {
     //must contain 1 uppercase & 1 lowercase character 
     //must contain one special symbol from @#$%
     @Pattern(regexp = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})")
-    private String password;
+    private String oldPassword;
+    
+    //at least 6 characters, maximum 20 
+    //must contain one digit 0..9 
+    //must contain 1 uppercase & 1 lowercase character 
+    //must contain one special symbol from @#$%
+    @Pattern(regexp = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})")
+    private String newPassword;
     
     private List<RoleDao> roles;
     
     private Boolean isActive;
     
-	public UserDto(Long id, String email, String password, List<RoleDao> roles, Boolean isActive) {
+    public UserPutRequestDto(Long id, String email, String passwordOld, String passwordNew, List<RoleDao> roles, Boolean isActive) {
     	this.id = id;
     	this.email = email;
-    	this.password = password;
+    	this.oldPassword = passwordOld;
+    	this.newPassword = passwordNew;
     	this.roles = roles;
     	this.isActive = isActive;
     }
-    
-    public UserDto() {
+
+	public UserPutRequestDto() {
     	
     }
 
@@ -53,12 +61,20 @@ public class UserDto {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
+    public String getOldPassword() {
+        return oldPassword;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setOldPassword(String password) {
+        this.oldPassword = password;
+    }
+    
+    public String getNewPassword() {
+    	return newPassword;
+    }
+    
+    public String setNewPassword(String passwordNew) {
+    	return this.newPassword = passwordNew;
     }
 
     public List<RoleDao> getRoles() {
@@ -68,13 +84,12 @@ public class UserDto {
     public void setRoles(List<RoleDao> roles) {
         this.roles = roles;
     }
-    
-    public Boolean getIsActive() {
+
+	public Boolean getIsActive() {
 		return isActive;
 	}
 
 	public void setIsActive(Boolean isActive) {
 		this.isActive = isActive;
 	}
-
 }

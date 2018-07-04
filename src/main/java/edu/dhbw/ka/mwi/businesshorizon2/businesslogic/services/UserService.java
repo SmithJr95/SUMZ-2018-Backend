@@ -10,6 +10,7 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.mail.MessagingException;
 
@@ -118,7 +119,7 @@ public class UserService implements IUserService {
 	}
 	
 	@Override 
-	public void activateUser(String tokenStr) throws JsonParseException, JsonMappingException, IOException {
+	public void activateUser(String tokenStr) throws Exception {
 		byte[] bytes = Base64.getDecoder().decode(tokenStr);
 		tokenStr = new String(bytes);
 		
@@ -126,18 +127,29 @@ public class UserService implements IUserService {
 		objectMapper.findAndRegisterModules();
 		UserActivationTokenDao token = objectMapper.readValue(tokenStr, UserActivationTokenDao.class);
 		
-		UserActivationTokenDao tokenFromDB = userActivationTokenRepository.findById(token.getId()).get();
+		Optional<UserActivationTokenDao> tokenFromDB = userActivationTokenRepository.findById(token.getId());
 		UserDao user = userRepository.findById(token.getUserId()).get();
 		
-		Boolean tokenIsValid 		= token.equals(tokenFromDB);
+		UserActivationTokenDao tokenFromDBObject = null;
+		
+		if (tokenFromDB.isPresent()) {
+			tokenFromDBObject = tokenFromDB.get();
+		}else {
+			throw new Exception("Der verwendete Token existiert nicht.");
+		}
+		
+		Boolean tokenExists			= tokenFromDB.isPresent();
+		Boolean tokenIsValid 		= token.equals(tokenFromDBObject);
 		Boolean tokenIsUnexpired 	= token.getExpirationDate().isAfter(LocalDateTime.now());
 		Boolean userIsInactive 		= !user.getIsActive();
 
-		if (tokenIsValid && tokenIsUnexpired && userIsInactive) {
+		if (tokenExists && tokenIsValid && tokenIsUnexpired && userIsInactive ) {
 			user.setIsActive(true);
 			userRepository.save(user);
-			userActivationTokenRepository.delete(tokenFromDB);
-		}		
+			userActivationTokenRepository.delete(tokenFromDBObject);
+		}else {
+			throw new Exception("Der verwendete Token ist ungültig.");
+		}
 		
 	}
 	
@@ -224,5 +236,52 @@ public class UserService implements IUserService {
 	public String encodePassword(String password) {
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(securityConfig.getEncodingStrength());
 		return (passwordEncoder.encode(password));
+	}
+	
+	@Override 
+	public void updateUserPassword(UserDao oldUser, UserDao newUser, Long userID) throws Exception {
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(securityConfig.getEncodingStrength());
+		
+		oldUser.setPassword(oldUser.getPassword());
+		newUser.setPassword(encodePassword(newUser.getPassword()));
+		
+		Optional<UserDao> userFromDb = userRepository.findById(userID);
+		
+		if (userFromDb.isPresent()){
+			
+			UserDao userFromDbObject = userFromDb.get();
+			Boolean oldPasswordIsCorrect = passwordEncoder.matches(oldUser.getPassword(), userFromDbObject.getPassword());
+			
+			if (oldPasswordIsCorrect){
+				
+				userFromDbObject.setPassword(newUser.getPassword());
+				userRepository.save(userFromDbObject);
+				
+			}else {
+				throw new Exception("Sie haben ein falsches altes Passwort angegeben.");
+			}
+		}else {
+			throw new Exception("Es existiert kein Benutzerkonto mit der ID: " + userID + ".");
+		}
+	}
+	
+	@Override
+	public void deleteUser(UserDao user, Long id) throws Exception {
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(securityConfig.getEncodingStrength());
+		
+		Optional<UserDao> userFromDb = userRepository.findById(id);
+		
+		if (userFromDb.isPresent()) {
+			
+			UserDao userFromDbObject = userFromDb.get();
+			Boolean passwordIsCorrect = passwordEncoder.matches(user.getPassword(), userFromDbObject.getPassword());
+			if (passwordIsCorrect) {
+				userRepository.delete(userFromDbObject);
+			}else {
+				throw new Exception("Sie haben ein falsches Passwort angegeben.");
+			}
+		}else {
+			throw new Exception("Es existiert kein Benutzerkonto mit der ID: " + id + ".");
+		}
 	}
 }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import edu.dhbw.ka.mwi.businesshorizon2.models.daos.UserDao;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.UserDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.UserPutRequestDto;
 
 public class UserMapper {
 	public static UserDao mapToDao(UserDto userDto) {
@@ -21,5 +22,13 @@ public class UserMapper {
 	
 	public static UserDto mapToDto(UserDao uDao) {
 		return new UserDto(uDao.getId(), uDao.getEmail(), uDao.getPassword(), uDao.getRoles(), uDao.getIsActive());
+	}
+	
+	public static UserDao mapPutRequestOldToDao(UserPutRequestDto uDto) {
+		return new UserDao((long)0, "", uDto.getOldPassword(), null, false);
+	}
+	
+	public static UserDao mapPutRequestNewToDao(UserPutRequestDto uDto) {
+		return new UserDao((long)0, "", uDto.getNewPassword(), null, false);
 	}
 }

@@ -20,7 +20,7 @@ public interface IUserService {
     
     public UserDao findByEmail(String s);
 
-	void activateUser(String token) throws JsonParseException, JsonMappingException, IOException;
+	void activateUser(String token) throws JsonParseException, JsonMappingException, IOException, Exception;
 
 	UserPasswordResetTokenDao checkPasswordResetToken(String token) throws JsonParseException, JsonMappingException, IOException, Exception;
 
@@ -31,4 +31,8 @@ public interface IUserService {
 	String requestUserPasswordReset(String email, String host) throws Exception;
 
 	String encodePassword(String password);
+
+	void updateUserPassword(UserDao oldUser, UserDao newUser, Long userID) throws Exception;
+
+	void deleteUser(UserDao user, Long id) throws Exception;
 }
