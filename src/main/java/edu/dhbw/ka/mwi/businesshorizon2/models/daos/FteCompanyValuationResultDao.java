@@ -19,6 +19,12 @@ public class FteCompanyValuationResultDao {
 	@Column(name="CompanyValue")
 	private Double companyValue;
 
+	public FteCompanyValuationResultDao() {}
+	
+	public FteCompanyValuationResultDao(Double companyValue) {
+		this.companyValue = companyValue;
+	}
+	
 	public Long getFteCompanyValuationResultId() { return fteCompanyValuationResultId; }
 
 	public Double getCompanyValue() { return companyValue; }

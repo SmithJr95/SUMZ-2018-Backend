@@ -7,11 +7,14 @@ import java.util.List;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import edu.dhbw.ka.mwi.businesshorizon2.models.common.MultiPeriodAccountingFigure;
-import edu.dhbw.ka.mwi.businesshorizon2.models.common.TimeSeriesItem;
-import edu.dhbw.ka.mwi.businesshorizon2.models.common.TimeSeriesItemDate;
-import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioPostRequestDto;
+import org.springframework.stereotype.Component;
 
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.MultiPeriodAccountingFigureRequestDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioPostRequestDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.TimeSeriesItemDateDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.TimeSeriesItemDto;
+
+@Component
 public class IsDateFormatConsistentValidator implements ConstraintValidator<IsDateFormatConsistent, ScenarioPostRequestDto>{
 	
 	public enum DateFormats{
@@ -23,11 +26,11 @@ public class IsDateFormatConsistentValidator implements ConstraintValidator<IsDa
 	@Override
 	public boolean isValid(ScenarioPostRequestDto arg0, ConstraintValidatorContext arg1) {
 		
-		List<TimeSeriesItemDate> timeSeriesItemDates = new ArrayList<TimeSeriesItemDate>();
+		List<TimeSeriesItemDateDto> timeSeriesItemDates = new ArrayList<TimeSeriesItemDateDto>();
 		
-		for (MultiPeriodAccountingFigure figure : arg0.getAllMultiPeriodAccountingFigures()) {
+		for (MultiPeriodAccountingFigureRequestDto figure : arg0.getAllMultiPeriodAccountingFigures()) {
 			if(figure != null && figure.getTimeSeries() != null) {
-				for (TimeSeriesItem item : figure.getTimeSeries()) {
+				for (TimeSeriesItemDto item : figure.getTimeSeries()) {
 					if(item != null && item.getDate() != null) {
 						timeSeriesItemDates.add(item.getDate());
 					}

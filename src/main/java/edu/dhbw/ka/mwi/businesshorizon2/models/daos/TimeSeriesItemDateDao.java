@@ -22,6 +22,17 @@ public class TimeSeriesItemDateDao {
 	@Column(name="ItemQuarter")
 	private Integer itemQuarter;
 	
+	public TimeSeriesItemDateDao() {}
+	
+	public TimeSeriesItemDateDao(Integer itemYear) {
+		this.itemYear = itemYear;
+	} 
+	
+	public TimeSeriesItemDateDao(Integer itemYear, Integer itemQuarter) {
+		this.itemYear = itemYear;
+		this.itemQuarter = itemQuarter;
+	}
+	
 	public Long getTimeSeriesItemDateId() { return timeSeriesItemDateId; }
 	
 	public Integer getItemYear() { return itemYear; }

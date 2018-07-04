@@ -10,12 +10,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.ITimeSeriesPredictionService;
-import edu.dhbw.ka.mwi.businesshorizon2.models.common.MultiPeriodAccountingFigure;
 import edu.dhbw.ka.mwi.businesshorizon2.models.common.MultiPeriodAccountingFigureNames;
-import edu.dhbw.ka.mwi.businesshorizon2.models.common.PredictionRequestTimeSeries;
-import edu.dhbw.ka.mwi.businesshorizon2.models.common.PredictionResponseTimeSeries;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.MultiPeriodAccountingFigureRequestDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.PredictionRequestDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.PredictionRequestTimeSeriesDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.PredictionResponseDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.PredictionResponseTimeSeriesDto;
 
 @Service
 public class TimeSeriesPredictionService implements ITimeSeriesPredictionService{
@@ -25,16 +25,16 @@ public class TimeSeriesPredictionService implements ITimeSeriesPredictionService
 	
 	@Override
 	public void MakePredictions(
-			List<MultiPeriodAccountingFigure> historicAccountingFigures, 
+			List<MultiPeriodAccountingFigureRequestDto> historicAccountingFigures, 
 			HashMap<MultiPeriodAccountingFigureNames, HashMap<Integer, List<Double>>> stochasticAccountingFigures,
 			Integer periods,
 			Integer numSamples) {
 		
-		List<PredictionRequestTimeSeries> timeSeries = new ArrayList<PredictionRequestTimeSeries>();
+		List<PredictionRequestTimeSeriesDto> timeSeries = new ArrayList<PredictionRequestTimeSeriesDto>();
 		Double[] amountsArr = new Double[historicAccountingFigures.size()];
 		
-		for (MultiPeriodAccountingFigure figure : historicAccountingFigures) {
-			timeSeries.add(new PredictionRequestTimeSeries(figure.getFigureName(), figure.getTimeSeriesAmountsSortedAscByDate().toArray(amountsArr)));
+		for (MultiPeriodAccountingFigureRequestDto figure : historicAccountingFigures) {
+			timeSeries.add(new PredictionRequestTimeSeriesDto(figure.getFigureName(), figure.getTimeSeriesAmountsSortedAscByDate().toArray(amountsArr)));
 		}
 		
 		PredictionRequestDto request = new PredictionRequestDto(timeSeries, periods, numSamples);
@@ -50,7 +50,7 @@ public class TimeSeriesPredictionService implements ITimeSeriesPredictionService
 		System.out.println("-----------------------RESPONSE-----------------------");
 		System.out.println(result);
 		
-		for (PredictionResponseTimeSeries ts : result.getTimeSeries()) {
+		for (PredictionResponseTimeSeriesDto ts : result.getTimeSeries()) {
 			MultiPeriodAccountingFigureNames name = MultiPeriodAccountingFigureNames.valueOf(ts.getId());
 			stochasticAccountingFigures.put(name, new HashMap<Integer, List<Double>>());
 			

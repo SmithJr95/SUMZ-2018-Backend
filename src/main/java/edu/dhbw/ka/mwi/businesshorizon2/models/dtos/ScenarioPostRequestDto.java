@@ -11,7 +11,6 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import edu.dhbw.ka.mwi.businesshorizon2.models.common.MultiPeriodAccountingFigure;
 import edu.dhbw.ka.mwi.businesshorizon2.models.common.MultiPeriodAccountingFigureNames;
 import edu.dhbw.ka.mwi.businesshorizon2.validators.IsContinuousTimeSeries;
 import edu.dhbw.ka.mwi.businesshorizon2.validators.IsDateFormatConsistent;
@@ -63,34 +62,34 @@ public class ScenarioPostRequestDto {
 	private Double interestOnLiabilitiesRate;
 	
 	@Valid
-	private MultiPeriodAccountingFigure depreciation;
+	private MultiPeriodAccountingFigureRequestDto depreciation;
 	
 	@Valid
-	private MultiPeriodAccountingFigure additionalIncome;
+	private MultiPeriodAccountingFigureRequestDto additionalIncome;
 	
 	@Valid
-	private MultiPeriodAccountingFigure additionalCosts;
+	private MultiPeriodAccountingFigureRequestDto additionalCosts;
 	
 	@Valid
-	private MultiPeriodAccountingFigure investments;
+	private MultiPeriodAccountingFigureRequestDto investments;
 	
 	@Valid
-	private MultiPeriodAccountingFigure divestments;
+	private MultiPeriodAccountingFigureRequestDto divestments;
 	
 	@Valid
-	private MultiPeriodAccountingFigure revenue;
+	private MultiPeriodAccountingFigureRequestDto revenue;
 	
 	@Valid
-	private MultiPeriodAccountingFigure costOfMaterial;
+	private MultiPeriodAccountingFigureRequestDto costOfMaterial;
 	
 	@Valid
-	private MultiPeriodAccountingFigure costOfStaff;
+	private MultiPeriodAccountingFigureRequestDto costOfStaff;
 	
 	@Valid
-	private MultiPeriodAccountingFigure liabilities;
+	private MultiPeriodAccountingFigureRequestDto liabilities;
 	
 	@Valid
-	private MultiPeriodAccountingFigure freeCashFlows;
+	private MultiPeriodAccountingFigureRequestDto freeCashFlows;
 	
 	public String getScenarioName() { return scenarioName; }
 	public void setScenarioName(String name) { this.scenarioName = name; }
@@ -113,32 +112,32 @@ public class ScenarioPostRequestDto {
 	public Double getEquityInterestRate() { return equityInterestRate; }
 	public void setEquityInterestRate(Double equityInterestRate) { this.equityInterestRate = equityInterestRate; }
 	
-	public MultiPeriodAccountingFigure getRevenue() { return revenue; }
-	public void setRevenue(MultiPeriodAccountingFigure revenue) {
+	public MultiPeriodAccountingFigureRequestDto getRevenue() { return revenue; }
+	public void setRevenue(MultiPeriodAccountingFigureRequestDto revenue) {
 		this.revenue = revenue; 
 		this.revenue.setFigureName(MultiPeriodAccountingFigureNames.Revenue);
 	}
 	
-	public MultiPeriodAccountingFigure getAdditionalIncome() { return additionalIncome; }
-	public void setAdditionalIncome(MultiPeriodAccountingFigure additionalIncome) { 
+	public MultiPeriodAccountingFigureRequestDto getAdditionalIncome() { return additionalIncome; }
+	public void setAdditionalIncome(MultiPeriodAccountingFigureRequestDto additionalIncome) { 
 		this.additionalIncome = additionalIncome; 
 		this.additionalIncome.setFigureName(MultiPeriodAccountingFigureNames.AdditionalIncome);
 	}
 	
-	public MultiPeriodAccountingFigure getCostOfMaterial() { return costOfMaterial; }
-	public void setCostOfMaterial(MultiPeriodAccountingFigure costOfMaterial) { 
+	public MultiPeriodAccountingFigureRequestDto getCostOfMaterial() { return costOfMaterial; }
+	public void setCostOfMaterial(MultiPeriodAccountingFigureRequestDto costOfMaterial) { 
 		this.costOfMaterial = costOfMaterial; 
 		this.costOfMaterial.setFigureName(MultiPeriodAccountingFigureNames.CostOfMaterial);
 	}
 	
-	public MultiPeriodAccountingFigure getCostOfStaff() { return costOfStaff; }
-	public void setCostOfStaff(MultiPeriodAccountingFigure costOfStaff) { 
+	public MultiPeriodAccountingFigureRequestDto getCostOfStaff() { return costOfStaff; }
+	public void setCostOfStaff(MultiPeriodAccountingFigureRequestDto costOfStaff) { 
 		this.costOfStaff = costOfStaff; 
 		this.costOfStaff.setFigureName(MultiPeriodAccountingFigureNames.CostOfStaff);
 	}
 	
-	public MultiPeriodAccountingFigure getAdditionalCosts() { return additionalCosts; }
-	public void setAdditionalCosts(MultiPeriodAccountingFigure additionalCosts) { 
+	public MultiPeriodAccountingFigureRequestDto getAdditionalCosts() { return additionalCosts; }
+	public void setAdditionalCosts(MultiPeriodAccountingFigureRequestDto additionalCosts) { 
 		this.additionalCosts = additionalCosts; 
 		this.additionalCosts.setFigureName(MultiPeriodAccountingFigureNames.AdditionalCosts);
 	}
@@ -146,38 +145,38 @@ public class ScenarioPostRequestDto {
 	public Double getInterestOnLiabilitiesRate() { return interestOnLiabilitiesRate; }
 	public void setInterestOnLiabilitiesRate(Double interestOnLiabilitiesRate) { this.interestOnLiabilitiesRate = interestOnLiabilitiesRate; }
 	
-	public MultiPeriodAccountingFigure getInvestments() { return investments; }
-	public void setInvestments(MultiPeriodAccountingFigure investments) { 
+	public MultiPeriodAccountingFigureRequestDto getInvestments() { return investments; }
+	public void setInvestments(MultiPeriodAccountingFigureRequestDto investments) { 
 		this.investments = investments; 
 		this.investments.setFigureName(MultiPeriodAccountingFigureNames.Investments);
 	}
 	
-	public MultiPeriodAccountingFigure getDivestments() { return divestments; }
-	public void setDivestments(MultiPeriodAccountingFigure divestments) { 
+	public MultiPeriodAccountingFigureRequestDto getDivestments() { return divestments; }
+	public void setDivestments(MultiPeriodAccountingFigureRequestDto divestments) { 
 		this.divestments = divestments; 
 		this.divestments.setFigureName(MultiPeriodAccountingFigureNames.Divestments);
 	}
 	
-	public MultiPeriodAccountingFigure getLiabilities() { return liabilities; }
-	public void setLiabilities(MultiPeriodAccountingFigure liabilities) { 
+	public MultiPeriodAccountingFigureRequestDto getLiabilities() { return liabilities; }
+	public void setLiabilities(MultiPeriodAccountingFigureRequestDto liabilities) { 
 		this.liabilities = liabilities; 
 		this.liabilities.setFigureName(MultiPeriodAccountingFigureNames.Liabilities);
 	}
 	
-	public MultiPeriodAccountingFigure getFreeCashFlows() { return freeCashFlows; }
-	public void setFreeCashFlows(MultiPeriodAccountingFigure freeCashFlows) { 
+	public MultiPeriodAccountingFigureRequestDto getFreeCashFlows() { return freeCashFlows; }
+	public void setFreeCashFlows(MultiPeriodAccountingFigureRequestDto freeCashFlows) { 
 		this.freeCashFlows = freeCashFlows; 
 		this.freeCashFlows.setFigureName(MultiPeriodAccountingFigureNames.FreeCashFlows);
 	}
 	
-	public MultiPeriodAccountingFigure getDepreciation() { return depreciation; }
-	public void setDepreciation(MultiPeriodAccountingFigure depreciation) { 
+	public MultiPeriodAccountingFigureRequestDto getDepreciation() { return depreciation; }
+	public void setDepreciation(MultiPeriodAccountingFigureRequestDto depreciation) { 
 		this.depreciation = depreciation; 
 		this.depreciation.setFigureName(MultiPeriodAccountingFigureNames.Depreciation);
 	} 
 	
-	public List<MultiPeriodAccountingFigure> getAllMultiPeriodAccountingFigures(){
-		List<MultiPeriodAccountingFigure> multiPeriodAccountingFigures = new ArrayList<MultiPeriodAccountingFigure>();
+	public List<MultiPeriodAccountingFigureRequestDto> getAllMultiPeriodAccountingFigures(){
+		List<MultiPeriodAccountingFigureRequestDto> multiPeriodAccountingFigures = new ArrayList<MultiPeriodAccountingFigureRequestDto>();
 		
 		multiPeriodAccountingFigures.add(this.depreciation);
 		multiPeriodAccountingFigures.add(this.additionalIncome);

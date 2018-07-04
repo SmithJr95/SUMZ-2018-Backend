@@ -5,27 +5,30 @@ import java.util.List;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import edu.dhbw.ka.mwi.businesshorizon2.models.common.MultiPeriodAccountingFigure;
-import edu.dhbw.ka.mwi.businesshorizon2.models.common.MultiPeriodAccountingFigureNames;
-import edu.dhbw.ka.mwi.businesshorizon2.models.common.TimeSeriesItemDate;
-import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioPostRequestDto;
+import org.springframework.stereotype.Component;
 
+import edu.dhbw.ka.mwi.businesshorizon2.models.common.MultiPeriodAccountingFigureNames;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.MultiPeriodAccountingFigureRequestDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioPostRequestDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.TimeSeriesItemDateDto;
+
+@Component
 public class IsValidTimeSeriesRangesValidator implements ConstraintValidator<IsValidTimeSeriesRanges, ScenarioPostRequestDto> {
 
 	@Override
 	public boolean isValid(ScenarioPostRequestDto arg0, ConstraintValidatorContext arg1) {
 		
-		List<MultiPeriodAccountingFigure> historicMultiPeriodAccountingFigures = arg0.getAllMultiPeriodAccountingFigures();
+		List<MultiPeriodAccountingFigureRequestDto> historicMultiPeriodAccountingFigures = arg0.getAllMultiPeriodAccountingFigures();
 		historicMultiPeriodAccountingFigures.removeIf(x -> x == null || x.getTimeSeries() == null || x.getIsHistoric() == null || x.getIsHistoric().equals(false));
 		
-		List<MultiPeriodAccountingFigure> futureMultiPeriodAccountingFigures = arg0.getAllMultiPeriodAccountingFigures();
+		List<MultiPeriodAccountingFigureRequestDto> futureMultiPeriodAccountingFigures = arg0.getAllMultiPeriodAccountingFigures();
 		futureMultiPeriodAccountingFigures.removeIf(x -> x == null || x.getTimeSeries() == null || x.getIsHistoric() == null || x.getIsHistoric().equals(true));
 		
 		if (historicMultiPeriodAccountingFigures.isEmpty() && futureMultiPeriodAccountingFigures.isEmpty()) {
 			return true;
 		}
 		
-		TimeSeriesItemDate basisDate = null;
+		TimeSeriesItemDateDto basisDate = null;
 		
 		for(int i = 0; i < historicMultiPeriodAccountingFigures.size(); i++) {
 			
@@ -33,7 +36,7 @@ public class IsValidTimeSeriesRangesValidator implements ConstraintValidator<IsV
 				return false;
 			}
 			
-			TimeSeriesItemDate maxDate = historicMultiPeriodAccountingFigures.get(i).getMaxDate();
+			TimeSeriesItemDateDto maxDate = historicMultiPeriodAccountingFigures.get(i).getMaxDate();
 			if(maxDate == null) {
 				return false;
 			}
@@ -61,7 +64,7 @@ public class IsValidTimeSeriesRangesValidator implements ConstraintValidator<IsV
 				return false;
 			}
 			
-			TimeSeriesItemDate minDate;
+			TimeSeriesItemDateDto minDate;
 			
 			if(futureMultiPeriodAccountingFigures.get(i).getFigureName() == MultiPeriodAccountingFigureNames.Liabilities) {
 				

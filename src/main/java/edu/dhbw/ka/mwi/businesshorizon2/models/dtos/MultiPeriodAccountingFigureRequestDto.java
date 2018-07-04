@@ -1,4 +1,4 @@
-package edu.dhbw.ka.mwi.businesshorizon2.models.common;
+package edu.dhbw.ka.mwi.businesshorizon2.models.dtos;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,34 +8,44 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import edu.dhbw.ka.mwi.businesshorizon2.comparators.TimeSeriesItemByDateComparator;
+import edu.dhbw.ka.mwi.businesshorizon2.models.common.MultiPeriodAccountingFigureNames;
+import edu.dhbw.ka.mwi.businesshorizon2.models.common.TimeSeriesItemDateFormats;
 
-public class MultiPeriodAccountingFigure {
+public class MultiPeriodAccountingFigureRequestDto {
 	
 	@NotNull(message="isHistoric must not be null.")
 	private Boolean isHistoric;
 	
 	@NotNull(message="timeSeries must not be null.")
 	@Valid
-	private List<TimeSeriesItem> timeSeries;
+	private List<TimeSeriesItemDto> timeSeries;
 	
 	private MultiPeriodAccountingFigureNames figureName;
+	
+	public MultiPeriodAccountingFigureRequestDto() {}
+	
+	public MultiPeriodAccountingFigureRequestDto(MultiPeriodAccountingFigureNames figureName, Boolean isHistoric, List<TimeSeriesItemDto> timeSeries) {
+		this.figureName = figureName;
+		this.isHistoric = isHistoric;
+		this.timeSeries = timeSeries;
+	}
 	
 	public Boolean getIsHistoric() { return isHistoric; }
 	public void setIsHistoric(Boolean isHistoric) { this.isHistoric = isHistoric; }
 
-	public List<TimeSeriesItem> getTimeSeries() { return timeSeries; }
-	public void setTimeSeries(List<TimeSeriesItem> timeSeries) { this.timeSeries = timeSeries; }
+	public List<TimeSeriesItemDto> getTimeSeries() { return timeSeries; }
+	public void setTimeSeries(List<TimeSeriesItemDto> timeSeries) { this.timeSeries = timeSeries; }
 	
 	public MultiPeriodAccountingFigureNames getFigureName() { return figureName; }
 	public void setFigureName(MultiPeriodAccountingFigureNames figureName) {this.figureName = figureName; }
 	
-	public TimeSeriesItemDate getMaxDate() {
+	public TimeSeriesItemDateDto getMaxDate() {
 		if (this.timeSeries == null || this.timeSeries.isEmpty()){
 			return null;
 		}
 		
-		List<TimeSeriesItemDate> dates = new ArrayList<TimeSeriesItemDate>();
-		for (TimeSeriesItem item : this.timeSeries) {
+		List<TimeSeriesItemDateDto> dates = new ArrayList<TimeSeriesItemDateDto>();
+		for (TimeSeriesItemDto item : this.timeSeries) {
 			if(item.getDate() != null && item.getDate().getDateFormat() != TimeSeriesItemDateFormats.Invalid) {
 				dates.add(item.getDate());
 			}
@@ -48,13 +58,13 @@ public class MultiPeriodAccountingFigure {
 		return Collections.max(dates);
 	}
 	
-	public TimeSeriesItemDate getMinDate() {
+	public TimeSeriesItemDateDto getMinDate() {
 		if (this.timeSeries == null || this.timeSeries.isEmpty()){
 			return null;
 		}
 		
-		List<TimeSeriesItemDate> dates = new ArrayList<TimeSeriesItemDate>();
-		for (TimeSeriesItem item : this.timeSeries) {
+		List<TimeSeriesItemDateDto> dates = new ArrayList<TimeSeriesItemDateDto>();
+		for (TimeSeriesItemDto item : this.timeSeries) {
 			if(item.getDate() != null && item.getDate().getDateFormat() != TimeSeriesItemDateFormats.Invalid) {
 				dates.add(item.getDate());
 			}
@@ -72,7 +82,7 @@ public class MultiPeriodAccountingFigure {
 			throw new UnsupportedOperationException();
 		}
 		
-		List<TimeSeriesItemDate> dates = new ArrayList<TimeSeriesItemDate>();
+		List<TimeSeriesItemDateDto> dates = new ArrayList<TimeSeriesItemDateDto>();
 		for (int i = 0; i < this.timeSeries.size(); i++) {
 			if(this.timeSeries.get(i).getDate() != null && this.timeSeries.get(i).getDate().getDateFormat() != TimeSeriesItemDateFormats.Invalid) {
 				dates.add(this.timeSeries.get(i).getDate());
@@ -81,8 +91,8 @@ public class MultiPeriodAccountingFigure {
 		dates.sort(null);
 		
 		for (int i = 0; i < dates.size() - 1; i++) {
-			TimeSeriesItemDate expectedNext = dates.get(i).getNextDate();
-			TimeSeriesItemDate actualNext = dates.get(i + 1);
+			TimeSeriesItemDateDto expectedNext = dates.get(i).getNextDate();
+			TimeSeriesItemDateDto actualNext = dates.get(i + 1);
 			
 			if(!expectedNext.equals(actualNext)) {
 				return false;

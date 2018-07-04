@@ -31,13 +31,13 @@ import edu.dhbw.ka.mwi.businesshorizon2.models.daos.AppUserDao;
 public class UserService implements IUserService {
 	
     @Autowired 
-    SecurityConfig securityConfig;
+    private SecurityConfig securityConfig;
     
     @Autowired 
-    UserActivationService userActivationService;
+    private UserActivationService userActivationService;
     
     @Autowired 
-    EmailService emailService;
+    private EmailService emailService;
     
     @Autowired
     private IAppUserRepository userRepository;

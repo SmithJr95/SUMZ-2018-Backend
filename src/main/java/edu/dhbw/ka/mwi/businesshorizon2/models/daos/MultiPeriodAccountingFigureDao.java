@@ -29,6 +29,14 @@ public class MultiPeriodAccountingFigureDao {
 	@OneToMany(mappedBy="accountingFigure")
 	private List<TimeSeriesItemDao> timeSeriesItems = new ArrayList<TimeSeriesItemDao>();
 	
+	public MultiPeriodAccountingFigureDao() {}
+	
+	public MultiPeriodAccountingFigureDao(String figureName, Boolean isHistoric, List<TimeSeriesItemDao> timeSeriesItems) {
+		this.figureName = figureName;
+		this.isHistoric = isHistoric;
+		this.timeSeriesItems = timeSeriesItems;
+	}
+	
 	public Long getMultiPeriodAccountingFigureId() { return multiPeriodAccountingFigureId; }
 	
 	public String getFigureName() {return figureName;}

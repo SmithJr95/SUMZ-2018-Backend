@@ -25,6 +25,14 @@ public class FcfCompanyValuationResultDao {
 	@Column(name="TotalLiabilities")
 	private Double totalLiabilities;
 
+	public FcfCompanyValuationResultDao() {}
+	
+	public FcfCompanyValuationResultDao(Double companyValue, Double marketValueTotalAssets, Double totalLiabilities) {
+		this.companyValue = companyValue;
+		this.marketValueTotalAssets = marketValueTotalAssets;
+		this.totalLiabilities = totalLiabilities;
+	}
+	
 	public Long getFcfCompanyValuationResultId() { return fcfCompanyValuationResultId; }
 
 	public Double getCompanyValue() { return companyValue; }

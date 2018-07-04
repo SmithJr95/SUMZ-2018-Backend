@@ -31,6 +31,16 @@ public class ApvCompanyValuationResultDao {
 	@Column(name="TaxShield")
 	private Double taxShield;
 
+	public ApvCompanyValuationResultDao() {}
+	
+	public ApvCompanyValuationResultDao(Double companyValue, Double marketValueTotalAssets, Double totalLiabilities, Double marketValueEquity, Double taxShield) {
+		this.companyValue = companyValue;
+		this.marketValueTotalAssets = marketValueTotalAssets;
+		this.totalLiabilities = totalLiabilities;
+		this.marketValueEquity = marketValueEquity;
+		this.taxShield = taxShield;
+	}
+	
 	public Long getApvCompanyValuationResultId() { return apvCompanyValuationResultId; }
 
 	public Double getCompanyValue() { return companyValue; }

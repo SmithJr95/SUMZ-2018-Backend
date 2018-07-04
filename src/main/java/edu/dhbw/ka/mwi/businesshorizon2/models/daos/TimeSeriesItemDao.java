@@ -31,6 +31,13 @@ public class TimeSeriesItemDao {
 	@JoinColumn(name = "TimeSeriesItemDateId")
 	private TimeSeriesItemDateDao timeSeriesItemDate;
 	
+	public TimeSeriesItemDao() {}
+	
+	public TimeSeriesItemDao(Double itemAmount, TimeSeriesItemDateDao timeSeriesItemDate) {
+		this.itemAmount = itemAmount;
+		this.timeSeriesItemDate = timeSeriesItemDate;
+	}
+	
 	public Long getTimeSeriesItemId() { return timeSeriesItemId; }
 	
 	public Double getItemAmount() { return itemAmount; }

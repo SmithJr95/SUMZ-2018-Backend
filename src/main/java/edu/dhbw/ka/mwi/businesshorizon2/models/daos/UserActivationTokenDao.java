@@ -34,8 +34,12 @@ public class UserActivationTokenDao {
 	@Column(name = "TokenKey", columnDefinition = "nvarchar")
 	private String tokenKey;
 	
-	public UserActivationTokenDao() {
-		
+	public UserActivationTokenDao() {}
+	
+	public UserActivationTokenDao(AppUserDao appUser, LocalDateTime expirationDate, String tokenKey) {
+		this.appUser = appUser;
+		this.expirationDate = expirationDate;
+		this.tokenKey = tokenKey;
 	}
 		
 	public Long getUserActivationTokenId() { return userActivationTokenId; }

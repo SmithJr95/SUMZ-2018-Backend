@@ -6,10 +6,13 @@ import java.util.List;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import edu.dhbw.ka.mwi.businesshorizon2.models.common.MultiPeriodAccountingFigure;
+import org.springframework.stereotype.Component;
+
 import edu.dhbw.ka.mwi.businesshorizon2.models.common.MultiPeriodAccountingFigureNames;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.MultiPeriodAccountingFigureRequestDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioPostRequestDto;
 
+@Component
 public class IsValidAccountingFigureCombinationValidator implements ConstraintValidator<IsValidAccountingFigureCombination, ScenarioPostRequestDto> {
 
 	@Override
@@ -30,11 +33,11 @@ public class IsValidAccountingFigureCombinationValidator implements ConstraintVa
 				MultiPeriodAccountingFigureNames.Investments,
 				MultiPeriodAccountingFigureNames.Revenue);
 		
-		List<MultiPeriodAccountingFigure> multiPeriodAccountingFigures = arg0.getAllMultiPeriodAccountingFigures();
+		List<MultiPeriodAccountingFigureRequestDto> multiPeriodAccountingFigures = arg0.getAllMultiPeriodAccountingFigures();
 		multiPeriodAccountingFigures.removeIf(x -> x == null);
 		
 		EnumSet<MultiPeriodAccountingFigureNames> actualCombination = EnumSet.noneOf(MultiPeriodAccountingFigureNames.class);
-		for (MultiPeriodAccountingFigure figure : multiPeriodAccountingFigures) {
+		for (MultiPeriodAccountingFigureRequestDto figure : multiPeriodAccountingFigures) {
 			actualCombination.add(figure.getFigureName());
 		}
 		
