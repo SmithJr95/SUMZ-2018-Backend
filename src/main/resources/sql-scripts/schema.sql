@@ -29,3 +29,12 @@ CREATE TABLE userActivationToken (
   PRIMARY KEY (id), 
   CONSTRAINT FK_UserActivationTokenUser FOREIGN KEY (userId) REFERENCES appUser(id)
 );
+
+CREATE TABLE userPasswordResetToken (
+  id bigint(20) NOT NULL AUTO_INCREMENT, 
+  userId bigint(20) NOT NULL,
+  expirationDate datetime NOT NULL, 
+  key varchar(255) not null,
+  PRIMARY KEY (id), 
+  CONSTRAINT FK_UserPasswordResetTokenUser FOREIGN KEY (userId) REFERENCES appUser(id)
+);
