@@ -3,6 +3,7 @@ package edu.dhbw.ka.mwi.businesshorizon2.controllers;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -15,12 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.IAccountingFigureCalculationsService;
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.ICompanyValuationService;
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.ITimeSeriesPredictionService;
+import edu.dhbw.ka.mwi.businesshorizon2.dataaccess.interfaces.IScenarioRepository;
 import edu.dhbw.ka.mwi.businesshorizon2.models.common.ApvCompanyValuationResult;
 import edu.dhbw.ka.mwi.businesshorizon2.models.common.CompanyValueDistribution;
 import edu.dhbw.ka.mwi.businesshorizon2.models.common.FcfCompanyValuationResult;
 import edu.dhbw.ka.mwi.businesshorizon2.models.common.FteCompanyValuationResult;
 import edu.dhbw.ka.mwi.businesshorizon2.models.common.MultiPeriodAccountingFigure;
 import edu.dhbw.ka.mwi.businesshorizon2.models.common.MultiPeriodAccountingFigureNames;
+import edu.dhbw.ka.mwi.businesshorizon2.models.daos.ScenarioDao;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioPostRequestDto;
 
 @RestController
@@ -28,6 +31,9 @@ import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioPostRequestDto;
 public class ScenarioController {
 	//@Autowired
 	//private IScenarioService scenarioService;
+	
+	@Autowired
+	private IScenarioRepository scenarioRepository;
 	
 	@Autowired
 	private IAccountingFigureCalculationsService accountingService;
@@ -161,5 +167,10 @@ public class ScenarioController {
 			//company value distribution.
 			CompanyValueDistribution companyValueDistribution = companyValuationService.getCompanyValueDistribution(companyValues);
 		}	
-	} 
+	}
+	
+	@RequestMapping(method = RequestMethod.GET)
+	public String getScenario () {
+		return "Success";
+	}
 }

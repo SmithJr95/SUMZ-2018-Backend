@@ -1,8 +1,5 @@
 package edu.dhbw.ka.mwi.businesshorizon2.models.daos;
 
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -15,14 +12,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-@Entity(name = "UserActivationToken")
-@Table(name = "UserActivationToken")
-public class UserActivationTokenDao {
+@Entity(name = "UserPasswordResetToken")
+@Table(name = "UserPasswordResetToken")
+public class UserPasswordResetTokenDao {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="UserActivationTokenId")
-    private Long userActivationTokenId;
+	@Column(name="UserPasswordResetTokenId")
+    private Long userPasswordResetTokenId;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "AppUserId")
@@ -34,11 +31,7 @@ public class UserActivationTokenDao {
 	@Column(name = "TokenKey", columnDefinition = "nvarchar")
 	private String tokenKey;
 	
-	public UserActivationTokenDao() {
-		
-	}
-		
-	public Long getUserActivationTokenId() { return userActivationTokenId; }
+	public Long getUserActivationTokenId() { return userPasswordResetTokenId; }
 
 	public LocalDateTime getExpirationDate() { return expirationDate; }
 	public void setExpirationDate(LocalDateTime expirationDate) { this.expirationDate = expirationDate; }
@@ -49,12 +42,12 @@ public class UserActivationTokenDao {
 	public AppUserDao getAppUser() { return appUser; }
 	public void setAppUser(AppUserDao appUser) { this.appUser = appUser; }
 	
-	public Boolean equals(UserActivationTokenDao userActivationToken) {
-		Boolean idEquals = userActivationToken.userActivationTokenId.equals(this.userActivationTokenId);
-		Boolean userIdEquals = userActivationToken.appUser.getAppUserId().equals(this.appUser.getAppUserId());
-		Boolean expirationDateEquals = userActivationToken.expirationDate.equals(this.expirationDate);
-		Boolean keyEquals = userActivationToken.tokenKey.equals(this.tokenKey);
+	public Boolean equals(UserPasswordResetTokenDao userPasswordResetToken) {
+		Boolean idEquals = userPasswordResetToken.userPasswordResetTokenId.equals(this.userPasswordResetTokenId);
+		Boolean userIdEquals = userPasswordResetToken.appUser.getAppUserId().equals(this.appUser.getAppUserId());
+		Boolean expirationDateEquals = userPasswordResetToken.expirationDate.equals(this.expirationDate);
+		Boolean keyEquals = userPasswordResetToken.tokenKey.equals(this.tokenKey);
 		
 		return idEquals && userIdEquals && expirationDateEquals && keyEquals;
-	}	
+	}
 }

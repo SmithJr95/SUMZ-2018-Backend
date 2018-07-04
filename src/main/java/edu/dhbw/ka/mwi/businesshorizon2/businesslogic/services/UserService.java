@@ -20,12 +20,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.IUserService;
 import edu.dhbw.ka.mwi.businesshorizon2.config.SecurityConfig;
-import edu.dhbw.ka.mwi.businesshorizon2.dataaccess.interfaces.IRoleRepository;
+import edu.dhbw.ka.mwi.businesshorizon2.dataaccess.interfaces.IAppRoleRepository;
 import edu.dhbw.ka.mwi.businesshorizon2.dataaccess.interfaces.IUserActivationTokenRepository;
-import edu.dhbw.ka.mwi.businesshorizon2.dataaccess.interfaces.IUserRepository;
+import edu.dhbw.ka.mwi.businesshorizon2.dataaccess.interfaces.IAppUserRepository;
 import edu.dhbw.ka.mwi.businesshorizon2.models.daos.UserActivationTokenDao;
-import edu.dhbw.ka.mwi.businesshorizon2.models.daos.RoleDao;
-import edu.dhbw.ka.mwi.businesshorizon2.models.daos.UserDao;
+import edu.dhbw.ka.mwi.businesshorizon2.models.daos.AppRoleDao;
+import edu.dhbw.ka.mwi.businesshorizon2.models.daos.AppUserDao;
 
 @Service
 public class UserService implements IUserService {
@@ -40,33 +40,33 @@ public class UserService implements IUserService {
     EmailService emailService;
     
     @Autowired
-    private IUserRepository userRepository;
+    private IAppUserRepository userRepository;
     
     @Autowired
-    private IRoleRepository roleRepository; 
+    private IAppRoleRepository roleRepository; 
     
     @Autowired 
     private IUserActivationTokenRepository userActivationTokenRepository;
     
     @Override
-    public List<UserDao> findAllUsers() {
-        return (List<UserDao>)userRepository.findAll();
+    public List<AppUserDao> findAllUsers() {
+        return (List<AppUserDao>)userRepository.findAll();
     }
    
 	@Override
-	public UserDao findByEmail(String s) {
+	public AppUserDao findByEmail(String s) {
 		return userRepository.findByEmail(s);
 	}
 	
 	@Override
-	public UserDao addUser(UserDao user) throws MessagingException, JsonProcessingException, NoSuchAlgorithmException, UnsupportedEncodingException {
+	public AppUserDao addUser(AppUserDao user) throws MessagingException, JsonProcessingException, NoSuchAlgorithmException, UnsupportedEncodingException {
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(securityConfig.getEncodingStrength());
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		ArrayList<RoleDao> roles = new ArrayList<RoleDao>();
+		user.setPassword(passwordEncoder.encode(user.getAppUserPassword()));
+		ArrayList<AppRoleDao> roles = new ArrayList<AppRoleDao>();
 		roles.add(roleRepository.findById((long) 1).get());
-		user.setRoles(roles);
+		user.setAppRoles(roles);
 		user.setIsActive(false);
-		UserDao userResult = userRepository.save(user);
+		AppUserDao userResult = userRepository.save(user);
 		
 		UserActivationTokenDao userToken = userActivationService.createUserActivationToken(userResult);
 		
@@ -95,8 +95,8 @@ public class UserService implements IUserService {
 		objectMapper.findAndRegisterModules();
 		UserActivationTokenDao token = objectMapper.readValue(tokenStr, UserActivationTokenDao.class);
 		
-		UserActivationTokenDao tokenFromDB = userActivationTokenRepository.findById(token.getId()).get();
-		UserDao user = userRepository.findById(token.getUserId()).get();
+		UserActivationTokenDao tokenFromDB = userActivationTokenRepository.findById(token.getUserActivationTokenId()).get();
+		AppUserDao user = userRepository.findById(token.getAppUser().getAppUserId()).get();
 		
 		Boolean tokenIsValid 		= token.equals(tokenFromDB);
 		Boolean tokenIsUnexpired 	= token.getExpirationDate().isAfter(LocalDateTime.now());
@@ -108,7 +108,5 @@ public class UserService implements IUserService {
 			user.setIsActive(true);
 			userRepository.save(user);
 		}
-		
-		
 	}
 }

@@ -2,16 +2,16 @@ package edu.dhbw.ka.mwi.businesshorizon2.models.dtos;
 
 import java.util.List;
 
-import edu.dhbw.ka.mwi.businesshorizon2.models.daos.RoleDao;
+import edu.dhbw.ka.mwi.businesshorizon2.models.daos.AppRoleDao;
 
 public class UserDto {
 
     private Long id;
     private String email;
     private String password;
-    private List<RoleDao> roles;
+    private List<AppRoleDao> roles;
     
-    public UserDto(Long id, String email, String password, List<RoleDao> roles, Boolean isActive) {
+    public UserDto(Long id, String email, String password, List<AppRoleDao> roles, Boolean isActive) {
     	this.id = id;
     	this.email = email;
     	this.password = password;
@@ -46,11 +46,11 @@ public class UserDto {
         this.password = password;
     }
 
-    public List<RoleDao> getRoles() {
+    public List<AppRoleDao> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<RoleDao> roles) {
+    public void setRoles(List<AppRoleDao> roles) {
         this.roles = roles;
     }
 }

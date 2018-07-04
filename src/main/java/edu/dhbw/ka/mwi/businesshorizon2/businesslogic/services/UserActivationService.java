@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.IUserActivationService;
 import edu.dhbw.ka.mwi.businesshorizon2.dataaccess.interfaces.IUserActivationTokenRepository;
 import edu.dhbw.ka.mwi.businesshorizon2.models.daos.UserActivationTokenDao;
-import edu.dhbw.ka.mwi.businesshorizon2.models.daos.UserDao;
+import edu.dhbw.ka.mwi.businesshorizon2.models.daos.AppUserDao;
 
 @Service
 public class UserActivationService implements IUserActivationService {
@@ -20,16 +20,16 @@ public class UserActivationService implements IUserActivationService {
 	@Autowired 
 	IUserActivationTokenRepository userActivationTokenRepository; 
 	
-	public UserActivationTokenDao createUserActivationToken(UserDao user) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+	public UserActivationTokenDao createUserActivationToken(AppUserDao user) throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		
-		Long userId = user.getId();
+		Long userId = user.getAppUserId();
 		
 		LocalDateTime expirationDate = LocalDateTime.now(); 
 		expirationDate = expirationDate.plusDays(1); 
 				
 		String key = "SUMZ1718";
 		key += (user.getEmail().toString());
-		key += (user.getId().toString()); 
+		key += (user.getAppUserId().toString()); 
 		key += (expirationDate.toString());	
 		
 		MessageDigest md5 = MessageDigest.getInstance("MD5");
