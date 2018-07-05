@@ -8,13 +8,11 @@ import java.util.List;
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;
-import javax.validation.Valid;
 import javax.validation.Validator;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -24,10 +22,6 @@ import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.MultiPeriodAccountingFigureR
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioPostRequestDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.TimeSeriesItemDateDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.TimeSeriesItemDto;
-import edu.dhbw.ka.mwi.businesshorizon2.validators.IsContinuousTimeSeriesValidator;
-import edu.dhbw.ka.mwi.businesshorizon2.validators.IsDateFormatConsistentValidator;
-import edu.dhbw.ka.mwi.businesshorizon2.validators.IsValidAccountingFigureCombinationValidator;
-import edu.dhbw.ka.mwi.businesshorizon2.validators.IsValidTimeSeriesRangesValidator;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = App.class)

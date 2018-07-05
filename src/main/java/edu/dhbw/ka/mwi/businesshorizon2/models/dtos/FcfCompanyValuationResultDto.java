@@ -13,8 +13,10 @@ public class FcfCompanyValuationResultDto {
 	
 	public double getCompanyValue() { return companyValue; }
 	public void setCompanyValue(double companyValue) { this.companyValue = companyValue; }
+	
 	public double getMarketValueTotalAssets() { return marketValueTotalAssets; }
 	public void setMarketValueTotalAssets(double marketValueTotalAssets) { this.marketValueTotalAssets = marketValueTotalAssets; }
+	
 	public double getTotalLiabilities() { return totalLiabilities; }
 	public void setTotalLiabilities(double totalLiabilities) { this.totalLiabilities = totalLiabilities; }
 }

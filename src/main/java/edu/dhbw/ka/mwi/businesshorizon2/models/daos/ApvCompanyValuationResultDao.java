@@ -25,19 +25,19 @@ public class ApvCompanyValuationResultDao {
 	@Column(name="TotalLiabilities")
 	private Double totalLiabilities;
 	
-	@Column(name="MarketValueEquity")
-	private Double marketValueEquity;
+	@Column(name="PresentValueOfCashflows")
+	private Double presentValueOfCashflows;
 	
 	@Column(name="TaxShield")
 	private Double taxShield;
 
 	public ApvCompanyValuationResultDao() {}
 	
-	public ApvCompanyValuationResultDao(Double companyValue, Double marketValueTotalAssets, Double totalLiabilities, Double marketValueEquity, Double taxShield) {
+	public ApvCompanyValuationResultDao(Double companyValue, Double marketValueTotalAssets, Double totalLiabilities, Double presentValueOfCashflows, Double taxShield) {
 		this.companyValue = companyValue;
 		this.marketValueTotalAssets = marketValueTotalAssets;
 		this.totalLiabilities = totalLiabilities;
-		this.marketValueEquity = marketValueEquity;
+		this.presentValueOfCashflows = presentValueOfCashflows;
 		this.taxShield = taxShield;
 	}
 	
@@ -52,8 +52,8 @@ public class ApvCompanyValuationResultDao {
 	public Double getTotalLiabilities() { return totalLiabilities; }
 	public void setTotalLiabilities(Double totalLiabilities) { this.totalLiabilities = totalLiabilities; }
 
-	public Double getMarketValueEquity() { return marketValueEquity; } 
-	public void setMarketValueEquity(Double marketValueEquity) { this.marketValueEquity = marketValueEquity; }
+	public Double getPresentValueOfCashflows() { return presentValueOfCashflows; } 
+	public void setPresentValueOfCashflows(Double presentValueOfCashflows) { this.presentValueOfCashflows = presentValueOfCashflows; }
 
 	public Double getTaxShield() { return taxShield; }
 	public void setTaxShield(Double taxShield) { this.taxShield = taxShield;}

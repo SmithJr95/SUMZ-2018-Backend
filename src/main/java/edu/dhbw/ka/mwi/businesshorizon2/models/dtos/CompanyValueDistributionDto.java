@@ -2,17 +2,9 @@ package edu.dhbw.ka.mwi.businesshorizon2.models.dtos;
 
 import java.util.List;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
 public class CompanyValueDistributionDto {
 	
-	@NotNull
-	@Size(min=31, max=31, message="xValues must have be of length 31.")
 	private List<Double> xValues;
-	
-	@NotNull
-	@Size(min=31, max=31, message="yValues must have be of length 31.")
 	private List<Double> yValues;
 	
 	public CompanyValueDistributionDto() {}
