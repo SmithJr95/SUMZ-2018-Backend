@@ -34,9 +34,14 @@ public class UserPasswordResetTokenDao {
 	
 	public UserPasswordResetTokenDao() {}
 	
-	public UserPasswordResetTokenDao(Long userPasswordResetTokenId, LocalDateTime expirationDate, String tokenKey) {
-		this.userPasswordResetTokenId = userPasswordResetTokenId;
+	public UserPasswordResetTokenDao(AppUserDao appUser, LocalDateTime expirationDate, String tokenKey) {
+		this.appUser = appUser;
 		this.expirationDate = expirationDate;
+		this.tokenKey = tokenKey;
+	}
+	
+	public UserPasswordResetTokenDao(LocalDateTime expirationDate, String tokenKey) {
+		this.expirationDate = expirationDate; 
 		this.tokenKey = tokenKey;
 	}
 	

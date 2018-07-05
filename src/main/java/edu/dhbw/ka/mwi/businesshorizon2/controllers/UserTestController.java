@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.services.UserService;
-import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.UserDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.AppUserDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.mappers.UserMapper;
 
 @RestController
@@ -20,7 +20,7 @@ public class UserTestController {
 	
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public List<UserDto> getAllUsers(){
+	public List<AppUserDto> getAllUsers(){
 		return UserMapper.mapToDto(userService.findAllUsers());
 	}
 

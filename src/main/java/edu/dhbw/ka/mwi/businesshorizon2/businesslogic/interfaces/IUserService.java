@@ -3,11 +3,15 @@ package edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces;
 import java.io.IOException;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 import edu.dhbw.ka.mwi.businesshorizon2.models.daos.AppUserDao;
 import edu.dhbw.ka.mwi.businesshorizon2.models.daos.UserPasswordResetTokenDao;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.AppUserDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.UserPutRequestDto;
 
 public interface IUserService {
 	
@@ -19,15 +23,15 @@ public interface IUserService {
 
 	UserPasswordResetTokenDao checkPasswordResetToken(String token) throws JsonParseException, JsonMappingException, IOException, Exception;
 
-	void resetUserPassword(AppUserDao user, String tokenStr) throws JsonParseException, JsonMappingException, IOException, Exception;
-
-	AppUserDao addUser(AppUserDao user, String host) throws Exception;
-
 	String requestUserPasswordReset(String email, String host) throws Exception;
 
 	String encodePassword(String password);
 
-	void updateUserPassword(AppUserDao oldUser, AppUserDao newUser, Long userID) throws Exception;
+	AppUserDao addUser(AppUserDto userDto, String host) throws Exception;
 
-	void deleteUser(AppUserDao user, Long id) throws Exception;
+	void resetUserPassword(@Valid AppUserDto userDto, String tokenStr) throws Exception;
+
+	void deleteUser(@Valid AppUserDto userDto, Long id) throws Exception;
+
+	void updateUserPassword(UserPutRequestDto user, Long userID) throws Exception;
 }

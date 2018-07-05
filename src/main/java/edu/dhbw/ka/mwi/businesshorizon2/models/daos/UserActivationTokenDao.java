@@ -38,6 +38,11 @@ public class UserActivationTokenDao {
 		this.expirationDate = expirationDate;
 		this.tokenKey = tokenKey;
 	}
+	
+	public UserActivationTokenDao(LocalDateTime expirationDate, String tokenKey) {
+		this.expirationDate = expirationDate;
+		this.tokenKey = tokenKey;
+	}
 		
 	public Long getUserActivationTokenId() { return userActivationTokenId; }
 

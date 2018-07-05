@@ -40,7 +40,7 @@ public class UserPasswordResetService implements IUserPasswordResetService {
 		
 		key = sb.toString();
 		
-		UserPasswordResetTokenDao userPasswordResetToken = new UserPasswordResetTokenDao(user.getAppUserId(), expirationDate, key);
+		UserPasswordResetTokenDao userPasswordResetToken = new UserPasswordResetTokenDao(user, expirationDate, key);
 		userPasswordResetToken = userPasswordResetTokenRepository.save(userPasswordResetToken);
 		
 		return userPasswordResetToken; 

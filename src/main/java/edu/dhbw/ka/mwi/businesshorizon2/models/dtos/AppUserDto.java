@@ -9,7 +9,7 @@ import javax.validation.constraints.Pattern;
 import edu.dhbw.ka.mwi.businesshorizon2.models.daos.AppRoleDao;
 
 
-public class UserDto {
+public class AppUserDto {
 
     private Long id;
     
@@ -27,9 +27,9 @@ public class UserDto {
     
     private List<AppRoleDao> roles = new ArrayList<>();
     
-    public UserDto() { }
+    public AppUserDto() { }
     
-    public UserDto(Long id, String email, String password, List<AppRoleDao> roles, Boolean isActive) {
+    public AppUserDto(Long id, String email, String password, List<AppRoleDao> roles, Boolean isActive) {
     	this.id = id;
     	this.email = email;
     	this.password = password;

@@ -19,7 +19,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.services.UserService;
 import edu.dhbw.ka.mwi.businesshorizon2.models.daos.AppUserDao;
-import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.UserDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.AppUserDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.UserPutRequestDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.mappers.UserMapper;
 
@@ -31,9 +31,9 @@ public class UserController {
 	private UserService userService;
 	
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void addUser(@RequestBody @Valid UserDto userDto, HttpServletRequest request) throws Exception{
+	public void addUser(@RequestBody @Valid AppUserDto userDto, HttpServletRequest request) throws Exception{
 		String host = request.getRequestURL().toString();
-		userService.addUser(UserMapper.mapToDao(userDto), host);
+		userService.addUser(userDto, host);
 	}
 	
 	@RequestMapping(value = "/activate/{token}", method = RequestMethod.GET)
@@ -48,10 +48,10 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/forgot", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void passwordForgot(@RequestBody @Valid UserDto user, HttpServletRequest request) throws Exception {
+	public void passwordForgot(@RequestBody @Valid AppUserDto user, HttpServletRequest request) throws Exception {
 		String redirectURL = request.getRequestURL().toString();
 		redirectURL = redirectURL.replaceAll(request.getRequestURI(), "");
-		userService.requestUserPasswordReset(UserMapper.mapToDao(user).getEmail(), redirectURL);
+		userService.requestUserPasswordReset(user.getEmail(), redirectURL);
 	}
 	
 	@RequestMapping(value = "/forgot/{token}", method = RequestMethod.GET)
@@ -67,9 +67,9 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/reset/{token}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void resetPassword(@PathVariable("token") String token, @RequestBody @Valid UserDto userDto) throws Exception {
-		AppUserDao user = UserMapper.mapToDao(userDto); 
-		userService.resetUserPassword(user, token);
+	public void resetPassword(@PathVariable("token") String token, @RequestBody @Valid AppUserDto userDto) throws Exception {
+		
+		userService.resetUserPassword(userDto, token);
 	}
 	
 	@RequestMapping(value = "/reset/{token}", method = RequestMethod.GET)
@@ -79,16 +79,14 @@ public class UserController {
 	
 	@RequestMapping(value = "/{id}/delete", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAuthority('ADMIN_USER') or hasAuthority('STANDARD_USER')")
-	public void deleteUser(@RequestBody @Valid UserDto user, @PathVariable Long id) throws Exception {
-		AppUserDao userDao = UserMapper.mapToDao(user);
-		userService.deleteUser(userDao, id);
+	public void deleteUser(@RequestBody @Valid AppUserDto user, @PathVariable Long id) throws Exception {
+		userService.deleteUser(user, id);
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAuthority('ADMIN_USER') or hasAuthority('STANDARD_USER')")
 	public void updateUser(@RequestBody @Valid UserPutRequestDto user, @PathVariable Long id) throws Exception {
-		AppUserDao oldUser = UserMapper.mapPutRequestOldToDao(user);
-		AppUserDao newUser = UserMapper.mapPutRequestNewToDao(user);
-		userService.updateUserPassword(oldUser, newUser, id);
+
+		userService.updateUserPassword(user, id);
 	}
 }

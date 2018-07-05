@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import javax.mail.MessagingException;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -35,6 +36,11 @@ import edu.dhbw.ka.mwi.businesshorizon2.models.daos.AppRoleDao;
 import edu.dhbw.ka.mwi.businesshorizon2.models.daos.AppUserDao;
 import edu.dhbw.ka.mwi.businesshorizon2.models.daos.UserActivationTokenDao;
 import edu.dhbw.ka.mwi.businesshorizon2.models.daos.UserPasswordResetTokenDao;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.UserActivationTokenDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.AppUserDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.UserPasswordResetTokenDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.UserPutRequestDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.mappers.UserMapper;
 
 
 @Service
@@ -79,7 +85,9 @@ public class UserService implements IUserService {
 	}
 	
 	@Override
-	public AppUserDao addUser(AppUserDao user, String host) throws Exception {
+	public AppUserDao addUser(AppUserDto userDto, String host) throws Exception {
+		
+		AppUserDao user = UserMapper.mapToDao(userDto); 
 		
 		AppUserDao userFromDB = userRepository.findByEmail(user.getEmail());
 		
@@ -98,10 +106,11 @@ public class UserService implements IUserService {
 		AppUserDao userResult = userRepository.save(user);
 		
 		UserActivationTokenDao userToken = userActivationService.createUserActivationToken(userResult);
+		UserActivationTokenDto userTokenDto = UserMapper.mapToDto(userToken);
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.findAndRegisterModules();
-		String link = objectMapper.writeValueAsString(userToken); 
+		String link = objectMapper.writeValueAsString(userTokenDto); 
 		
 		link = Base64.getEncoder().encodeToString(link.getBytes(StandardCharsets.UTF_8));
 		link = host + "/activate/" + link;
@@ -128,10 +137,12 @@ public class UserService implements IUserService {
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.findAndRegisterModules();
-		UserActivationTokenDao token = objectMapper.readValue(tokenStr, UserActivationTokenDao.class);
+		UserActivationTokenDto token = objectMapper.readValue(tokenStr, UserActivationTokenDto.class);
+		UserActivationTokenDao tokenDao = UserMapper.mapToDao(token);
+		tokenDao.setAppUser(userRepository.findById(token.getAppUserId()).get());
 		
-		Optional<UserActivationTokenDao> tokenFromDB = userActivationTokenRepository.findById(token.getUserActivationTokenId());
-		AppUserDao user = userRepository.findById(token.getAppUser().getAppUserId()).get();
+		Optional<UserActivationTokenDao> tokenFromDB = userActivationTokenRepository.findById(tokenDao.getUserActivationTokenId());
+		AppUserDao user = userRepository.findById(tokenDao.getAppUser().getAppUserId()).get();
 		
 		UserActivationTokenDao tokenFromDBObject = null;
 		
@@ -169,10 +180,11 @@ public class UserService implements IUserService {
 		}
 		
 		UserPasswordResetTokenDao userToken = userPasswordResetService.createUserPasswordResetToken(user);
+		UserPasswordResetTokenDto userTokenDto = UserMapper.mapToDto(userToken);
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.findAndRegisterModules();
-		String token = objectMapper.writeValueAsString(userToken); 
+		String token = objectMapper.writeValueAsString(userTokenDto); 
 		
 		token 		= Base64.getEncoder().encodeToString(token.getBytes(StandardCharsets.UTF_8));
 		String link = host + "/users/reset/" + token;
@@ -199,7 +211,9 @@ public class UserService implements IUserService {
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.findAndRegisterModules();
-		UserPasswordResetTokenDao token = objectMapper.readValue(tokenStr, UserPasswordResetTokenDao.class);
+		UserPasswordResetTokenDto tokenDto = objectMapper.readValue(tokenStr, UserPasswordResetTokenDto.class);
+		UserPasswordResetTokenDao token = UserMapper.mapToDao(tokenDto);
+		token.setAppUser(userRepository.findById(tokenDto.getAppUserId()).get());
 		
 		UserPasswordResetTokenDao tokenFromDB = userPasswordResetTokenRepository.findById(token.getUserActivationTokenId()).get();
 		AppUserDao user = userRepository.findById(token.getUserActivationTokenId()).get();
@@ -224,8 +238,9 @@ public class UserService implements IUserService {
 	}
 	
 	@Override 
-	public void resetUserPassword(AppUserDao user, String tokenStr) throws Exception {
+	public void resetUserPassword(@Valid AppUserDto userDto, String tokenStr) throws Exception {
 		
+		AppUserDao user = UserMapper.mapToDao(userDto);
 		UserPasswordResetTokenDao token = checkPasswordResetToken(tokenStr);
 		
 		AppUserDao userFromDB = userRepository.findById(token.getUserActivationTokenId()).get();	
@@ -242,8 +257,11 @@ public class UserService implements IUserService {
 	}
 	
 	@Override 
-	public void updateUserPassword(AppUserDao oldUser, AppUserDao newUser, Long userID) throws Exception {
+	public void updateUserPassword(UserPutRequestDto user, Long userID) throws Exception {
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(securityConfig.getEncodingStrength());
+		
+		AppUserDao oldUser = UserMapper.mapPutRequestOldToDao(user);
+		AppUserDao newUser = UserMapper.mapPutRequestNewToDao(user);
 		
 		oldUser.setPassword(oldUser.getAppUserPassword());
 		newUser.setPassword(encodePassword(newUser.getAppUserPassword()));
@@ -269,8 +287,10 @@ public class UserService implements IUserService {
 	}
 	
 	@Override
-	public void deleteUser(AppUserDao user, Long id) throws Exception {
+	public void deleteUser(@Valid AppUserDto userDto, Long id) throws Exception {
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(securityConfig.getEncodingStrength());
+		
+		AppUserDao user = UserMapper.mapToDao(userDto);
 		
 		Optional<AppUserDao> userFromDb = userRepository.findById(id);
 		
@@ -287,4 +307,5 @@ public class UserService implements IUserService {
 			throw new Exception("Es existiert kein Benutzerkonto mit der ID: " + id + ".");
 		}
 	}
+
 }
