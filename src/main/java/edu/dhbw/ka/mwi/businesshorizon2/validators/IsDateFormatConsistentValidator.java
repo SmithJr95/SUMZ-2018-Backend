@@ -10,12 +10,12 @@ import javax.validation.ConstraintValidatorContext;
 import org.springframework.stereotype.Component;
 
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.MultiPeriodAccountingFigureRequestDto;
-import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioPostRequestDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioRequestDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.TimeSeriesItemDateDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.TimeSeriesItemDto;
 
 @Component
-public class IsDateFormatConsistentValidator implements ConstraintValidator<IsDateFormatConsistent, ScenarioPostRequestDto>{
+public class IsDateFormatConsistentValidator implements ConstraintValidator<IsDateFormatConsistent, ScenarioRequestDto>{
 	
 	public enum DateFormats{
 		Invalid,
@@ -24,7 +24,7 @@ public class IsDateFormatConsistentValidator implements ConstraintValidator<IsDa
 	}
 	
 	@Override
-	public boolean isValid(ScenarioPostRequestDto arg0, ConstraintValidatorContext arg1) {
+	public boolean isValid(ScenarioRequestDto arg0, ConstraintValidatorContext arg1) {
 		
 		List<TimeSeriesItemDateDto> timeSeriesItemDates = new ArrayList<TimeSeriesItemDateDto>();
 		

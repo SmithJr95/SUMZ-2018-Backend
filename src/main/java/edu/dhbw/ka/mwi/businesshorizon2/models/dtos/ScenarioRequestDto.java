@@ -21,7 +21,7 @@ import edu.dhbw.ka.mwi.businesshorizon2.validators.IsValidTimeSeriesRanges;
 @IsDateFormatConsistent()
 @IsContinuousTimeSeries()
 @IsValidTimeSeriesRanges()
-public class ScenarioPostRequestDto {
+public class ScenarioRequestDto {
 	
 	@NotNull(message = "scenarioName must not be null.")
 	@Size(min=1, max=20, message="scenarioName must consist of 1-20 characters.")
