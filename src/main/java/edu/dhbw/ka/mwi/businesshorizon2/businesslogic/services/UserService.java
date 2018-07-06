@@ -113,7 +113,7 @@ public class UserService implements IUserService {
 		String link = objectMapper.writeValueAsString(userTokenDto); 
 		
 		link = Base64.getEncoder().encodeToString(link.getBytes(StandardCharsets.UTF_8));
-		link = host + "activate/" + link;
+		link = host + "/activate/" + link;
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("email", user.getEmail());
