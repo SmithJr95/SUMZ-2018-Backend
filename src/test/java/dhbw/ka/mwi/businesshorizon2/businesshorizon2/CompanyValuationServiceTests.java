@@ -42,6 +42,56 @@ public class CompanyValuationServiceTests {
 	}
 	
 	@Test
+	public void performApvCompanyValuationWithBallwieserData() {
+		List<Double> cashflows = new ArrayList<Double>();
+		cashflows.add(138.61);
+		cashflows.add(202.31);
+		cashflows.add(174.41);
+		cashflows.add(202.51);
+		
+		List<Double> liabilities = new ArrayList<Double>();
+		liabilities.add(1260.0);
+		liabilities.add(1320.0);
+		liabilities.add(1330.0);
+		liabilities.add(1400.0);
+		
+		double equityInterest = 0.09969137;
+		double outsideCapitalInterest = 0.08;
+		double corporateTax = 0.26325;
+
+		CompanyValuationService valuationService = new CompanyValuationService();
+		ApvCompanyValuationResultDto apvCompanyValuationResult = valuationService.performApvCompanyValuation(cashflows,
+				liabilities, equityInterest, outsideCapitalInterest, corporateTax);
+
+		Assert.assertEquals(1055.24, apvCompanyValuationResult.getCompanyValue(), 0.1);
+	}
+	
+	@Test
+	public void performApvCompanyValuationWithPohlData() {
+		List<Double> cashflows = new ArrayList<Double>();
+		cashflows.add(176.76);
+		cashflows.add(520.13);
+		cashflows.add(404.87);
+		cashflows.add(203.78);
+		
+		List<Double> liabilities = new ArrayList<Double>();
+		liabilities.add(1260.0);
+		liabilities.add(1300.0);
+		liabilities.add(1000.0);
+		liabilities.add(1400.0);
+		
+		double equityInterest = 0.100582;
+		double outsideCapitalInterest = 0.08;
+		double corporateTax = 0.30625;
+
+		CompanyValuationService valuationService = new CompanyValuationService();
+		ApvCompanyValuationResultDto apvCompanyValuationResult = valuationService.performApvCompanyValuation(cashflows,
+				liabilities, equityInterest, outsideCapitalInterest, corporateTax);
+
+		Assert.assertEquals(1569.18934438987, apvCompanyValuationResult.getCompanyValue(), 0.1);
+	}
+	
+	@Test
 	public void performFcfCompanyValuation() {
 
 		List<Double> cashflows = new ArrayList<Double>();
@@ -65,6 +115,31 @@ public class CompanyValuationServiceTests {
 				outsideCapitalInterest, corporateTax);
 
 		Assert.assertEquals(32146.0,fcfCompanyValuationResult.getCompanyValue(), 0.1);
+	}
+	@Test
+	public void performFcfCompanyValuationwithBallwieserData() {
+
+		List<Double> cashflows = new ArrayList<Double>();
+		cashflows.add(138.61);
+		cashflows.add(202.31);
+		cashflows.add(174.41);
+		cashflows.add(202.51);
+		
+		List<Double> liabilities = new ArrayList<Double>();
+		liabilities.add(1260.0);
+		liabilities.add(1320.0);
+		liabilities.add(1330.0);
+		liabilities.add(1400.0);
+		
+		double equityInterest = 0.09969137;
+		double outsideCapitalInterest = 0.08;
+		double corporateTax = 0.26325;
+		CompanyValuationService valuationService = new CompanyValuationService();
+
+		FcfCompanyValuationResultDto fcfCompanyValuationResult = valuationService.performFcfCompanyValuationResult(cashflows, liabilities, equityInterest,
+				outsideCapitalInterest, corporateTax);
+
+		Assert.assertEquals(1055.24,fcfCompanyValuationResult.getCompanyValue(), 0.1);
 	}
 	
 
