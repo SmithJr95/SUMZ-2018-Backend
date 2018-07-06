@@ -10,13 +10,13 @@ import org.springframework.stereotype.Component;
 
 import edu.dhbw.ka.mwi.businesshorizon2.models.common.MultiPeriodAccountingFigureNames;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.MultiPeriodAccountingFigureRequestDto;
-import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioPostRequestDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioRequestDto;
 
 @Component
-public class IsValidAccountingFigureCombinationValidator implements ConstraintValidator<IsValidAccountingFigureCombination, ScenarioPostRequestDto> {
+public class IsValidAccountingFigureCombinationValidator implements ConstraintValidator<IsValidAccountingFigureCombination, ScenarioRequestDto> {
 
 	@Override
-	public boolean isValid(ScenarioPostRequestDto arg0, ConstraintValidatorContext arg1) {
+	public boolean isValid(ScenarioRequestDto arg0, ConstraintValidatorContext arg1) {
 		
 		EnumSet<MultiPeriodAccountingFigureNames> validCombination1 = EnumSet.of(
 				MultiPeriodAccountingFigureNames.Liabilities,

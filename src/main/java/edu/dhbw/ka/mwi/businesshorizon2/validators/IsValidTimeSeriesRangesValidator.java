@@ -9,14 +9,14 @@ import org.springframework.stereotype.Component;
 
 import edu.dhbw.ka.mwi.businesshorizon2.models.common.MultiPeriodAccountingFigureNames;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.MultiPeriodAccountingFigureRequestDto;
-import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioPostRequestDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioRequestDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.TimeSeriesItemDateDto;
 
 @Component
-public class IsValidTimeSeriesRangesValidator implements ConstraintValidator<IsValidTimeSeriesRanges, ScenarioPostRequestDto> {
+public class IsValidTimeSeriesRangesValidator implements ConstraintValidator<IsValidTimeSeriesRanges, ScenarioRequestDto> {
 
 	@Override
-	public boolean isValid(ScenarioPostRequestDto arg0, ConstraintValidatorContext arg1) {
+	public boolean isValid(ScenarioRequestDto arg0, ConstraintValidatorContext arg1) {
 		
 		List<MultiPeriodAccountingFigureRequestDto> historicMultiPeriodAccountingFigures = arg0.getAllMultiPeriodAccountingFigures();
 		historicMultiPeriodAccountingFigures.removeIf(x -> x == null || x.getTimeSeries() == null || x.getIsHistoric() == null || x.getIsHistoric().equals(false));

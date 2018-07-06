@@ -4,7 +4,7 @@ import edu.dhbw.ka.mwi.businesshorizon2.models.daos.FteCompanyValuationResultDao
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.FteCompanyValuationResultDto;
 
 public class FteCompanyValuationResultMapper {
-	
+
 	public static FteCompanyValuationResultDto mapDaoToDto(FteCompanyValuationResultDao dao) {
 		
 		if(dao == null) {
