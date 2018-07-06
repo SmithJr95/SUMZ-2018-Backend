@@ -5,23 +5,7 @@ import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ApvCompanyValuationResultDto
 
 public class ApvCompanyValuationResultMapper {
 	
-	public static ApvCompanyValuationResultDao mapDtoToDao(ApvCompanyValuationResultDto dto) {
-		
-		if(dto == null) {
-			return null;
-		}
-		
-		ApvCompanyValuationResultDao dao = new ApvCompanyValuationResultDao(
-				dto.getCompanyValue(), 
-				dto.getMarketValueTotalAssets(), 
-				dto.getTotalLiabilities(), 
-				dto.getMarketValueEquity(), 
-				dto.getTaxShield());
-		
-		return dao;
-	}
-	
-	public static ApvCompanyValuationResultDto mapDtoToDao(ApvCompanyValuationResultDao dao) {
+	public static ApvCompanyValuationResultDto mapDaoToDto(ApvCompanyValuationResultDao dao) {
 		
 		if(dao == null) {
 			return null;
@@ -31,7 +15,7 @@ public class ApvCompanyValuationResultMapper {
 				dao.getCompanyValue(), 
 				dao.getMarketValueTotalAssets(), 
 				dao.getTotalLiabilities(), 
-				dao.getMarketValueEquity(), 
+				dao.getPresentValueOfCashflows(), 
 				dao.getTaxShield());
 		
 		return dto;

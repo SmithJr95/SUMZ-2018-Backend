@@ -78,7 +78,7 @@ public class UserMapper {
 			return null;
 		}
 		
-		return new UserActivationTokenDao(tDto.getExpirationDate(), tDto.getTokenKey());
+		return new UserActivationTokenDao(tDto.getUserActivationTokenId(), null, tDto.getExpirationDate(), tDto.getTokenKey());
 	}
 	
 	public static UserActivationTokenDto mapToDto(UserActivationTokenDao tDao) {
@@ -94,11 +94,11 @@ public class UserMapper {
 			return null;
 		}
 		
-		return new UserPasswordResetTokenDao(tDto.getExpirationDate(), tDto.getTokenKey());
+		return new UserPasswordResetTokenDao(tDto.getUserPasswordResetTokenId(), null, tDto.getExpirationDate(), tDto.getTokenKey());
 	}
 	
 	public static UserPasswordResetTokenDto mapToDto(UserPasswordResetTokenDao tDao) {
-		UserPasswordResetTokenDto userPasswordResetTokenDto = new UserPasswordResetTokenDto(tDao.getUserActivationTokenId(), 
+		UserPasswordResetTokenDto userPasswordResetTokenDto = new UserPasswordResetTokenDto(tDao.getUserPasswordResetTokenId(),  
 				tDao.getAppUser().getAppUserId(), tDao.getExpirationDate(), tDao.getTokenKey());
 		
 		return userPasswordResetTokenDto;

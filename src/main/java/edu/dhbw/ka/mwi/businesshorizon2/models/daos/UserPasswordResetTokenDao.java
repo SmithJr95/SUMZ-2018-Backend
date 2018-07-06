@@ -34,7 +34,8 @@ public class UserPasswordResetTokenDao {
 	
 	public UserPasswordResetTokenDao() {}
 	
-	public UserPasswordResetTokenDao(AppUserDao appUser, LocalDateTime expirationDate, String tokenKey) {
+	public UserPasswordResetTokenDao(Long userPasswordResetTokenId, AppUserDao appUser, LocalDateTime expirationDate, String tokenKey) {
+		this.userPasswordResetTokenId = userPasswordResetTokenId;
 		this.appUser = appUser;
 		this.expirationDate = expirationDate;
 		this.tokenKey = tokenKey;
@@ -45,7 +46,7 @@ public class UserPasswordResetTokenDao {
 		this.tokenKey = tokenKey;
 	}
 	
-	public Long getUserActivationTokenId() { return userPasswordResetTokenId; }
+	public Long getUserPasswordResetTokenId() { return userPasswordResetTokenId; }
 
 	public LocalDateTime getExpirationDate() { return expirationDate; }
 	public void setExpirationDate(LocalDateTime expirationDate) { this.expirationDate = expirationDate; }
@@ -63,5 +64,15 @@ public class UserPasswordResetTokenDao {
 		Boolean keyEquals = userPasswordResetToken.tokenKey.equals(this.tokenKey);
 		
 		return idEquals && userIdEquals && expirationDateEquals && keyEquals;
+	}
+	
+	public String toString() {
+		String result = ""; 
+		result += " userPasswordResetTokenId: " + userPasswordResetTokenId; 
+		result += " appUserId:_" + appUser.getAppUserId();
+		result += " expirationDate: " + expirationDate;
+		result += " tokenKey: " + tokenKey;
+		
+		return result; 
 	}
 }

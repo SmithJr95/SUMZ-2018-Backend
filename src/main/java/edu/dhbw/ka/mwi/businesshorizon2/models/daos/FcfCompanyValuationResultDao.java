@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity(name = "FcfCompanyValuationResult")
@@ -24,7 +26,11 @@ public class FcfCompanyValuationResultDao {
 	
 	@Column(name="TotalLiabilities")
 	private Double totalLiabilities;
-
+	
+	@OneToOne
+	@JoinColumn(name="ScenarioId")
+	private ScenarioDao scenario;
+	
 	public FcfCompanyValuationResultDao() {}
 	
 	public FcfCompanyValuationResultDao(Double companyValue, Double marketValueTotalAssets, Double totalLiabilities) {
@@ -43,4 +49,7 @@ public class FcfCompanyValuationResultDao {
 
 	public Double getTotalLiabilities() { return totalLiabilities; }
 	public void setTotalLiabilities(Double totalLiabilities) { this.totalLiabilities = totalLiabilities; }
+	
+	public ScenarioDao getScenario() { return scenario; }
+	public void setScenario(ScenarioDao scenario) { this.scenario = scenario; }
 }

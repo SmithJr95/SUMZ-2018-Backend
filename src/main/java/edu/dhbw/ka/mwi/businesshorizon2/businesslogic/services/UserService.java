@@ -113,7 +113,7 @@ public class UserService implements IUserService {
 		String link = objectMapper.writeValueAsString(userTokenDto); 
 		
 		link = Base64.getEncoder().encodeToString(link.getBytes(StandardCharsets.UTF_8));
-		link = host + "/activate/" + link;
+		link = host + "activate/" + link;
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("email", user.getEmail());
@@ -138,11 +138,12 @@ public class UserService implements IUserService {
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.findAndRegisterModules();
 		UserActivationTokenDto token = objectMapper.readValue(tokenStr, UserActivationTokenDto.class);
+		
 		UserActivationTokenDao tokenDao = UserMapper.mapToDao(token);
 		tokenDao.setAppUser(userRepository.findById(token.getAppUserId()).get());
 		
 		Optional<UserActivationTokenDao> tokenFromDB = userActivationTokenRepository.findById(tokenDao.getUserActivationTokenId());
-		AppUserDao user = userRepository.findById(tokenDao.getAppUser().getAppUserId()).get();
+		AppUserDao user = userRepository.findById(token.getAppUserId()).get();
 		
 		UserActivationTokenDao tokenFromDBObject = null;
 		
@@ -153,8 +154,8 @@ public class UserService implements IUserService {
 		}
 		
 		Boolean tokenExists			= tokenFromDB.isPresent();
-		Boolean tokenIsValid 		= token.equals(tokenFromDBObject);
-		Boolean tokenIsUnexpired 	= token.getExpirationDate().isAfter(LocalDateTime.now());
+		Boolean tokenIsValid 		= tokenDao.equals(tokenFromDBObject);
+		Boolean tokenIsUnexpired 	= tokenDao.getExpirationDate().isAfter(LocalDateTime.now());
 		Boolean userIsInactive 		= !user.getIsActive();
 
 		if (tokenExists && tokenIsValid && tokenIsUnexpired && userIsInactive ) {
@@ -212,11 +213,12 @@ public class UserService implements IUserService {
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.findAndRegisterModules();
 		UserPasswordResetTokenDto tokenDto = objectMapper.readValue(tokenStr, UserPasswordResetTokenDto.class);
+		
 		UserPasswordResetTokenDao token = UserMapper.mapToDao(tokenDto);
 		token.setAppUser(userRepository.findById(tokenDto.getAppUserId()).get());
 		
-		UserPasswordResetTokenDao tokenFromDB = userPasswordResetTokenRepository.findById(token.getUserActivationTokenId()).get();
-		AppUserDao user = userRepository.findById(token.getUserActivationTokenId()).get();
+		UserPasswordResetTokenDao tokenFromDB = userPasswordResetTokenRepository.findById(token.getUserPasswordResetTokenId()).get();
+		AppUserDao user = userRepository.findById(token.getAppUser().getAppUserId()).get();
 		
 		Boolean tokenIsValid 		= token.equals(tokenFromDB);
 		Boolean tokenIsUnexpired 	= token.getExpirationDate().isAfter(LocalDateTime.now());
@@ -240,14 +242,20 @@ public class UserService implements IUserService {
 	@Override 
 	public void resetUserPassword(@Valid AppUserDto userDto, String tokenStr) throws Exception {
 		
-		AppUserDao user = UserMapper.mapToDao(userDto);
 		UserPasswordResetTokenDao token = checkPasswordResetToken(tokenStr);
 		
-		AppUserDao userFromDB = userRepository.findById(token.getUserActivationTokenId()).get();	
-		userFromDB.setPassword(encodePassword(user.getAppUserPassword()));
-		userRepository.save(userFromDB);
-		userPasswordResetTokenRepository.delete(token);
+		Long userId = token.getAppUser().getAppUserId();
 		
+		Optional<AppUserDao> user = userRepository.findById(userId);	
+		
+		if (user != null) {
+			AppUserDao userFromDB = user.get();
+			userFromDB.setPassword(encodePassword(userDto.getPassword()));
+			userRepository.save(userFromDB);
+			userPasswordResetTokenRepository.delete(token);
+		}else {
+			throw new Exception("Der im Token angegebene User existiert nicht."); 
+		}
 	}
 	
 	@Override

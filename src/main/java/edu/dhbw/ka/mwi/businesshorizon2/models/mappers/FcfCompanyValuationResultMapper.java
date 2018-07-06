@@ -5,20 +5,6 @@ import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.FcfCompanyValuationResultDto
 
 public class FcfCompanyValuationResultMapper {
 	
-	public static FcfCompanyValuationResultDao mapDtoToDao(FcfCompanyValuationResultDto dto) {
-		
-		if(dto == null) {
-			return null;
-		}
-		
-		FcfCompanyValuationResultDao dao = new FcfCompanyValuationResultDao(
-				dto.getCompanyValue(), 
-				dto.getMarketValueTotalAssets(), 
-				dto.getTotalLiabilities());
-				
-		return dao;
-	}
-	
 	public static FcfCompanyValuationResultDto mapDaoToDto(FcfCompanyValuationResultDao dao) {
 		
 		if(dao == null) {

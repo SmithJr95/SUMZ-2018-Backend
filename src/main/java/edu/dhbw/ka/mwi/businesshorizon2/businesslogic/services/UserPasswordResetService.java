@@ -22,6 +22,8 @@ public class UserPasswordResetService implements IUserPasswordResetService {
 		Long userId = user.getAppUserId();
 		
 		LocalDateTime expirationDate = LocalDateTime.now(); 
+		expirationDate = expirationDate.withNano(0);
+		expirationDate = expirationDate.withSecond(0);
 		expirationDate = expirationDate.plusDays(1); 
 		
 		String key = "SUMZ1718";
@@ -40,7 +42,7 @@ public class UserPasswordResetService implements IUserPasswordResetService {
 		
 		key = sb.toString();
 		
-		UserPasswordResetTokenDao userPasswordResetToken = new UserPasswordResetTokenDao(user, expirationDate, key);
+		UserPasswordResetTokenDao userPasswordResetToken = new UserPasswordResetTokenDao(null, user, expirationDate, key);
 		userPasswordResetToken = userPasswordResetTokenRepository.save(userPasswordResetToken);
 		
 		return userPasswordResetToken; 

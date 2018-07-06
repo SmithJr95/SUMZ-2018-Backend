@@ -7,6 +7,10 @@ import org.springframework.security.core.userdetails.User;
 
 public class CustomUserDetailsConfig extends User{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1914961795626200101L;
 	private final long userID;
 	
 	public CustomUserDetailsConfig(String username, String password, Collection<? extends GrantedAuthority> authorities, long userID) {

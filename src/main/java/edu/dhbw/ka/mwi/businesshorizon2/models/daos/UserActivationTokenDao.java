@@ -33,7 +33,8 @@ public class UserActivationTokenDao {
 	
 	public UserActivationTokenDao() {}
 	
-	public UserActivationTokenDao(AppUserDao appUser, LocalDateTime expirationDate, String tokenKey) {
+	public UserActivationTokenDao(Long userActivationTokenId, AppUserDao appUser, LocalDateTime expirationDate, String tokenKey) {
+		this.userActivationTokenId = userActivationTokenId;
 		this.appUser = appUser;
 		this.expirationDate = expirationDate;
 		this.tokenKey = tokenKey;
@@ -62,5 +63,16 @@ public class UserActivationTokenDao {
 		Boolean keyEquals = userActivationToken.tokenKey.equals(this.tokenKey);
 		
 		return idEquals && userIdEquals && expirationDateEquals && keyEquals;
-	}	
+	}
+	
+	@Override
+	public String toString() {
+		String result = "";
+		result += ("userActivationTokenId: " + userActivationTokenId);
+		result += (" appUserId: " + appUser.getAppUserId());
+		result += (" expirationDate: " + expirationDate);
+		result += (" tokenKey: " + tokenKey);
+		
+		return result; 
+	}
 }

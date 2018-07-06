@@ -25,6 +25,9 @@ public class UserActivationService implements IUserActivationService {
 		Long userId = appUser.getAppUserId();
 		
 		LocalDateTime expirationDate = LocalDateTime.now(); 
+		expirationDate = expirationDate.withNano(0); 
+		expirationDate = expirationDate.withSecond(0);
+		
 		expirationDate = expirationDate.plusDays(1); 
 				
 		String tokenKey = "SUMZ1718";
@@ -43,7 +46,7 @@ public class UserActivationService implements IUserActivationService {
 		
 		tokenKey = sb.toString();
 		
-		UserActivationTokenDao userActivationToken = new UserActivationTokenDao(appUser, expirationDate, tokenKey); 
+		UserActivationTokenDao userActivationToken = new UserActivationTokenDao(null, appUser, expirationDate, tokenKey); 
 		userActivationToken = userActivationTokenRepository.save(userActivationToken);
 		
 		return userActivationToken; 

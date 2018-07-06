@@ -5,10 +5,14 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity(name = "MultiPeriodAccountingFigure")
@@ -29,6 +33,10 @@ public class MultiPeriodAccountingFigureDao {
 	@OneToMany(mappedBy="accountingFigure")
 	private List<TimeSeriesItemDao> timeSeriesItems = new ArrayList<TimeSeriesItemDao>();
 	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ScenarioId")
+	private ScenarioDao scenario;
+	
 	public MultiPeriodAccountingFigureDao() {}
 	
 	public MultiPeriodAccountingFigureDao(String figureName, Boolean isHistoric, List<TimeSeriesItemDao> timeSeriesItems) {
@@ -47,4 +55,7 @@ public class MultiPeriodAccountingFigureDao {
 	
 	public List<TimeSeriesItemDao> getTimeSeriesItems(){ return timeSeriesItems; }
 	public void setTimeSeriesItems(List<TimeSeriesItemDao> timeSeriesItems) { this.timeSeriesItems = timeSeriesItems; }
+	
+	public ScenarioDao getScenario() { return scenario; }
+	public void setScenario(ScenarioDao scenario) { this.scenario = scenario; }
 }

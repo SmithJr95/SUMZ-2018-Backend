@@ -8,18 +8,22 @@ public class UserPasswordResetTokenDto {
 	private LocalDateTime expirationDate; 
 	private String tokenKey;
 	
-	public UserPasswordResetTokenDto(Long userActivationTokenId, Long appUserId, LocalDateTime expirationDate,
+	public UserPasswordResetTokenDto(Long userPasswordResetTokenId, Long appUserId, LocalDateTime expirationDate,
 			String tokenKey) {
 		super();
-		this.userPasswordResetTokenId = userActivationTokenId;
+		this.userPasswordResetTokenId = userPasswordResetTokenId;
 		this.appUserId = appUserId;
 		this.expirationDate = expirationDate;
 		this.tokenKey = tokenKey;
 	}
 	
-	public Long getUserActivationTokenId() { return userPasswordResetTokenId; }
+	public UserPasswordResetTokenDto() {
+		
+	}
+	
+	public Long getUserPasswordResetTokenId() { return userPasswordResetTokenId; }
 
-	public void setUserActivationTokenId(Long userActivationTokenId) { this.userPasswordResetTokenId = userActivationTokenId; }
+	public void setUserPasswordResetTokenId(Long userPasswordResetTokenId) { this.userPasswordResetTokenId = userPasswordResetTokenId; }
 
 	public Long getAppUserId() { return appUserId; }
 
@@ -32,4 +36,14 @@ public class UserPasswordResetTokenDto {
 	public String getTokenKey() { return tokenKey; }
 
 	public void setTokenKey(String tokenKey) { this.tokenKey = tokenKey; }
+	
+	public String toString() {
+		String result = ""; 
+		result += " userPasswordResetTokenId: " + userPasswordResetTokenId;
+		result += " appUserId: " + appUserId; 
+		result += " expirationDate: " + expirationDate; 
+		result += " tokenKey: " + tokenKey;
+		
+		return result;
+	}
 }

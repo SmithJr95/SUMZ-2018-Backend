@@ -22,16 +22,6 @@ public class ScenarioTestController {
 		
 		Optional<ScenarioDao> scenario = scenarioRepository.findById((long) 1);
 		if(scenario.isPresent()) {
-			System.out.println(scenario.get().getScenarioName());
-			System.out.println(scenario.get().getScenarioDescription());
-			System.out.println(scenario.get().getApvCompanyValuationResultDao().getMarketValueTotalAssets());
-			System.out.println(scenario.get().getFcfCompanyValuationResultDao().getMarketValueTotalAssets());
-			System.out.println(scenario.get().getFteCompanyValuationResultDao().getCompanyValue());
-			System.out.println(scenario.get().getFreeCashFlows().getFigureName());
-			System.out.println(scenario.get().getCostOfStaff() != null ? scenario.get().getCostOfStaff().getFigureName() : "isnull.");
-			scenario.get().getCompanyValueDistributionPoints().forEach(x -> System.out.println(x.getxValue()));
-			scenario.get().getCompanyValueDistributionPoints().forEach(x -> System.out.println(x.getScenario().getScenarioId()));
-			scenario.get().getCostOfStaff().getTimeSeriesItems().forEach(x -> System.out.println(x.getTimeSeriesItemDate().getItemQuarter()));
 		}
 		
 		return "Success";

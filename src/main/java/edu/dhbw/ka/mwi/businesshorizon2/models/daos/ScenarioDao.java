@@ -15,6 +15,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.CascadeType;
+
 @Entity(name = "Scenario")
 @Table(name = "Scenario")
 public class ScenarioDao {
@@ -47,60 +49,20 @@ public class ScenarioDao {
 	@Column(name="InterestOnLiabilitiesRate")
 	private Double interestOnLiabilitiesRate;
 	
-	@OneToOne
-	@JoinColumn(name="ApvCompanyValuationResultId")
+	@OneToOne(mappedBy="scenario")
 	private ApvCompanyValuationResultDao apvCompanyValuationResultDao;
 	
-	@OneToOne
-	@JoinColumn(name="FteCompanyValuationResultId")
+	@OneToOne(mappedBy="scenario")
 	private FteCompanyValuationResultDao fteCompanyValuationResultDao;
 	
-	@OneToOne
-	@JoinColumn(name="FcfCompanyValuationResultId")
+	@OneToOne(mappedBy="scenario")
 	private FcfCompanyValuationResultDao fcfCompanyValuationResultDao;
 	
-	@OneToOne
-	@JoinColumn(name="DepreciationId")
-	private MultiPeriodAccountingFigureDao depreciation;
-	
-	@OneToOne
-	@JoinColumn(name="AdditionalIncomeId")
-	private MultiPeriodAccountingFigureDao additionalIncome;
-	
-	@OneToOne
-	@JoinColumn(name="AdditionalCostsId")
-	private MultiPeriodAccountingFigureDao additionalCosts;
-	
-	@OneToOne
-	@JoinColumn(name="InvestmentsId")
-	private MultiPeriodAccountingFigureDao investments;
-	
-	@OneToOne
-	@JoinColumn(name="DivestmentsId")
-	private MultiPeriodAccountingFigureDao divestments;
-	
-	@OneToOne
-	@JoinColumn(name="RevenueId")
-	private MultiPeriodAccountingFigureDao revenue;
-	
-	@OneToOne
-	@JoinColumn(name="CostOfMaterialId")
-	private MultiPeriodAccountingFigureDao costOfMaterial;
-	
-	@OneToOne
-	@JoinColumn(name="CostOfStaffId")
-	private MultiPeriodAccountingFigureDao costOfStaff;
-	
-	@OneToOne
-	@JoinColumn(name="LiabilitiesId")
-	private MultiPeriodAccountingFigureDao liabilities;
-	
-	@OneToOne
-	@JoinColumn(name="FreeCashFlowsId")
-	private MultiPeriodAccountingFigureDao freeCashFlows;
+	@OneToMany(mappedBy="scenario")
+	private List<MultiPeriodAccountingFigureDao> multiPeriodAccountingFigures = new ArrayList<>();
 	
 	@OneToMany(mappedBy="scenario")
-	private List<CompanyValueDistributionPointDao> companyValueDistributionPoints = new ArrayList<CompanyValueDistributionPointDao>();
+	private List<CompanyValueDistributionPointDao> companyValueDistributionPoints = new ArrayList<>();
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "AppUserId")
@@ -140,40 +102,13 @@ public class ScenarioDao {
 
 	public FcfCompanyValuationResultDao getFcfCompanyValuationResultDao() { return fcfCompanyValuationResultDao; }
 	public void setFcfCompanyValuationResultDao(FcfCompanyValuationResultDao fcfCompanyValuationResultDao) { this.fcfCompanyValuationResultDao = fcfCompanyValuationResultDao;}
-
-	public MultiPeriodAccountingFigureDao getDepreciation() { return depreciation; }
-	public void setDepreciation(MultiPeriodAccountingFigureDao depreciation) {this.depreciation = depreciation;}
-	
-	public MultiPeriodAccountingFigureDao getAdditionalIncome() { return additionalIncome; }
-	public void setAdditionalIncome(MultiPeriodAccountingFigureDao additionalIncome) {this.additionalIncome = additionalIncome;}
-	
-	public MultiPeriodAccountingFigureDao getAdditionalCosts() { return additionalCosts; }
-	public void setAdditionalCosts(MultiPeriodAccountingFigureDao additionalCosts) {this.additionalCosts = additionalCosts;}
-	
-	public MultiPeriodAccountingFigureDao getInvestments() { return investments; }
-	public void setInvestments(MultiPeriodAccountingFigureDao investments) {this.investments = investments;}
-	
-	public MultiPeriodAccountingFigureDao getDivestments() { return divestments; }
-	public void setDivestments(MultiPeriodAccountingFigureDao divestments) {this.divestments = divestments;}
-	
-	public MultiPeriodAccountingFigureDao getRevenue() { return revenue; }
-	public void setRevenue(MultiPeriodAccountingFigureDao revenue) {this.revenue = revenue;}
-	
-	public MultiPeriodAccountingFigureDao getCostOfMaterial() { return costOfMaterial; }
-	public void setCostOfMaterial(MultiPeriodAccountingFigureDao costOfMaterial) {this.costOfMaterial = costOfMaterial;}
-	
-	public MultiPeriodAccountingFigureDao getCostOfStaff() { return costOfStaff; }
-	public void setCostOfStaff(MultiPeriodAccountingFigureDao costOfStaff) {this.costOfStaff = costOfStaff;}
-	
-	public MultiPeriodAccountingFigureDao getLiabilities() { return liabilities; }
-	public void setLiabilities(MultiPeriodAccountingFigureDao liabilities) {this.liabilities = liabilities;}
-	
-	public MultiPeriodAccountingFigureDao getFreeCashFlows() { return freeCashFlows; }
-	public void setFreeCashFlows(MultiPeriodAccountingFigureDao freeCashFlows) {this.freeCashFlows = freeCashFlows;}
 	
 	public List<CompanyValueDistributionPointDao> getCompanyValueDistributionPoints(){return companyValueDistributionPoints;}
 	public void setCompanyValueDistributionPoints(List<CompanyValueDistributionPointDao> companyValueDistributionPoints) {this.companyValueDistributionPoints = companyValueDistributionPoints;}
 
 	public AppUserDao getAppUser() { return appUser; }
 	public void setAppUser(AppUserDao appUser) { this.appUser = appUser; }
+	
+	public List<MultiPeriodAccountingFigureDao> getMultiPeriodAccountingFigures(){ return multiPeriodAccountingFigures; }
+	public void setMultiPeriodAccountingFigures(List<MultiPeriodAccountingFigureDao> multiPeriodAccountingFigures) { this.multiPeriodAccountingFigures = multiPeriodAccountingFigures; }
 }

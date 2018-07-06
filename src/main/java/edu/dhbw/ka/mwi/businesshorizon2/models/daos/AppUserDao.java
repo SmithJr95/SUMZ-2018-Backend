@@ -35,11 +35,12 @@ public class AppUserDao{
     @Column(name = "IsActive")
     private Boolean isActive;
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    //, cascade = {CascadeType.ALL}
+	@ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
     		name = "UserRole", 
-    		joinColumns = @JoinColumn(name = "AppUserId"),
-            inverseJoinColumns = @JoinColumn(name = "AppRoleId"))
+    		joinColumns = @JoinColumn(name = "AppUserId", referencedColumnName = "AppUserId"),
+            inverseJoinColumns = @JoinColumn(name = "AppRoleId", referencedColumnName = "AppRoleId"))
     private List<AppRoleDao> appRoles = new ArrayList<>();
 
 	public AppUserDao() { }

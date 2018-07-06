@@ -17,6 +17,8 @@ public class UserActivationTokenDto {
 		this.tokenKey = tokenKey;
 	}
 	
+	public UserActivationTokenDto() {}
+	
 	public Long getUserActivationTokenId() { return userActivationTokenId; }
 
 	public void setUserActivationTokenId(Long userActivationTokenId) { this.userActivationTokenId = userActivationTokenId; }
