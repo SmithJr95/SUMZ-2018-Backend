@@ -200,5 +200,11 @@ public class ScenarioService implements IScenarioService{
 			? deterministicAccountingFigures.get(figureName)
 			: stochasticAccountingFigures.get(figureName).get(sampleNum);
 	}
+
+	@Override
+	public void delete(Long appUserId, Long scenarioId) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }
