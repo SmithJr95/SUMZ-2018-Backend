@@ -114,7 +114,6 @@ public class ScenarioMapper {
 			.findFirst();
 		
 		if(figure.isPresent()) {
-			System.out.println(figure.get().getFigureName());
 			return MultiPeriodAccountingFigureMapper.mapDaoToDto(figure.get());
 		}
 		

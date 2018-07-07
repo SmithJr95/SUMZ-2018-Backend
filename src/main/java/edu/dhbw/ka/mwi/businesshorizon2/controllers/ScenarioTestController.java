@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.IScenarioService;
 import edu.dhbw.ka.mwi.businesshorizon2.dataaccess.interfaces.IAppUserRepository;
 import edu.dhbw.ka.mwi.businesshorizon2.dataaccess.interfaces.IApvCompanyValuationResultRepository;
 import edu.dhbw.ka.mwi.businesshorizon2.dataaccess.interfaces.ICompanyValueDistributionPointRepository;
@@ -35,9 +36,6 @@ public class ScenarioTestController {
 	@Autowired
 	private IScenarioGraphRepository scenarioGraphRepository;
 	
-	@Autowired
-	private IAppUserRepository appUserRepository;
-	
 	@RequestMapping(method = RequestMethod.GET)
 	public void get() {
 		
@@ -52,8 +50,6 @@ public class ScenarioTestController {
 		dao.setScenarioName("name...");
 		dao.setSolidaryTaxRate(0.5);
 		
-		dao.setAppUser(appUserRepository.findById(new Long(2)).get());
-		
 		ApvCompanyValuationResultDao apvRes = new ApvCompanyValuationResultDao(100.0, 100.0, 100.0, 100.0, 100.0);
 		FteCompanyValuationResultDao fteRes = new FteCompanyValuationResultDao(100.0);
 		FcfCompanyValuationResultDao fcfRes = new FcfCompanyValuationResultDao(100.0, 100.0, 100.0);
@@ -64,17 +60,23 @@ public class ScenarioTestController {
 		List<CompanyValueDistributionPointDao> points = new ArrayList<>();
 		points.add(new CompanyValueDistributionPointDao(100.0, 100.0));
 		points.add(new CompanyValueDistributionPointDao(200.0, 200.0));
+		points.add(new CompanyValueDistributionPointDao(100.0, 300.0));
 		dao.setCompanyValueDistributionPoints(points);
 		
-		List<TimeSeriesItemDao> items = new ArrayList<>();
-		items.add(new TimeSeriesItemDao(100.0, new TimeSeriesItemDateDao(2000)));
-		items.add(new TimeSeriesItemDao(100.0, new TimeSeriesItemDateDao(2001)));
+		List<TimeSeriesItemDao> items1 = new ArrayList<>();
+		items1.add(new TimeSeriesItemDao(100.0, new TimeSeriesItemDateDao(2000)));
+		items1.add(new TimeSeriesItemDao(100.0, new TimeSeriesItemDateDao(2001)));
+		
+		List<TimeSeriesItemDao> items2 = new ArrayList<>();
+		items2.add(new TimeSeriesItemDao(200.0, new TimeSeriesItemDateDao(2000, 1)));
+		items2.add(new TimeSeriesItemDao(200.0, new TimeSeriesItemDateDao(2000, 2)));
 		
 		List<MultiPeriodAccountingFigureDao> multis = new ArrayList<>();
-		multis.add(new MultiPeriodAccountingFigureDao(MultiPeriodAccountingFigureNames.CostOfMaterial.name(), true, items));
+		multis.add(new MultiPeriodAccountingFigureDao(MultiPeriodAccountingFigureNames.CostOfMaterial.name(), true, items1));
+		multis.add(new MultiPeriodAccountingFigureDao(MultiPeriodAccountingFigureNames.FreeCashFlows.name(), false, items2));
 		
 		dao.setMultiPeriodAccountingFigures(multis);
 		
-		scenarioGraphRepository.createOrUpdate(dao, new Long(1));
+		scenarioGraphRepository.createOrUpdate(dao, new Long(2));
 	}
 }

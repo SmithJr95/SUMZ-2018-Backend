@@ -16,6 +16,7 @@ import edu.dhbw.ka.mwi.businesshorizon2.dataaccess.interfaces.IScenarioGraphRepo
 import edu.dhbw.ka.mwi.businesshorizon2.dataaccess.interfaces.IScenarioRepository;
 import edu.dhbw.ka.mwi.businesshorizon2.dataaccess.interfaces.ITimeSeriesItemDateRepository;
 import edu.dhbw.ka.mwi.businesshorizon2.dataaccess.interfaces.ITimeSeriesItemRepository;
+import edu.dhbw.ka.mwi.businesshorizon2.models.daos.AppUserDao;
 import edu.dhbw.ka.mwi.businesshorizon2.models.daos.ApvCompanyValuationResultDao;
 import edu.dhbw.ka.mwi.businesshorizon2.models.daos.CompanyValueDistributionPointDao;
 import edu.dhbw.ka.mwi.businesshorizon2.models.daos.FcfCompanyValuationResultDao;
@@ -55,7 +56,6 @@ public class ScenarioGraphRepository implements IScenarioGraphRepository{
 	@Autowired
 	private ICompanyValueDistributionPointRepository pointRepository;
 	
-	
 	@Override
 	public ScenarioDao createOrUpdate(ScenarioDao scenario, Long appUserId) {
 		
@@ -71,6 +71,9 @@ public class ScenarioGraphRepository implements IScenarioGraphRepository{
 		
 		List<MultiPeriodAccountingFigureDao> multisPeriodAccountingFiguresTemp = scenario.getMultiPeriodAccountingFigures();
 		scenario.setMultiPeriodAccountingFigures(null);
+		
+		AppUserDao appUser = appUserRepository.findById(appUserId).get();
+		scenario.setAppUser(appUser);
 		
 		ScenarioDao daoInDb = scenarioRepository.save(scenario);
 		apvResTemp.setScenario(daoInDb);

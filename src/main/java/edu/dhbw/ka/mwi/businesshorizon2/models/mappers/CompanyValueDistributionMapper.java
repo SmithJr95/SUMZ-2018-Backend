@@ -10,7 +10,7 @@ public class CompanyValueDistributionMapper {
 	
 	public static CompanyValueDistributionDto mapDaoToDto(List<CompanyValueDistributionPointDao> pointsDao) {
 		
-		if(pointsDao == null) {
+		if(pointsDao == null || pointsDao.isEmpty()) {
 			return null;
 		}
 		
