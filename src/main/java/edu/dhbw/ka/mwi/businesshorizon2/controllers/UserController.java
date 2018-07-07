@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.services.UserService;
+import edu.dhbw.ka.mwi.businesshorizon2.config.AdditionalWebConfig;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.AppUserDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.UserPutRequestDto;
 
@@ -23,6 +24,9 @@ public class UserController {
 	
 	@Autowired
 	private UserService userService;
+	
+	@Autowired 
+	private AdditionalWebConfig webConfig;
 	
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void addUser(@RequestBody @Valid AppUserDto userDto, HttpServletRequest request) throws Exception{
@@ -34,8 +38,7 @@ public class UserController {
 	public void activateUser(@PathVariable("token") String token, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		userService.activateUser(token);
 		
-		String redirectURL = request.getRequestURL().toString();
-		redirectURL = redirectURL.replaceAll(request.getRequestURI(), "");
+		String redirectURL = "http://" + webConfig.getClientHost();
 		redirectURL = redirectURL + "/login";
 		
 		response.sendRedirect(redirectURL);
@@ -51,8 +54,8 @@ public class UserController {
 	@RequestMapping(value = "/forgot/{token}", method = RequestMethod.GET)
 	public void checkPasswordResetToken(@PathVariable("token") String token, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
-		String redirectURL = request.getRequestURL().toString();
-		redirectURL = redirectURL.replaceAll(request.getRequestURI(), "");
+		String redirectURL = "http://" + webConfig.getClientHost();
+
 		redirectURL = redirectURL + "/users/reset/" + token;
 		
 		userService.checkPasswordResetToken(token);

@@ -1,5 +1,6 @@
 package edu.dhbw.ka.mwi.businesshorizon2.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,4 +23,16 @@ public class AdditionalWebConfig {
         bean.setOrder(0);
         return bean;
     }
+    
+	@Value("${sumz.client.host}")
+	private String clientHost;
+	
+	public String getClientHost() {
+		return clientHost;
+	}
+
+	public void setClientHost(String clientHost) {
+		this.clientHost = clientHost;
+	}
+
 }
