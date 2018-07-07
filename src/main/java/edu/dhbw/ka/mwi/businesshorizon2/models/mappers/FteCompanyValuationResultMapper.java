@@ -15,4 +15,16 @@ public class FteCompanyValuationResultMapper {
 		
 		return dto;
 	}
+	
+	public static FteCompanyValuationResultDao mapDtoToDao(FteCompanyValuationResultDto dto) {
+		
+		if(dto == null) {
+			return null;
+		}
+		
+		FteCompanyValuationResultDao dao = new FteCompanyValuationResultDao();
+		dao.setCompanyValue(dto.getCompanyValue());
+		
+		return dao;
+	}
 }

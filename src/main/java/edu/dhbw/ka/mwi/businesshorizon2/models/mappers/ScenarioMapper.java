@@ -1,6 +1,14 @@
 package edu.dhbw.ka.mwi.businesshorizon2.models.mappers;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import edu.dhbw.ka.mwi.businesshorizon2.models.common.MultiPeriodAccountingFigureNames;
+import edu.dhbw.ka.mwi.businesshorizon2.models.daos.MultiPeriodAccountingFigureDao;
 import edu.dhbw.ka.mwi.businesshorizon2.models.daos.ScenarioDao;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.MultiPeriodAccountingFigureResponseDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioRequestDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioResponseDto;
 
@@ -13,17 +21,13 @@ public class ScenarioMapper {
 		}
 		
 		ScenarioDao dao = new ScenarioDao();
-		/*
-		dao.setAdditionalCosts(MultiPeriodAccountingFigureMapper.mapDtoToDao(dto.getAdditionalCosts()));
-		dao.setAdditionalIncome(MultiPeriodAccountingFigureMapper.mapDtoToDao(dto.getAdditionalIncome()));
-		dao.setCostOfMaterial(MultiPeriodAccountingFigureMapper.mapDtoToDao(dto.getCostOfMaterial()));
-		dao.setCostOfStaff(MultiPeriodAccountingFigureMapper.mapDtoToDao(dto.getCostOfStaff()));
-		dao.setDepreciation(MultiPeriodAccountingFigureMapper.mapDtoToDao(dto.getDepreciation()));
-		dao.setDivestments(MultiPeriodAccountingFigureMapper.mapDtoToDao(dto.getDivestments()));
-		dao.setFreeCashFlows(MultiPeriodAccountingFigureMapper.mapDtoToDao(dto.getFreeCashFlows()));
-		dao.setInvestments(MultiPeriodAccountingFigureMapper.mapDtoToDao(dto.getInvestments()));
-		dao.setLiabilities(MultiPeriodAccountingFigureMapper.mapDtoToDao(dto.getLiabilities()));
-		dao.setRevenue(MultiPeriodAccountingFigureMapper.mapDtoToDao(dto.getRevenue()));
+		List<MultiPeriodAccountingFigureDao> multiPeriodAccountingFigures = new ArrayList<>();
+		
+		for(int i = 0; i < dto.getAllMultiPeriodAccountingFigures().size(); i ++) {
+			if(dto.getAllMultiPeriodAccountingFigures().get(i) != null) {
+				multiPeriodAccountingFigures.add(MultiPeriodAccountingFigureMapper.mapDtoToDao(dto.getAllMultiPeriodAccountingFigures().get(i)));
+			}	
+		}
 		
 		dao.setEquityInterestRate(dto.getEquityInterestRate());
 		dao.setInterestOnLiabilitiesRate(dto.getInterestOnLiabilitiesRate());
@@ -33,8 +37,27 @@ public class ScenarioMapper {
 		dao.setScenarioDescription(dto.getScenarioDescription());
 		dao.setScenarioName(dto.getScenarioName());
 		dao.setSolidaryTaxRate(dto.getSolidaryTaxRate());
-		*/
+		
+		dao.setMultiPeriodAccountingFigures(multiPeriodAccountingFigures);
+		
 		return dao;
+	}
+	
+	public static List<ScenarioResponseDto> mapDaoToDto(List<ScenarioDao> daos){
+		
+		if(daos == null) {
+			return null;
+		}
+		
+		List<ScenarioResponseDto> dtos = new ArrayList<>();
+		
+		for(ScenarioDao dao : daos) {
+			if(dao != null) {
+				dtos.add(mapDaoToDto(dao));
+			}
+		}
+		
+		return dtos;
 	}
 	
 	public static ScenarioResponseDto mapDaoToDto(ScenarioDao dao) {
@@ -45,17 +68,16 @@ public class ScenarioMapper {
 		
 		ScenarioResponseDto dto = new ScenarioResponseDto();
 		
-		/*
-		dto.setAdditionalCosts(MultiPeriodAccountingFigureMapper.mapDaoToDto(dao.getAdditionalCosts()));
-		dto.setAdditionalIncome(MultiPeriodAccountingFigureMapper.mapDaoToDto(dao.getAdditionalIncome()));
-		dto.setCostOfMaterial(MultiPeriodAccountingFigureMapper.mapDaoToDto(dao.getCostOfMaterial()));
-		dto.setCostOfStaff(MultiPeriodAccountingFigureMapper.mapDaoToDto(dao.getCostOfStaff()));
-		dto.setDepreciation(MultiPeriodAccountingFigureMapper.mapDaoToDto(dao.getDepreciation()));
-		dto.setDivestments(MultiPeriodAccountingFigureMapper.mapDaoToDto(dao.getDivestments()));
-		dto.setFreeCashFlows(MultiPeriodAccountingFigureMapper.mapDaoToDto(dao.getFreeCashFlows()));
-		dto.setInvestments(MultiPeriodAccountingFigureMapper.mapDaoToDto(dao.getInvestments()));
-		dto.setLiabilities(MultiPeriodAccountingFigureMapper.mapDaoToDto(dao.getLiabilities()));
-		dto.setRevenue(MultiPeriodAccountingFigureMapper.mapDaoToDto(dao.getRevenue()));
+		dto.setAdditionalIncome(selectMultiPeriodAccountingFigure(dao.getMultiPeriodAccountingFigures(), MultiPeriodAccountingFigureNames.AdditionalIncome));
+		dto.setAdditionalCosts(selectMultiPeriodAccountingFigure(dao.getMultiPeriodAccountingFigures(), MultiPeriodAccountingFigureNames.AdditionalCosts));
+		dto.setCostOfMaterial(selectMultiPeriodAccountingFigure(dao.getMultiPeriodAccountingFigures(), MultiPeriodAccountingFigureNames.CostOfMaterial));
+		dto.setCostOfStaff(selectMultiPeriodAccountingFigure(dao.getMultiPeriodAccountingFigures(), MultiPeriodAccountingFigureNames.CostOfStaff));
+		dto.setDepreciation(selectMultiPeriodAccountingFigure(dao.getMultiPeriodAccountingFigures(), MultiPeriodAccountingFigureNames.Depreciation));
+		dto.setDivestments(selectMultiPeriodAccountingFigure(dao.getMultiPeriodAccountingFigures(), MultiPeriodAccountingFigureNames.Divestments));
+		dto.setFreeCashFlows(selectMultiPeriodAccountingFigure(dao.getMultiPeriodAccountingFigures(), MultiPeriodAccountingFigureNames.FreeCashFlows));
+		dto.setInvestments(selectMultiPeriodAccountingFigure(dao.getMultiPeriodAccountingFigures(), MultiPeriodAccountingFigureNames.Investments));
+		dto.setLiabilities(selectMultiPeriodAccountingFigure(dao.getMultiPeriodAccountingFigures(), MultiPeriodAccountingFigureNames.Liabilities));
+		dto.setRevenue(selectMultiPeriodAccountingFigure(dao.getMultiPeriodAccountingFigures(), MultiPeriodAccountingFigureNames.Revenue));
 		
 		dto.setBusinessTaxRate(dao.getBusinessTaxRate());
 		dto.setCorporateTaxRate(dao.getCorporateTaxRate());
@@ -64,9 +86,38 @@ public class ScenarioMapper {
 		dto.setSolidaryTaxRate(dao.getSolidaryTaxRate());
 		dto.setEquityInterestRate(dao.getEquityInterestRate());
 		dto.setPeriods(dao.getForecastPeriods());
-		dto.setInterestOnLiabilitiesRate(dto.getInterestOnLiabilitiesRate());
+		dto.setInterestOnLiabilitiesRate(dao.getInterestOnLiabilitiesRate());
 		
-		*/
+		dto.setApvValuationResult(ApvCompanyValuationResultMapper.mapDaoToDto(dao.getApvCompanyValuationResultDao()));
+		dto.setFteValuationResult(FteCompanyValuationResultMapper.mapDaoToDto(dao.getFteCompanyValuationResultDao()));
+		dto.setFcfValuationResult(FcfCompanyValuationResultMapper.mapDaoToDto(dao.getFcfCompanyValuationResultDao()));
+		
+		dto.setCompanyValueDistribution(CompanyValueDistributionMapper.mapDaoToDto(dao.getCompanyValueDistributionPoints()));
+		
+		dto.setId(dao.getScenarioId());
+		
+		if(dao.getCompanyValueDistributionPoints() != null && !dao.getCompanyValueDistributionPoints().isEmpty()) {
+			dto.setStochastic(true);
+		}
+		else {
+			dto.setStochastic(false);
+		}
+		
 		return dto;
+	}
+	
+	private static MultiPeriodAccountingFigureResponseDto selectMultiPeriodAccountingFigure(List<MultiPeriodAccountingFigureDao> figures, MultiPeriodAccountingFigureNames figureName) {
+		
+		Optional<MultiPeriodAccountingFigureDao> figure = figures
+			.stream()
+			.filter(x -> x.getFigureName().equals(figureName.name()))
+			.findFirst();
+		
+		if(figure.isPresent()) {
+			System.out.println(figure.get().getFigureName());
+			return MultiPeriodAccountingFigureMapper.mapDaoToDto(figure.get());
+		}
+		
+		return null;
 	}
 }

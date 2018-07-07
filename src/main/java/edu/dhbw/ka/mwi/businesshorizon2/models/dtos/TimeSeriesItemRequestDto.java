@@ -2,18 +2,18 @@ package edu.dhbw.ka.mwi.businesshorizon2.models.dtos;
 
 import javax.validation.constraints.NotNull;
 
-public class TimeSeriesItemDto{
+public class TimeSeriesItemRequestDto{
 	
 	@NotNull(message="date must not be null.")
-	private TimeSeriesItemDateDto date;
+	private TimeSeriesItemDateRequestDto date;
 	
 	@NotNull(message="amount must not be null.")
 	private Double amount;
 	
-	public TimeSeriesItemDto() {
+	public TimeSeriesItemRequestDto() {
 	}
 	
-	public TimeSeriesItemDto(TimeSeriesItemDateDto date, Double amount) {
+	public TimeSeriesItemRequestDto(TimeSeriesItemDateRequestDto date, Double amount) {
 		this.date = date;
 		this.amount = amount;
 	}
@@ -21,8 +21,8 @@ public class TimeSeriesItemDto{
 	public Double getAmount() { return amount; }
 	public void setAmount(Double amount) { this.amount = amount; }
 	
-	public TimeSeriesItemDateDto getDate() { return date; }
-	public void setDate(TimeSeriesItemDateDto date) { this.date = date; }
+	public TimeSeriesItemDateRequestDto getDate() { return date; }
+	public void setDate(TimeSeriesItemDateRequestDto date) { this.date = date; }
 	
 	@Override
 	public String toString() {

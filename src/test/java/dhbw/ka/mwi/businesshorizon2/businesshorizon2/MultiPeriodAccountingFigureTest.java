@@ -10,8 +10,8 @@ import java.util.List;
 import org.junit.Test;
 
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.MultiPeriodAccountingFigureRequestDto;
-import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.TimeSeriesItemDateDto;
-import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.TimeSeriesItemDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.TimeSeriesItemDateRequestDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.TimeSeriesItemRequestDto;
 
 public class MultiPeriodAccountingFigureTest {
 	
@@ -22,7 +22,7 @@ public class MultiPeriodAccountingFigureTest {
 		figure.setIsHistoric(true);
 		
 		//Act
-		TimeSeriesItemDateDto minDate = figure.getMinDate();
+		TimeSeriesItemDateRequestDto minDate = figure.getMinDate();
 		
 		//Assert
 		assertNull(minDate);
@@ -35,7 +35,7 @@ public class MultiPeriodAccountingFigureTest {
 		figure.setIsHistoric(true);
 		
 		//Act
-		TimeSeriesItemDateDto maxDate = figure.getMaxDate();
+		TimeSeriesItemDateRequestDto maxDate = figure.getMaxDate();
 		
 		//Assert
 		assertNull(maxDate);
@@ -46,10 +46,10 @@ public class MultiPeriodAccountingFigureTest {
 		//Arrange
 		MultiPeriodAccountingFigureRequestDto figure = new MultiPeriodAccountingFigureRequestDto();
 		figure.setIsHistoric(true);
-		figure.setTimeSeries(new ArrayList<TimeSeriesItemDto>());
+		figure.setTimeSeries(new ArrayList<TimeSeriesItemRequestDto>());
 		
 		//Act
-		TimeSeriesItemDateDto minDate = figure.getMinDate();
+		TimeSeriesItemDateRequestDto minDate = figure.getMinDate();
 		
 		//Assert
 		assertNull(minDate);
@@ -60,10 +60,10 @@ public class MultiPeriodAccountingFigureTest {
 		//Arrange
 		MultiPeriodAccountingFigureRequestDto figure = new MultiPeriodAccountingFigureRequestDto();
 		figure.setIsHistoric(true);
-		figure.setTimeSeries(new ArrayList<TimeSeriesItemDto>());
+		figure.setTimeSeries(new ArrayList<TimeSeriesItemRequestDto>());
 		
 		//Act
-		TimeSeriesItemDateDto maxDate = figure.getMaxDate();
+		TimeSeriesItemDateRequestDto maxDate = figure.getMaxDate();
 		
 		//Assert
 		assertNull(maxDate);
@@ -72,30 +72,30 @@ public class MultiPeriodAccountingFigureTest {
 	@Test
 	public void getMinDate_TimeSeriesIsNotEmpty_ReturnsCorrectDate(){
 		//Arrange
-		List<TimeSeriesItemDto> timeSeries1 = new ArrayList<TimeSeriesItemDto>();
-		timeSeries1.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2005), 60.0));
-		timeSeries1.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000), 50.0));
-		timeSeries1.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2002), 70.0));
+		List<TimeSeriesItemRequestDto> timeSeries1 = new ArrayList<TimeSeriesItemRequestDto>();
+		timeSeries1.add(new TimeSeriesItemRequestDto(new TimeSeriesItemDateRequestDto(2005), 60.0));
+		timeSeries1.add(new TimeSeriesItemRequestDto(new TimeSeriesItemDateRequestDto(2000), 50.0));
+		timeSeries1.add(new TimeSeriesItemRequestDto(new TimeSeriesItemDateRequestDto(2002), 70.0));
 		
 		MultiPeriodAccountingFigureRequestDto figure1 = new MultiPeriodAccountingFigureRequestDto();
 		figure1.setIsHistoric(true);
 		figure1.setTimeSeries(timeSeries1);
 		
-		List<TimeSeriesItemDto> timeSeries2 = new ArrayList<TimeSeriesItemDto>();
-		timeSeries2.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 1), 60.0));
-		timeSeries2.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(1999, 2), 50.0));
-		timeSeries2.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 4), 70.0));
+		List<TimeSeriesItemRequestDto> timeSeries2 = new ArrayList<TimeSeriesItemRequestDto>();
+		timeSeries2.add(new TimeSeriesItemRequestDto(new TimeSeriesItemDateRequestDto(2000, 1), 60.0));
+		timeSeries2.add(new TimeSeriesItemRequestDto(new TimeSeriesItemDateRequestDto(1999, 2), 50.0));
+		timeSeries2.add(new TimeSeriesItemRequestDto(new TimeSeriesItemDateRequestDto(2000, 4), 70.0));
 		
 		MultiPeriodAccountingFigureRequestDto figure2 = new MultiPeriodAccountingFigureRequestDto();
 		figure2.setIsHistoric(true);
 		figure2.setTimeSeries(timeSeries2);
 		
-		TimeSeriesItemDateDto expectedMinDate1 = new TimeSeriesItemDateDto(2000);
-		TimeSeriesItemDateDto expectedMinDate2 = new TimeSeriesItemDateDto(1999, 2);
+		TimeSeriesItemDateRequestDto expectedMinDate1 = new TimeSeriesItemDateRequestDto(2000);
+		TimeSeriesItemDateRequestDto expectedMinDate2 = new TimeSeriesItemDateRequestDto(1999, 2);
 		
 		//Act
-		TimeSeriesItemDateDto actualMinDate1 = figure1.getMinDate();
-		TimeSeriesItemDateDto actualMinDate2 = figure2.getMinDate();
+		TimeSeriesItemDateRequestDto actualMinDate1 = figure1.getMinDate();
+		TimeSeriesItemDateRequestDto actualMinDate2 = figure2.getMinDate();
 		
 		//Assert
 		assertEquals(expectedMinDate1, actualMinDate1);	
@@ -105,30 +105,30 @@ public class MultiPeriodAccountingFigureTest {
 	@Test
 	public void getMaxDate_TimeSeriesIsNotEmpty_ReturnsCorrectDate(){
 		//Arrange
-		List<TimeSeriesItemDto> timeSeries1 = new ArrayList<TimeSeriesItemDto>();
-		timeSeries1.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000), 50.0));
-		timeSeries1.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2005), 60.0));
-		timeSeries1.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2002), 70.0));
+		List<TimeSeriesItemRequestDto> timeSeries1 = new ArrayList<TimeSeriesItemRequestDto>();
+		timeSeries1.add(new TimeSeriesItemRequestDto(new TimeSeriesItemDateRequestDto(2000), 50.0));
+		timeSeries1.add(new TimeSeriesItemRequestDto(new TimeSeriesItemDateRequestDto(2005), 60.0));
+		timeSeries1.add(new TimeSeriesItemRequestDto(new TimeSeriesItemDateRequestDto(2002), 70.0));
 		
 		MultiPeriodAccountingFigureRequestDto figure1 = new MultiPeriodAccountingFigureRequestDto();
 		figure1.setIsHistoric(true);
 		figure1.setTimeSeries(timeSeries1);
 		
-		List<TimeSeriesItemDto> timeSeries2 = new ArrayList<TimeSeriesItemDto>();
-		timeSeries2.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 1), 60.0));
-		timeSeries2.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 4), 50.0));
-		timeSeries2.add(new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 2), 70.0));
+		List<TimeSeriesItemRequestDto> timeSeries2 = new ArrayList<TimeSeriesItemRequestDto>();
+		timeSeries2.add(new TimeSeriesItemRequestDto(new TimeSeriesItemDateRequestDto(2000, 1), 60.0));
+		timeSeries2.add(new TimeSeriesItemRequestDto(new TimeSeriesItemDateRequestDto(2000, 4), 50.0));
+		timeSeries2.add(new TimeSeriesItemRequestDto(new TimeSeriesItemDateRequestDto(2000, 2), 70.0));
 		
 		MultiPeriodAccountingFigureRequestDto figure2 = new MultiPeriodAccountingFigureRequestDto();
 		figure2.setIsHistoric(true);
 		figure2.setTimeSeries(timeSeries2);
 		
-		TimeSeriesItemDateDto expectedMaxDate1 = new TimeSeriesItemDateDto(2005);
-		TimeSeriesItemDateDto expectedMaxDate2 = new TimeSeriesItemDateDto(2000, 4);
+		TimeSeriesItemDateRequestDto expectedMaxDate1 = new TimeSeriesItemDateRequestDto(2005);
+		TimeSeriesItemDateRequestDto expectedMaxDate2 = new TimeSeriesItemDateRequestDto(2000, 4);
 		
 		//Act
-		TimeSeriesItemDateDto actualMaxDate1 = figure1.getMaxDate();
-		TimeSeriesItemDateDto actualMaxDate2 = figure2.getMaxDate();
+		TimeSeriesItemDateRequestDto actualMaxDate1 = figure1.getMaxDate();
+		TimeSeriesItemDateRequestDto actualMaxDate2 = figure2.getMaxDate();
 		
 		//Assert
 		assertEquals(expectedMaxDate1, actualMaxDate1);	
@@ -140,12 +140,12 @@ public class MultiPeriodAccountingFigureTest {
 		//Arrange
 		MultiPeriodAccountingFigureRequestDto figure = new MultiPeriodAccountingFigureRequestDto();
 		
-		List<TimeSeriesItemDto> items = new ArrayList<TimeSeriesItemDto>();
+		List<TimeSeriesItemRequestDto> items = new ArrayList<TimeSeriesItemRequestDto>();
 		
-		TimeSeriesItemDto tsi1 = new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 3), 70.0);
-		TimeSeriesItemDto tsi2 = new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 1), 50.0);
-		TimeSeriesItemDto tsi3 = new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 2), 60.0);
-		TimeSeriesItemDto tsi4 = new TimeSeriesItemDto(new TimeSeriesItemDateDto(2000, 4), 80.0);
+		TimeSeriesItemRequestDto tsi1 = new TimeSeriesItemRequestDto(new TimeSeriesItemDateRequestDto(2000, 3), 70.0);
+		TimeSeriesItemRequestDto tsi2 = new TimeSeriesItemRequestDto(new TimeSeriesItemDateRequestDto(2000, 1), 50.0);
+		TimeSeriesItemRequestDto tsi3 = new TimeSeriesItemRequestDto(new TimeSeriesItemDateRequestDto(2000, 2), 60.0);
+		TimeSeriesItemRequestDto tsi4 = new TimeSeriesItemRequestDto(new TimeSeriesItemDateRequestDto(2000, 4), 80.0);
 		
 		items.add(tsi1);
 		items.add(tsi2);

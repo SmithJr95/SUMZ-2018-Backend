@@ -18,13 +18,13 @@ public class MultiPeriodAccountingFigureRequestDto {
 	
 	@NotNull(message="timeSeries must not be null.")
 	@Valid
-	private List<TimeSeriesItemDto> timeSeries;
+	private List<TimeSeriesItemRequestDto> timeSeries;
 	
 	private MultiPeriodAccountingFigureNames figureName;
 	
 	public MultiPeriodAccountingFigureRequestDto() {}
 	
-	public MultiPeriodAccountingFigureRequestDto(MultiPeriodAccountingFigureNames figureName, Boolean isHistoric, List<TimeSeriesItemDto> timeSeries) {
+	public MultiPeriodAccountingFigureRequestDto(MultiPeriodAccountingFigureNames figureName, Boolean isHistoric, List<TimeSeriesItemRequestDto> timeSeries) {
 		this.figureName = figureName;
 		this.isHistoric = isHistoric;
 		this.timeSeries = timeSeries;
@@ -33,19 +33,19 @@ public class MultiPeriodAccountingFigureRequestDto {
 	public Boolean getIsHistoric() { return isHistoric; }
 	public void setIsHistoric(Boolean isHistoric) { this.isHistoric = isHistoric; }
 
-	public List<TimeSeriesItemDto> getTimeSeries() { return timeSeries; }
-	public void setTimeSeries(List<TimeSeriesItemDto> timeSeries) { this.timeSeries = timeSeries; }
+	public List<TimeSeriesItemRequestDto> getTimeSeries() { return timeSeries; }
+	public void setTimeSeries(List<TimeSeriesItemRequestDto> timeSeries) { this.timeSeries = timeSeries; }
 	
 	public MultiPeriodAccountingFigureNames getFigureName() { return figureName; }
 	public void setFigureName(MultiPeriodAccountingFigureNames figureName) {this.figureName = figureName; }
 	
-	public TimeSeriesItemDateDto getMaxDate() {
+	public TimeSeriesItemDateRequestDto getMaxDate() {
 		if (this.timeSeries == null || this.timeSeries.isEmpty()){
 			return null;
 		}
 		
-		List<TimeSeriesItemDateDto> dates = new ArrayList<TimeSeriesItemDateDto>();
-		for (TimeSeriesItemDto item : this.timeSeries) {
+		List<TimeSeriesItemDateRequestDto> dates = new ArrayList<TimeSeriesItemDateRequestDto>();
+		for (TimeSeriesItemRequestDto item : this.timeSeries) {
 			if(item.getDate() != null && item.getDate().getDateFormat() != TimeSeriesItemDateFormats.Invalid) {
 				dates.add(item.getDate());
 			}
@@ -58,13 +58,13 @@ public class MultiPeriodAccountingFigureRequestDto {
 		return Collections.max(dates);
 	}
 	
-	public TimeSeriesItemDateDto getMinDate() {
+	public TimeSeriesItemDateRequestDto getMinDate() {
 		if (this.timeSeries == null || this.timeSeries.isEmpty()){
 			return null;
 		}
 		
-		List<TimeSeriesItemDateDto> dates = new ArrayList<TimeSeriesItemDateDto>();
-		for (TimeSeriesItemDto item : this.timeSeries) {
+		List<TimeSeriesItemDateRequestDto> dates = new ArrayList<TimeSeriesItemDateRequestDto>();
+		for (TimeSeriesItemRequestDto item : this.timeSeries) {
 			if(item.getDate() != null && item.getDate().getDateFormat() != TimeSeriesItemDateFormats.Invalid) {
 				dates.add(item.getDate());
 			}
@@ -82,7 +82,7 @@ public class MultiPeriodAccountingFigureRequestDto {
 			throw new UnsupportedOperationException();
 		}
 		
-		List<TimeSeriesItemDateDto> dates = new ArrayList<TimeSeriesItemDateDto>();
+		List<TimeSeriesItemDateRequestDto> dates = new ArrayList<TimeSeriesItemDateRequestDto>();
 		for (int i = 0; i < this.timeSeries.size(); i++) {
 			if(this.timeSeries.get(i).getDate() != null && this.timeSeries.get(i).getDate().getDateFormat() != TimeSeriesItemDateFormats.Invalid) {
 				dates.add(this.timeSeries.get(i).getDate());
@@ -91,8 +91,8 @@ public class MultiPeriodAccountingFigureRequestDto {
 		dates.sort(null);
 		
 		for (int i = 0; i < dates.size() - 1; i++) {
-			TimeSeriesItemDateDto expectedNext = dates.get(i).getNextDate();
-			TimeSeriesItemDateDto actualNext = dates.get(i + 1);
+			TimeSeriesItemDateRequestDto expectedNext = dates.get(i).getNextDate();
+			TimeSeriesItemDateRequestDto actualNext = dates.get(i + 1);
 			
 			if(!expectedNext.equals(actualNext)) {
 				return false;

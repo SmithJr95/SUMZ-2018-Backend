@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity(name = "TimeSeriesItemDate")
@@ -21,6 +23,10 @@ public class TimeSeriesItemDateDao {
 	
 	@Column(name="ItemQuarter")
 	private Integer itemQuarter;
+	
+	@OneToOne
+	@JoinColumn(name = "TimeSeriesItemId")
+	private TimeSeriesItemDao timeSeriesItem;
 	
 	public TimeSeriesItemDateDao() {}
 	
@@ -40,4 +46,7 @@ public class TimeSeriesItemDateDao {
 	
 	public Integer getItemQuarter() { return itemQuarter; }
 	public void setItemQuarter(Integer itemQuarter) { this.itemQuarter = itemQuarter; }
+	
+	public TimeSeriesItemDao getTimeSeriesItem() { return timeSeriesItem; }
+	public void setTimeSeriesItem(TimeSeriesItemDao timeSeriesItem) { this.timeSeriesItem = timeSeriesItem; }
 }

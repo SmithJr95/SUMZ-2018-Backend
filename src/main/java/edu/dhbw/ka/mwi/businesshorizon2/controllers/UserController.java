@@ -1,6 +1,5 @@
 package edu.dhbw.ka.mwi.businesshorizon2.controllers;
 
-import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -14,14 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.services.UserService;
-import edu.dhbw.ka.mwi.businesshorizon2.models.daos.AppUserDao;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.AppUserDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.UserPutRequestDto;
-import edu.dhbw.ka.mwi.businesshorizon2.models.mappers.UserMapper;
 
 @RestController
 @RequestMapping("/users")

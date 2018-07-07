@@ -315,5 +315,12 @@ public class UserService implements IUserService {
 			throw new Exception("Es existiert kein Benutzerkonto mit der ID: " + id + ".");
 		}
 	}
+	
+	@Override 
+	public Long getUserId(String username) {
+		AppUserDao user = userRepository.findByEmail(username);
+		
+		return user.getAppUserId();
+	}
 
 }
