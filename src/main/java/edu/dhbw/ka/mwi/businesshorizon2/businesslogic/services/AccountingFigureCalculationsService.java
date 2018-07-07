@@ -43,6 +43,30 @@ public class AccountingFigureCalculationsService implements IAccountingFigureCal
 		return freeCashFlow;
 	}
 	
+	public List<Double> calculateFreeCashFlow(List<Double> revenue, List<Double> additionalIncome, List<Double> costOfMaterial, 
+			List<Double> costOfStaff, List<Double> additionalCosts, List<Double> depreciation, Double businessTaxRate, 
+			Double corporateTaxRate, Double solidaryTaxRate, List<Double> investments, List<Double> divestments){
+	
+		List<Double> freeCashFlow = new ArrayList<Double>();
+		
+		
+		for (int i = 0; i < revenue.size(); i++) {
+		
+			double proceeds = revenue.get(i) + additionalIncome.get(i);
+			double payments = costOfMaterial.get(i) + costOfStaff.get(i) + additionalCosts.get(i);
+			
+			double cashFlow = proceeds - payments;
+	
+			double absoluteTaxes = (cashFlow - depreciation.get(i)) * (businessTaxRate + (corporateTaxRate * (1 + solidaryTaxRate)));
+			double operatingCashFlow = cashFlow - absoluteTaxes;
+			
+			freeCashFlow.add(operatingCashFlow - (investments.get(i) - divestments.get(i)));
+		
+		}
+		
+		return freeCashFlow;
+	}
+	
 	/**
 	 * @param freeCashFlow
 	 * @param liabilities
@@ -54,12 +78,25 @@ public class AccountingFigureCalculationsService implements IAccountingFigureCal
 	public double calculateFlowToEquity(double freeCashFlow, double liabilities, double previousLiabilities, double interestOnLiabilities,  
 			double effectiveTaxRate) {
 
-		double taxShield = effectiveTaxRate * interestOnLiabilities * liabilities;
+		double taxShield = effectiveTaxRate * interestOnLiabilities * previousLiabilities;
 		double totalCashFlow = freeCashFlow + taxShield;
-		double flowToEquity = totalCashFlow - (interestOnLiabilities * liabilities) + (liabilities - previousLiabilities);
+		double flowToEquity = totalCashFlow - (interestOnLiabilities * previousLiabilities) + (liabilities - previousLiabilities);
 		
 		return flowToEquity; 
 	}	
+	
+	public List<Double> calculateFlowToEquity(List<Double> freeCashFlow, List<Double> liabilities, Double interestOnLiabilities, Double effectiveTaxRate){
+		Double duplicate = liabilities.get(liabilities.size() - 1);
+		liabilities.add(duplicate);
+		
+		List<Double> flowToEquity = new ArrayList<Double>();
+		
+		for (int i = 0; i < freeCashFlow.size(); i++) {
+			flowToEquity.add(calculateFlowToEquity(freeCashFlow.get(i), liabilities.get(i + 1), liabilities.get(i), interestOnLiabilities, effectiveTaxRate));
+		}
+		
+		return flowToEquity;
+	}
 	
 	/**
 	 * @param businessTaxRate

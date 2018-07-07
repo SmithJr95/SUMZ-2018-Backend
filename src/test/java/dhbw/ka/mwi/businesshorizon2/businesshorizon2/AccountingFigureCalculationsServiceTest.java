@@ -2,6 +2,9 @@ package dhbw.ka.mwi.businesshorizon2.businesshorizon2;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Test;
 
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.services.AccountingFigureCalculationsService;
@@ -47,6 +50,44 @@ public class AccountingFigureCalculationsServiceTest {
 		
 		//Assert
 		assertEquals(expectedRes, actualRes, 0.01);
+	}
+	
+	@Test
+	public void calculateMultipleFlowToEquity1() {
+		//Arrange
+		AccountingFigureCalculationsService accountingService = new AccountingFigureCalculationsService();
+		
+		Double[] freeCashFlow = new Double[]{138.61,202.31,174.41,202.51};
+		Double[] liabilities = new Double[]{1260.0,1320.0,1330.0,1400.0,1400.0};
+		Double interestOnLiabilities = 0.08;
+		Double effectiveTaxRate = 0.26325;
+		
+		//Act 
+		Double[] fte = new Double[freeCashFlow.length];
+		
+		for (int i = 0; i < freeCashFlow.length; i++) {
+			fte[i] = accountingService.calculateFlowToEquity(freeCashFlow[i], liabilities[i+1], liabilities[i], interestOnLiabilities, effectiveTaxRate);
+			System.out.println("cashflows.add(" + fte[i] + ");");
+		}
+	}
+	
+	@Test
+	public void calculateMultipleFlowToEquity2() {
+		//Arrange
+		AccountingFigureCalculationsService accountingService = new AccountingFigureCalculationsService();
+		
+		Double[] freeCashFlow = new Double[]{176.76,520.13,404.87,203.78};
+		Double[] liabilities = new Double[]{1260.0,1300.0,1000.0,1400.0,1400.0};
+		Double interestOnLiabilities = 0.08;
+		Double effectiveTaxRate = 0.30625;
+		
+		//Act 
+		Double[] fte = new Double[freeCashFlow.length];
+		
+		for (int i = 0; i < freeCashFlow.length; i++) {
+			fte[i] = accountingService.calculateFlowToEquity(freeCashFlow[i], liabilities[i+1], liabilities[i], interestOnLiabilities, effectiveTaxRate);
+			System.out.println("cashflows.add(" + fte[i] + ");");
+		}
 	}
 	
 	@Test
