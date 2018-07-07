@@ -42,7 +42,6 @@ import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.UserPasswordResetTokenDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.UserPutRequestDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.mappers.UserMapper;
 
-
 @Service
 public class UserService implements IUserService {
 	

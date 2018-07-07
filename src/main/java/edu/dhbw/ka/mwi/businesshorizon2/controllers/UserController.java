@@ -1,6 +1,5 @@
 package edu.dhbw.ka.mwi.businesshorizon2.controllers;
 
-import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -14,28 +13,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.services.UserService;
-import edu.dhbw.ka.mwi.businesshorizon2.models.daos.AppUserDao;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.AppUserDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.UserPutRequestDto;
-import edu.dhbw.ka.mwi.businesshorizon2.models.mappers.UserMapper;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/users")
+@Api(value="User")
 public class UserController {
 	
 	@Autowired
 	private UserService userService;
 	
+	@ApiOperation(value = "add a user to the system")
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void addUser(@RequestBody @Valid AppUserDto userDto, HttpServletRequest request) throws Exception{
 		String host = request.getRequestURL().toString();
 		userService.addUser(userDto, host);
 	}
 	
+	@ApiOperation(value = "activate a user")
 	@RequestMapping(value = "/activate/{token}", method = RequestMethod.GET)
 	public void activateUser(@PathVariable("token") String token, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		userService.activateUser(token);
@@ -47,6 +46,7 @@ public class UserController {
 		response.sendRedirect(redirectURL);
 	}
 	
+	@ApiOperation(value = "User forgot password")
 	@RequestMapping(value = "/forgot", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void passwordForgot(@RequestBody @Valid AppUserDto user, HttpServletRequest request) throws Exception {
 		String redirectURL = request.getRequestURL().toString();
@@ -54,6 +54,7 @@ public class UserController {
 		userService.requestUserPasswordReset(user.getEmail(), redirectURL);
 	}
 	
+	@ApiOperation("check token to reset the password")
 	@RequestMapping(value = "/forgot/{token}", method = RequestMethod.GET)
 	public void checkPasswordResetToken(@PathVariable("token") String token, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
@@ -66,23 +67,27 @@ public class UserController {
 		response.sendRedirect(redirectURL + token);
 	}
 	
+	@ApiOperation("reset the password")
 	@RequestMapping(value = "/reset/{token}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void resetPassword(@PathVariable("token") String token, @RequestBody @Valid AppUserDto userDto) throws Exception {
 		
 		userService.resetUserPassword(userDto, token);
 	}
 	
+	@ApiOperation("redirect to the reset password")
 	@RequestMapping(value = "/reset/{token}", method = RequestMethod.GET)
 	public void resetPassword() {
 		
 	}
 	
+	@ApiOperation("delete a user from the system")
 	@RequestMapping(value = "/{id}/delete", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAuthority('ADMIN_USER') or hasAuthority('STANDARD_USER')")
 	public void deleteUser(@RequestBody @Valid AppUserDto user, @PathVariable Long id) throws Exception {
 		userService.deleteUser(user, id);
 	}
 	
+	@ApiOperation("update a user password")
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAuthority('ADMIN_USER') or hasAuthority('STANDARD_USER')")
 	public void updateUser(@RequestBody @Valid UserPutRequestDto user, @PathVariable Long id) throws Exception {
