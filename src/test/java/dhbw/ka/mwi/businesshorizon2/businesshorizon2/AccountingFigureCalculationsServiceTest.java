@@ -5,36 +5,87 @@ import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.services.AccountingFigureCalculationsService;
 
+
 public class AccountingFigureCalculationsServiceTest {
 	
-//	public List<Double> calculateFreeCashFlow(List<Double> revenue, List<Double> additionalIncome, List<Double> costOfMaterial, 
-//			List<Double> costOfStaff, List<Double> additionalCosts, List<Double> depreciation, Double businessTaxRate, 
-//			Double corporateTaxRate, Double solidaryTaxRate, List<Double> investments, List<Double> divestments)
+
+	
 	
 	@Test
 	public void calculateFreeCashFlow(){
 		//Arrange
 		AccountingFigureCalculationsService accountingService = new AccountingFigureCalculationsService();
-		double expectedRes1 = 202.52;
-		double expectedRes2 = 202.52;
-		double expectedRes3 = 202.52;
-		double expectedRes4 = 138.61;
+		List<Double> expectedRes1 = new ArrayList<>();
+		expectedRes1.add(202.52);
+		expectedRes1.add(202.52);
+		expectedRes1.add(202.8);
+		expectedRes1.add(138.61);
+
+		List<Double> revenue = new ArrayList<>();
+		revenue.add(2000.0);
+		revenue.add(0.0);
+		revenue.add(1500.0);
+		revenue.add(2200.0);
+		
+		List<Double> additionalIncome = new ArrayList<>();
+		additionalIncome.add(0.0);
+		additionalIncome.add(2000.0);
+		additionalIncome.add(500.0);
+		additionalIncome.add(0.0);
+		
+		List<Double> costOfMaterial= new ArrayList<>();
+		costOfMaterial.add(1431.41);
+		costOfMaterial.add(0.0);
+		costOfMaterial.add(0.0);
+		costOfMaterial.add(1459.98);
+		
+		List<Double> costOfStaff= new ArrayList<>();
+		costOfStaff.add(0.0);
+		costOfStaff.add(1431.41);
+		costOfStaff.add(0.0);
+		costOfStaff.add(0.0);
+		
+		List<Double> additionalCost= new ArrayList<>();
+		additionalCost.add(0.0);
+		additionalCost.add(0.0);
+		additionalCost.add(1431.0);
+		additionalCost.add(0.0);
+		
+		List<Double> depreciation= new ArrayList<>();
+		depreciation.add(280.0);
+		depreciation.add(280.0);
+		depreciation.add(280.0);
+		depreciation.add(400.0);
+		
+		List<Double> investments= new ArrayList<>();
+		investments.add(280.0);
+		investments.add(300.0);
+		investments.add(300.0);
+		investments.add(500.0);
+		
+		List<Double> divestments= new ArrayList<>();
+		divestments.add(0.0);
+		divestments.add(20.0);
+		divestments.add(20.0);
+		divestments.add(0.0);
+		
 		
 		//Act
-		double actualRes1 = accountingService.calculateFreeCashFlow(2000.0, 0, 1431.41, 0, 0, 280.0, 0.14, 0.15, 0.055, 280.0, 0.0);
-		double actualRes2 = accountingService.calculateFreeCashFlow(0, 2000, 0, 1431.41, 0, 280, 0.14, 0.15, 0.055, 300, 20);
-		double actualRes3 = accountingService.calculateFreeCashFlow(1500, 500, 0, 0, 1431.41, 280, 0.14, 0.15, 0.055, 300, 20);
-		double actualRes4 = accountingService.calculateFreeCashFlow(2200, 0, 1459.98, 0, 0, 400, 0.14, 0.15, 0.055, 500, 0);
+		List<Double> actualRes1 = new ArrayList<>(); 
+		actualRes1 = accountingService.calculateFreeCashFlow(revenue, additionalIncome, costOfMaterial, costOfStaff, additionalCost, depreciation, 
+							0.14, 0.15, 0.055, investments, divestments);
+		
 		
 		//Assert
-		assertEquals(expectedRes1, actualRes1, 0.1);
-		assertEquals(expectedRes2, actualRes2, 0.1);
-		assertEquals(expectedRes3, actualRes3, 0.1);
-		assertEquals(expectedRes4, actualRes4, 0.1);
+		for (int i = 0; i < actualRes1.size();  i++) {
+			Assert.assertEquals(expectedRes1.get(i), actualRes1.get(i),0.1);
+		}
+
 	}
 	
 	@Test
