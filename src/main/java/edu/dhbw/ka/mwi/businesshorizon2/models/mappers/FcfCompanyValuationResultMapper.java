@@ -18,4 +18,18 @@ public class FcfCompanyValuationResultMapper {
 		
 		return dto;
 	}
+	
+	public static FcfCompanyValuationResultDao mapDtoToDao(FcfCompanyValuationResultDto dto) {
+		
+		if(dto == null) {
+			return null;
+		}
+		
+		FcfCompanyValuationResultDao dao = new FcfCompanyValuationResultDao();
+		dao.setCompanyValue(dto.getCompanyValue());
+		dao.setMarketValueTotalAssets(dto.getMarketValueTotalAssets());
+		dao.setTotalLiabilities(dto.getTotalLiabilities());
+		
+		return dao;
+	}
 }

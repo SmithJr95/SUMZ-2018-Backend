@@ -1,12 +1,12 @@
 package edu.dhbw.ka.mwi.businesshorizon2.comparators;
 import java.util.Comparator;
 
-import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.TimeSeriesItemDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.TimeSeriesItemRequestDto;
 
-public class TimeSeriesItemByDateComparator implements Comparator<TimeSeriesItemDto> {
+public class TimeSeriesItemByDateComparator implements Comparator<TimeSeriesItemRequestDto> {
 
 	@Override
-	public int compare(TimeSeriesItemDto o1, TimeSeriesItemDto o2) {
+	public int compare(TimeSeriesItemRequestDto o1, TimeSeriesItemRequestDto o2) {
 		if(o1 == o2) {
 			return 0;
 		}

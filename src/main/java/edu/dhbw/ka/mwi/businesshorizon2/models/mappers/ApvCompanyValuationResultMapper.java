@@ -20,4 +20,20 @@ public class ApvCompanyValuationResultMapper {
 		
 		return dto;
 	}
+	
+	public static ApvCompanyValuationResultDao mapDtoToDao(ApvCompanyValuationResultDto dto) {
+		
+		if(dto == null) {
+			return null;
+		}
+		
+		ApvCompanyValuationResultDao dao = new ApvCompanyValuationResultDao();
+		dao.setCompanyValue(dto.getCompanyValue());
+		dao.setMarketValueTotalAssets(dto.getMarketValueTotalAssets());
+		dao.setPresentValueOfCashflows(dto.getPresentValueOfCashflows());
+		dao.setTaxShield(dto.getTaxShield());
+		dao.setTotalLiabilities(dto.getTotalLiabilities());
+		
+		return dao;
+	}
 }

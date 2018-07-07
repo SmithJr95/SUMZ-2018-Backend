@@ -27,8 +27,7 @@ public class TimeSeriesItemDao {
 	@JoinColumn(name = "MultiPeriodAccountingFigureId")
 	private MultiPeriodAccountingFigureDao accountingFigure;
 	
-	@OneToOne
-	@JoinColumn(name = "TimeSeriesItemDateId")
+	@OneToOne(mappedBy = "timeSeriesItem")
 	private TimeSeriesItemDateDao timeSeriesItemDate;
 	
 	public TimeSeriesItemDao() {}

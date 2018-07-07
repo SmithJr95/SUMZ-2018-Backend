@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.IUserService;
+import edu.dhbw.ka.mwi.businesshorizon2.config.AdditionalWebConfig;
 import edu.dhbw.ka.mwi.businesshorizon2.config.EmailConfig;
 import edu.dhbw.ka.mwi.businesshorizon2.config.SecurityConfig;
 import edu.dhbw.ka.mwi.businesshorizon2.dataaccess.interfaces.IAppRoleRepository;
@@ -188,7 +189,7 @@ public class UserService implements IUserService {
 		String token = objectMapper.writeValueAsString(userTokenDto); 
 		
 		token 		= Base64.getEncoder().encodeToString(token.getBytes(StandardCharsets.UTF_8));
-		String link = host + "/users/reset/" + token;
+		String link = host + "/users/forgot/" + token;
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("email", user.getEmail());
@@ -314,6 +315,13 @@ public class UserService implements IUserService {
 		}else {
 			throw new Exception("Es existiert kein Benutzerkonto mit der ID: " + id + ".");
 		}
+	}
+	
+	@Override 
+	public Long getUserId(String username) {
+		AppUserDao user = userRepository.findByEmail(username);
+		
+		return user.getAppUserId();
 	}
 
 }

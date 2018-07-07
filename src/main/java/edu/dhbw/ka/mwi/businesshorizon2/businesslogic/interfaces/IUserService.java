@@ -34,4 +34,6 @@ public interface IUserService {
 	void deleteUser(@Valid AppUserDto userDto, Long id) throws Exception;
 
 	void updateUserPassword(UserPutRequestDto user, Long userID) throws Exception;
+
+	Long getUserId(String username);
 }

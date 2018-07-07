@@ -7,7 +7,8 @@ import edu.dhbw.ka.mwi.businesshorizon2.models.daos.MultiPeriodAccountingFigureD
 import edu.dhbw.ka.mwi.businesshorizon2.models.daos.TimeSeriesItemDao;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.MultiPeriodAccountingFigureRequestDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.MultiPeriodAccountingFigureResponseDto;
-import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.TimeSeriesItemDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.TimeSeriesItemRequestDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.TimeSeriesItemResponseDto;
 
 public class MultiPeriodAccountingFigureMapper {
 
@@ -31,7 +32,7 @@ public class MultiPeriodAccountingFigureMapper {
 			return null;
 		}
 		
-		List<TimeSeriesItemDto> timeSeriesItems = TimeSeriesItemMapper.mapDaoToDto(dao.getTimeSeriesItems());
+		List<TimeSeriesItemResponseDto> timeSeriesItems = TimeSeriesItemMapper.mapDaoToDto(dao.getTimeSeriesItems());
 		MultiPeriodAccountingFigureResponseDto dto = new MultiPeriodAccountingFigureResponseDto(dao.getIsHistoric(), timeSeriesItems);
 		
 		return dto;

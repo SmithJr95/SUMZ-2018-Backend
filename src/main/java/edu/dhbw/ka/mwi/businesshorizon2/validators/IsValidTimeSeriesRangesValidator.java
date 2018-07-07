@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import edu.dhbw.ka.mwi.businesshorizon2.models.common.MultiPeriodAccountingFigureNames;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.MultiPeriodAccountingFigureRequestDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioRequestDto;
-import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.TimeSeriesItemDateDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.TimeSeriesItemDateRequestDto;
 
 @Component
 public class IsValidTimeSeriesRangesValidator implements ConstraintValidator<IsValidTimeSeriesRanges, ScenarioRequestDto> {
@@ -28,7 +28,7 @@ public class IsValidTimeSeriesRangesValidator implements ConstraintValidator<IsV
 			return true;
 		}
 		
-		TimeSeriesItemDateDto basisDate = null;
+		TimeSeriesItemDateRequestDto basisDate = null;
 		
 		for(int i = 0; i < historicMultiPeriodAccountingFigures.size(); i++) {
 			
@@ -36,7 +36,7 @@ public class IsValidTimeSeriesRangesValidator implements ConstraintValidator<IsV
 				return false;
 			}
 			
-			TimeSeriesItemDateDto maxDate = historicMultiPeriodAccountingFigures.get(i).getMaxDate();
+			TimeSeriesItemDateRequestDto maxDate = historicMultiPeriodAccountingFigures.get(i).getMaxDate();
 			if(maxDate == null) {
 				return false;
 			}
@@ -64,7 +64,7 @@ public class IsValidTimeSeriesRangesValidator implements ConstraintValidator<IsV
 				return false;
 			}
 			
-			TimeSeriesItemDateDto minDate;
+			TimeSeriesItemDateRequestDto minDate;
 			
 			if(futureMultiPeriodAccountingFigures.get(i).getFigureName() == MultiPeriodAccountingFigureNames.Liabilities) {
 				

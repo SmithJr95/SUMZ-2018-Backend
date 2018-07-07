@@ -28,6 +28,13 @@ public class CompanyValueDistributionPointDao {
 	@JoinColumn(name = "ScenarioId")
 	private ScenarioDao scenario;
 	
+	public CompanyValueDistributionPointDao() {}
+	
+	public CompanyValueDistributionPointDao(Double xValue, Double yValue) {
+		this.xValue = xValue;
+		this.yValue = yValue;
+	}
+	
 	public Long getCompanyValueDistributionPointId() { return companyValueDistributionPointId; }
 	
 	public Double getxValue() { return xValue; }

@@ -1,22 +1,23 @@
 package edu.dhbw.ka.mwi.businesshorizon2.models.mappers;
 
 import edu.dhbw.ka.mwi.businesshorizon2.models.daos.TimeSeriesItemDateDao;
-import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.TimeSeriesItemDateDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.TimeSeriesItemDateRequestDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.TimeSeriesItemDateResponseDto;
 
 public class TimeSeriesItemDateMapper {
 	
-	public static TimeSeriesItemDateDto mapDaoToDto(TimeSeriesItemDateDao dao) {
+	public static TimeSeriesItemDateResponseDto mapDaoToDto(TimeSeriesItemDateDao dao) {
 		
-		TimeSeriesItemDateDto dto = null; 
+		TimeSeriesItemDateResponseDto dto = null; 
 		
 		if(dao != null) {
-			dto = new TimeSeriesItemDateDto(dao.getItemYear(), dao.getItemQuarter());
+			dto = new TimeSeriesItemDateResponseDto(dao.getItemYear(), dao.getItemQuarter());
 		}
 		
 		return dto;
 	}
 	
-	public static TimeSeriesItemDateDao mapDtoToDao(TimeSeriesItemDateDto dto) {
+	public static TimeSeriesItemDateDao mapDtoToDao(TimeSeriesItemDateRequestDto dto) {
 		
 		TimeSeriesItemDateDao dao = null;
 		
