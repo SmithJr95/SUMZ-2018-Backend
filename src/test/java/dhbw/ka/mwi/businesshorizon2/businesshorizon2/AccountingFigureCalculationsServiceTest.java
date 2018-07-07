@@ -11,6 +11,10 @@ import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.services.AccountingFigureC
 
 public class AccountingFigureCalculationsServiceTest {
 	
+//	public List<Double> calculateFreeCashFlow(List<Double> revenue, List<Double> additionalIncome, List<Double> costOfMaterial, 
+//			List<Double> costOfStaff, List<Double> additionalCosts, List<Double> depreciation, Double businessTaxRate, 
+//			Double corporateTaxRate, Double solidaryTaxRate, List<Double> investments, List<Double> divestments)
+	
 	@Test
 	public void calculateFreeCashFlow(){
 		//Arrange
@@ -57,10 +61,10 @@ public class AccountingFigureCalculationsServiceTest {
 		//Arrange
 		AccountingFigureCalculationsService accountingService = new AccountingFigureCalculationsService();
 		
-		Double[] freeCashFlow = new Double[]{138.61,202.31,174.41,202.51};
-		Double[] liabilities = new Double[]{1260.0,1320.0,1330.0,1400.0,1400.0};
+		Double[] freeCashFlow = new Double[]{3960.0,4158.0,4365.0,4584.0,4813.0,5054.0,4587.0,5035.0,4035.0};
+		Double[] liabilities = new Double[]{1625.0,1771.0,1931.0,2104.0,2294.0,2500.0,1850.0,2300.0,2468.0,2468.0};
 		Double interestOnLiabilities = 0.08;
-		Double effectiveTaxRate = 0.26325;
+		Double effectiveTaxRate = 0.30625;
 		
 		//Act 
 		Double[] fte = new Double[freeCashFlow.length];
