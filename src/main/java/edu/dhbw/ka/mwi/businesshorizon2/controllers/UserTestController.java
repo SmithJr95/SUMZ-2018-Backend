@@ -10,15 +10,18 @@ import org.springframework.web.bind.annotation.RestController;
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.services.UserService;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.AppUserDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.mappers.UserMapper;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/users/test")
+@Api(value = "User")
 public class UserTestController {
 	
 	@Autowired
 	private UserService userService;
 	
-	
+	@ApiOperation(value = "returns a list of all users")
 	@RequestMapping(method = RequestMethod.GET)
 	public List<AppUserDto> getAllUsers(){
 		return UserMapper.mapToDto(userService.findAllUsers());

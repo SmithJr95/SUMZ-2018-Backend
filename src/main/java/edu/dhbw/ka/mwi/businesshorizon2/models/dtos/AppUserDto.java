@@ -12,23 +12,25 @@ import io.swagger.annotations.ApiModelProperty;
 
 public class AppUserDto {
 
-	@ApiModelProperty()
+	@ApiModelProperty(notes = "the users id")
     private Long id;
     
-	@ApiModelProperty()
     @Email
+	@ApiModelProperty(notes = "the users email as username")
     private String email;
     
     //at least 6 characters, maximum 20 
     //must contain one digit 0..9 
     //must contain 1 uppercase & 1 lowercase character 
     //must contain one special symbol from @#$%
-	@ApiModelProperty()
 	@Pattern(regexp = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})")
+	@ApiModelProperty(notes = "the password")
     private String password;
-        
+     
+	@ApiModelProperty(notes = "tells if user is logged in")
     private Boolean isActive;
-    
+
+	@ApiModelProperty()
     private List<AppRoleDao> roles = new ArrayList<>();
     
     public AppUserDto() { }

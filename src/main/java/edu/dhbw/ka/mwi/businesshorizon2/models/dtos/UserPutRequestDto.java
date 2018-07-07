@@ -6,12 +6,15 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
 
 import edu.dhbw.ka.mwi.businesshorizon2.models.daos.AppRoleDao;
+import io.swagger.annotations.ApiModelProperty;
 
 public class UserPutRequestDto {
 
+	@ApiModelProperty()
     private Long id;
     
     @Email
+	@ApiModelProperty()
     private String email;
     
     //at least 6 characters, maximum 20 
@@ -19,6 +22,7 @@ public class UserPutRequestDto {
     //must contain 1 uppercase & 1 lowercase character 
     //must contain one special symbol from @#$%
     @Pattern(regexp = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})")
+	@ApiModelProperty()
     private String oldPassword;
     
     //at least 6 characters, maximum 20 
@@ -26,10 +30,13 @@ public class UserPutRequestDto {
     //must contain 1 uppercase & 1 lowercase character 
     //must contain one special symbol from @#$%
     @Pattern(regexp = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})")
+	@ApiModelProperty()
     private String newPassword;
-    
+
+	@ApiModelProperty()
     private List<AppRoleDao> roles;
-    
+
+	@ApiModelProperty()
     private Boolean isActive;
     
     public UserPutRequestDto(Long id, String email, String passwordOld, String passwordNew, List<AppRoleDao> roles, Boolean isActive) {

@@ -3,19 +3,19 @@ package edu.dhbw.ka.mwi.businesshorizon2.models.daos;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import javax.persistence.JoinColumn;
 import javax.persistence.Table;
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
+
+import io.swagger.annotations.ApiModelProperty;
 
 @Entity(name = "AppUser")
 @Table(name = "AppUser")
@@ -24,6 +24,7 @@ public class AppUserDao{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="AppUserId")
+	@ApiModelProperty(notes = "user ID")
     private Long appUserId;
 
     @Column(name = "Email", columnDefinition = "nvarchar")
@@ -41,6 +42,7 @@ public class AppUserDao{
     		name = "UserRole", 
     		joinColumns = @JoinColumn(name = "AppUserId", referencedColumnName = "AppUserId"),
             inverseJoinColumns = @JoinColumn(name = "AppRoleId", referencedColumnName = "AppRoleId"))
+	@ApiModelProperty()
     private List<AppRoleDao> appRoles = new ArrayList<>();
 
 	public AppUserDao() { }

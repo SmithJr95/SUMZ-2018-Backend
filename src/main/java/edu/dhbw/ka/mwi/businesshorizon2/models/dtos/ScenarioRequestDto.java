@@ -16,6 +16,7 @@ import edu.dhbw.ka.mwi.businesshorizon2.validators.IsContinuousTimeSeries;
 import edu.dhbw.ka.mwi.businesshorizon2.validators.IsDateFormatConsistent;
 import edu.dhbw.ka.mwi.businesshorizon2.validators.IsValidAccountingFigureCombination;
 import edu.dhbw.ka.mwi.businesshorizon2.validators.IsValidTimeSeriesRanges;
+import io.swagger.annotations.ApiModelProperty;
 
 @IsValidAccountingFigureCombination()
 @IsDateFormatConsistent()
@@ -23,71 +24,89 @@ import edu.dhbw.ka.mwi.businesshorizon2.validators.IsValidTimeSeriesRanges;
 @IsValidTimeSeriesRanges()
 public class ScenarioRequestDto {
 	
+	@ApiModelProperty()
 	@NotNull(message = "scenarioName must not be null.")
 	@Size(min=1, max=20, message="scenarioName must consist of 1-20 characters.")
 	private String scenarioName;
 	
+	@ApiModelProperty()
 	@NotNull(message = "scenarioDescription must not be null.")
 	@Size(min=1, max=100, message="scenarioDescription must consist of 1-100 characters.")
 	private String scenarioDescription;
 	
+	@ApiModelProperty()
 	@NotNull(message = "periods must not be null.")
 	@Min(value=1, message="periods must be >=1 and <=10.")
 	@Max(value=10, message="periods must be >=1 and <=10.")
 	private Integer periods;
 	
+	@ApiModelProperty()
 	@NotNull(message = "businessTaxRate must not be null.")
 	@DecimalMin(value="0.0", message="businessTaxRate must be >=0 and <=1.0.")
 	@DecimalMax(value="1.0", message="businessTaxRate must be >=0 and <=1.0.")
 	private Double businessTaxRate;
 	
+	@ApiModelProperty()
 	@NotNull(message = "corporateTaxRate must not be null.")
 	@DecimalMin(value="0.0", message="corporateTaxRate must be >=0 and <=1.0.")
 	@DecimalMax(value="1.0", message="corporateTaxRate must be >=0 and <=1.0.")
 	private Double corporateTaxRate;
-	
+
+	@ApiModelProperty()
 	@NotNull(message = "solidaryTaxRate must not be null.")
 	@DecimalMin(value="0.0", message="solidaryTaxRate must be >=0 and <=1.0.")
 	@DecimalMax(value="1.0", message="solidaryTaxRate must be >=0 and <=1.0.")
 	private Double solidaryTaxRate;
-	
+
+	@ApiModelProperty()
 	@NotNull(message = "costOfEquity must not be null.")
 	@DecimalMin(value="-0.1", message="costOfEquity must be >=-0.1 and <=1.0.")
 	@DecimalMax(value="1.0", message="costOfEquity must be >=-0.1 and <=1.0.")
 	private Double equityInterestRate;
-	
+
+	@ApiModelProperty()
 	@NotNull(message = "interestOnLiabilitiesRate must not be null.")
 	@DecimalMin(value="0.0", message="interestOnLiabilitiesRate must be >=0.0 and <=1.0.")
 	@DecimalMax(value="1.0", message="interestOnLiabilitiesRate must be >=0.0 and <=1.0.")
 	private Double interestOnLiabilitiesRate;
-	
+
+	@ApiModelProperty()
 	@Valid
 	private MultiPeriodAccountingFigureRequestDto depreciation;
-	
+
+	@ApiModelProperty()
 	@Valid
 	private MultiPeriodAccountingFigureRequestDto additionalIncome;
-	
+
+	@ApiModelProperty()
 	@Valid
 	private MultiPeriodAccountingFigureRequestDto additionalCosts;
-	
+
+	@ApiModelProperty()
 	@Valid
 	private MultiPeriodAccountingFigureRequestDto investments;
-	
+
+	@ApiModelProperty()
 	@Valid
 	private MultiPeriodAccountingFigureRequestDto divestments;
-	
+
+	@ApiModelProperty()
 	@Valid
 	private MultiPeriodAccountingFigureRequestDto revenue;
-	
+
+	@ApiModelProperty()
 	@Valid
 	private MultiPeriodAccountingFigureRequestDto costOfMaterial;
-	
+
+	@ApiModelProperty()
 	@Valid
 	private MultiPeriodAccountingFigureRequestDto costOfStaff;
-	
+
+	@ApiModelProperty()
 	@Valid
 	private MultiPeriodAccountingFigureRequestDto liabilities;
-	
+
+	@ApiModelProperty()
 	@Valid
 	private MultiPeriodAccountingFigureRequestDto freeCashFlows;
 	

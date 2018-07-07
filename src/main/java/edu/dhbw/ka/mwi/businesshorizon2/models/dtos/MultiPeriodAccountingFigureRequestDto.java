@@ -10,16 +10,20 @@ import javax.validation.constraints.NotNull;
 import edu.dhbw.ka.mwi.businesshorizon2.comparators.TimeSeriesItemByDateComparator;
 import edu.dhbw.ka.mwi.businesshorizon2.models.common.MultiPeriodAccountingFigureNames;
 import edu.dhbw.ka.mwi.businesshorizon2.models.common.TimeSeriesItemDateFormats;
+import io.swagger.annotations.ApiModelProperty;
 
 public class MultiPeriodAccountingFigureRequestDto {
-	
+
 	@NotNull(message="isHistoric must not be null.")
+	@ApiModelProperty()
 	private Boolean isHistoric;
-	
+
 	@NotNull(message="timeSeries must not be null.")
 	@Valid
+	@ApiModelProperty()
 	private List<TimeSeriesItemDto> timeSeries;
-	
+
+	@ApiModelProperty()
 	private MultiPeriodAccountingFigureNames figureName;
 	
 	public MultiPeriodAccountingFigureRequestDto() {}
