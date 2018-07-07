@@ -42,6 +42,262 @@ public class CompanyValuationServiceTests {
 	}
 	
 	@Test
+	public void performApvCompanyValuationWithBallwieserData() {
+		List<Double> cashflows = new ArrayList<Double>();
+		cashflows.add(138.61);
+		cashflows.add(202.31);
+		cashflows.add(174.41);
+		cashflows.add(202.51);
+		
+		List<Double> liabilities = new ArrayList<Double>();
+		liabilities.add(1260.0);
+		liabilities.add(1320.0);
+		liabilities.add(1330.0);
+		liabilities.add(1400.0);
+		
+		double equityInterest = 0.09969137;
+		double outsideCapitalInterest = 0.08;
+		double corporateTax = 0.26325;
+
+		CompanyValuationService valuationService = new CompanyValuationService();
+		ApvCompanyValuationResultDto apvCompanyValuationResult = valuationService.performApvCompanyValuation(cashflows,
+				liabilities, equityInterest, outsideCapitalInterest, corporateTax);
+
+		Assert.assertEquals(1055.24, apvCompanyValuationResult.getCompanyValue(), 0.1);
+	}
+	
+	@Test
+	public void performApvCompanyValuationWithPohlData() {
+		List<Double> cashflows = new ArrayList<Double>();
+		cashflows.add(176.76);
+		cashflows.add(520.13);
+		cashflows.add(404.87);
+		cashflows.add(203.78);
+		
+		List<Double> liabilities = new ArrayList<Double>();
+		liabilities.add(1260.0);
+		liabilities.add(1300.0);
+		liabilities.add(1000.0);
+		liabilities.add(1400.0);
+		
+		double equityInterest = 0.100582;
+		double outsideCapitalInterest = 0.08;
+		double corporateTax = 0.30625;
+
+		CompanyValuationService valuationService = new CompanyValuationService();
+		ApvCompanyValuationResultDto apvCompanyValuationResult = valuationService.performApvCompanyValuation(cashflows,
+				liabilities, equityInterest, outsideCapitalInterest, corporateTax);
+
+		Assert.assertEquals(1569.18934438987, apvCompanyValuationResult.getCompanyValue(), 0.1);
+	}
+	
+	@Test
+	public void performApvCompanyValuationWithAllZeroAmounts() {
+		List<Double> cashflows = new ArrayList<Double>();
+		cashflows.add(0.0);
+		cashflows.add(0.0);
+		cashflows.add(0.0);
+		cashflows.add(0.0);
+		
+		List<Double> liabilities = new ArrayList<Double>();
+		liabilities.add(0.0);
+		liabilities.add(0.0);
+		liabilities.add(0.0);
+		liabilities.add(0.0);
+		
+		double equityInterest = 0.100582;
+		double outsideCapitalInterest = 0.08;
+		double corporateTax = 0.30625;
+
+		CompanyValuationService valuationService = new CompanyValuationService();
+		ApvCompanyValuationResultDto apvCompanyValuationResult = valuationService.performApvCompanyValuation(cashflows,
+				liabilities, equityInterest, outsideCapitalInterest, corporateTax);
+
+		Assert.assertEquals(0, apvCompanyValuationResult.getCompanyValue(), 0.1);
+	}
+	
+	@Test
+	public void performApvCompanyValuationWithAllOnesAmounts() {
+		List<Double> cashflows = new ArrayList<Double>();
+		cashflows.add(1.0);
+		cashflows.add(1.0);
+		cashflows.add(1.0);
+		cashflows.add(1.0);
+		
+		List<Double> liabilities = new ArrayList<Double>();
+		liabilities.add(1.0);
+		liabilities.add(1.0);
+		liabilities.add(1.0);
+		liabilities.add(1.0);
+		
+		double equityInterest = 0.100582;
+		double outsideCapitalInterest = 0.08;
+		double corporateTax = 0.30625;
+
+		CompanyValuationService valuationService = new CompanyValuationService();
+		ApvCompanyValuationResultDto apvCompanyValuationResult = valuationService.performApvCompanyValuation(cashflows,
+				liabilities, equityInterest, outsideCapitalInterest, corporateTax);
+
+		Assert.assertEquals(9.248386764, apvCompanyValuationResult.getCompanyValue(), 0.1);
+	}
+	
+	public void performApvCompanyValuationWithAllBillionsAmounts() {
+		List<Double> cashflows = new ArrayList<Double>();
+		cashflows.add(1450000000.0);
+		cashflows.add(1260000000.0);
+		cashflows.add(3340000000.0);
+		cashflows.add(1680000000.0);
+		
+		List<Double> liabilities = new ArrayList<Double>();
+		liabilities.add(1360000000.0);
+		liabilities.add(1600000000.0);
+		liabilities.add(2200000000.0);
+		liabilities.add(1500000000.0);
+		
+		double equityInterest = 0.100582;
+		double outsideCapitalInterest = 0.08;
+		double corporateTax = 0.30625;
+
+		CompanyValuationService valuationService = new CompanyValuationService();
+		ApvCompanyValuationResultDto apvCompanyValuationResult = valuationService.performApvCompanyValuation(cashflows,
+				liabilities, equityInterest, outsideCapitalInterest, corporateTax);
+
+		Assert.assertEquals(16504187818.2333000000, apvCompanyValuationResult.getCompanyValue(), 0.1);
+	}
+	
+	public void performApvCompanyValuationWithNegativAmounts() {
+		List<Double> cashflows = new ArrayList<Double>();
+		cashflows.add(176.76);
+		cashflows.add(-520.13);
+		cashflows.add(404.87);
+		cashflows.add(-203.78);
+		
+		List<Double> liabilities = new ArrayList<Double>();
+		liabilities.add(-1260.0);
+		liabilities.add(-1300.0);
+		liabilities.add(1000.0);
+		liabilities.add(-1400.0);
+		
+		double equityInterest = 0.100582;
+		double outsideCapitalInterest = 0.08;
+		double corporateTax = 0.30625;
+
+		CompanyValuationService valuationService = new CompanyValuationService();
+		ApvCompanyValuationResultDto apvCompanyValuationResult = valuationService.performApvCompanyValuation(cashflows,
+				liabilities, equityInterest, outsideCapitalInterest, corporateTax);
+
+		Assert.assertEquals(-601.6495353431, apvCompanyValuationResult.getCompanyValue(), 0.1);
+	}
+	
+	public void performApvCompanyValuationWithSmallAmounts() {
+		List<Double> cashflows = new ArrayList<Double>();
+		cashflows.add(1.12);
+		cashflows.add(0.78);
+		cashflows.add(0.56);
+		cashflows.add(1.01);
+		
+		List<Double> liabilities = new ArrayList<Double>();
+		liabilities.add(0.34);
+		liabilities.add(1.2);
+		liabilities.add(0.8);
+		liabilities.add(0.51);
+		
+		double equityInterest = 0.100582;
+		double outsideCapitalInterest = 0.08;
+		double corporateTax = 0.30625;
+
+		CompanyValuationService valuationService = new CompanyValuationService();
+		ApvCompanyValuationResultDto apvCompanyValuationResult = valuationService.performApvCompanyValuation(cashflows,
+				liabilities, equityInterest, outsideCapitalInterest, corporateTax);
+
+		Assert.assertEquals(9.4465325137, apvCompanyValuationResult.getCompanyValue(), 0.1);
+	}
+	
+	public void performApvCompanyValuationWithDifferentTaxRates() {
+		List<Double> cashflows = new ArrayList<Double>();
+		cashflows.add(176.76);
+		cashflows.add(520.13);
+		cashflows.add(404.87);
+		cashflows.add(203.78);
+		
+		List<Double> liabilities = new ArrayList<Double>();
+		liabilities.add(1260.0);
+		liabilities.add(1300.0);
+		liabilities.add(1000.0);
+		liabilities.add(1400.0);
+		
+		
+		double equityInterest = 0.080722;
+		double outsideCapitalInterest = 0.06;
+		double corporateTax = 0.349;
+
+		CompanyValuationService valuationService = new CompanyValuationService();
+		ApvCompanyValuationResultDto apvCompanyValuationResult = valuationService.performApvCompanyValuation(cashflows,
+				liabilities, equityInterest, outsideCapitalInterest, corporateTax);
+
+		Assert.assertEquals(2146.60456861283, apvCompanyValuationResult.getCompanyValue(), 0.1);
+	}
+	
+	public void performApvCompanyValuationWithThreePeriods() {
+		List<Double> cashflows = new ArrayList<Double>();
+		cashflows.add(404.8692500000);
+		cashflows.add(203.7832500000);
+
+		
+		List<Double> liabilities = new ArrayList<Double>();
+		liabilities.add(1300.00);
+		liabilities.add(1400.00);
+
+		
+		double equityInterest = 0.100582;
+		double outsideCapitalInterest = 0.08;
+		double corporateTax = 0.30625;
+
+		CompanyValuationService valuationService = new CompanyValuationService();
+		ApvCompanyValuationResultDto apvCompanyValuationResult = valuationService.performApvCompanyValuation(cashflows,
+				liabilities, equityInterest, outsideCapitalInterest, corporateTax);
+
+		Assert.assertEquals(1335.2312081890, apvCompanyValuationResult.getCompanyValue(), 0.1);
+	}
+	
+	public void performApvCompanyValuationWithTenPeriods() {
+		List<Double> cashflows = new ArrayList<Double>();
+		cashflows.add(3960.0);
+		cashflows.add(4158.0);
+		cashflows.add(4365.0);
+		cashflows.add(4584.0);
+		cashflows.add(4813.0);
+		cashflows.add(5054.0);
+		cashflows.add(4587.0);
+		cashflows.add(5035.0);
+		cashflows.add(4035.0);
+
+		
+		List<Double> liabilities = new ArrayList<Double>();
+		liabilities.add(1625.0);
+		liabilities.add(1771.0);
+		liabilities.add(1931.0);
+		liabilities.add(2104.0);
+		liabilities.add(2294.0);
+		liabilities.add(2500.0);
+		liabilities.add(1850.0);
+		liabilities.add(2300.0);
+		liabilities.add(2468.0);
+		
+		
+		
+		double equityInterest = 0.100582;
+		double outsideCapitalInterest = 0.08;
+		double corporateTax = 0.30625;
+
+		CompanyValuationService valuationService = new CompanyValuationService();
+		ApvCompanyValuationResultDto apvCompanyValuationResult = valuationService.performApvCompanyValuation(cashflows,
+				liabilities, equityInterest, outsideCapitalInterest, corporateTax);
+
+		Assert.assertEquals(41640.17149257649, apvCompanyValuationResult.getCompanyValue(), 0.1);
+	}
+	
+	@Test
 	public void performFcfCompanyValuation() {
 
 		List<Double> cashflows = new ArrayList<Double>();
@@ -66,8 +322,282 @@ public class CompanyValuationServiceTests {
 
 		Assert.assertEquals(32146.0,fcfCompanyValuationResult.getCompanyValue(), 0.1);
 	}
-	
+	@Test
+	public void performFcfCompanyValuationwithBallwieserData() {
 
+		List<Double> cashflows = new ArrayList<Double>();
+		cashflows.add(138.61);
+		cashflows.add(202.31);
+		cashflows.add(174.41);
+		cashflows.add(202.51);
+		
+		List<Double> liabilities = new ArrayList<Double>();
+		liabilities.add(1260.0);
+		liabilities.add(1320.0);
+		liabilities.add(1330.0);
+		liabilities.add(1400.0);
+		
+		double equityInterest = 0.09969137;
+		double outsideCapitalInterest = 0.08;
+		double corporateTax = 0.26325;
+		CompanyValuationService valuationService = new CompanyValuationService();
+
+		FcfCompanyValuationResultDto fcfCompanyValuationResult = valuationService.performFcfCompanyValuationResult(cashflows, liabilities, equityInterest,
+				outsideCapitalInterest, corporateTax);
+
+		Assert.assertEquals(1055.24,fcfCompanyValuationResult.getCompanyValue(), 0.1);
+	}
+	
+	@Test
+	public void performFcfCompanyValuationwithPohlData() {
+
+		List<Double> cashflows = new ArrayList<Double>();
+		cashflows.add(176.76);
+		cashflows.add(520.13);
+		cashflows.add(404.87);
+		cashflows.add(203.78);
+		
+		List<Double> liabilities = new ArrayList<Double>();
+		liabilities.add(1260.0);
+		liabilities.add(1300.0);
+		liabilities.add(1000.0);
+		liabilities.add(1400.0);
+		
+		double equityInterest = 0.100582;
+		double outsideCapitalInterest = 0.08;
+		double corporateTax = 0.30625;
+		CompanyValuationService valuationService = new CompanyValuationService();
+
+		FcfCompanyValuationResultDto fcfCompanyValuationResult = valuationService.performFcfCompanyValuationResult(cashflows, liabilities, equityInterest,
+				outsideCapitalInterest, corporateTax);
+
+		Assert.assertEquals(1569.18934438987,fcfCompanyValuationResult.getCompanyValue(), 0.1);
+	}
+	
+	@Test
+	public void performFcfCompanyValuationwithAllZeroAmounts() {
+
+		List<Double> cashflows = new ArrayList<Double>();
+		cashflows.add(0.0);
+		cashflows.add(0.0);
+		cashflows.add(0.0);
+		cashflows.add(0.0);
+		
+		List<Double> liabilities = new ArrayList<Double>();
+		liabilities.add(0.0);
+		liabilities.add(0.0);
+		liabilities.add(0.0);
+		liabilities.add(0.0);
+		
+		double equityInterest = 0.100582;
+		double outsideCapitalInterest = 0.08;
+		double corporateTax = 0.30625;
+		CompanyValuationService valuationService = new CompanyValuationService();
+
+		FcfCompanyValuationResultDto fcfCompanyValuationResult = valuationService.performFcfCompanyValuationResult(cashflows, liabilities, equityInterest,
+				outsideCapitalInterest, corporateTax);
+
+		Assert.assertEquals(0,fcfCompanyValuationResult.getCompanyValue(), 0.1);
+	}
+	
+	@Test
+	public void performFcfCompanyValuationwithAllOnesAmounts() {
+
+		List<Double> cashflows = new ArrayList<Double>();
+		cashflows.add(1.0);
+		cashflows.add(1.0);
+		cashflows.add(1.0);
+		cashflows.add(1.0);
+		
+		List<Double> liabilities = new ArrayList<Double>();
+		liabilities.add(1.0);
+		liabilities.add(1.0);
+		liabilities.add(1.0);
+		liabilities.add(1.0);
+		
+		double equityInterest = 0.100582;
+		double outsideCapitalInterest = 0.08;
+		double corporateTax = 0.30625;
+		CompanyValuationService valuationService = new CompanyValuationService();
+
+		FcfCompanyValuationResultDto fcfCompanyValuationResult = valuationService.performFcfCompanyValuationResult(cashflows, liabilities, equityInterest,
+				outsideCapitalInterest, corporateTax);
+
+		Assert.assertEquals(9.248386764,fcfCompanyValuationResult.getCompanyValue(), 0.1);
+	}
+	
+	@Test
+	public void performFcfCompanyValuationwithAllBillionsAmounts() {
+		List<Double> cashflows = new ArrayList<Double>();
+		cashflows.add(1450000000.0);
+		cashflows.add(1260000000.0);
+		cashflows.add(3340000000.0);
+		cashflows.add(1680000000.0);
+		
+		List<Double> liabilities = new ArrayList<Double>();
+		liabilities.add(1360000000.0);
+		liabilities.add(1600000000.0);
+		liabilities.add(2200000000.0);
+		liabilities.add(1500000000.0);
+		
+		double equityInterest = 0.100582;
+		double outsideCapitalInterest = 0.08;
+		double corporateTax = 0.30625;
+		
+		CompanyValuationService valuationService = new CompanyValuationService();
+
+		FcfCompanyValuationResultDto fcfCompanyValuationResult = valuationService.performFcfCompanyValuationResult(cashflows, liabilities, equityInterest,
+				outsideCapitalInterest, corporateTax);
+
+		Assert.assertEquals(16504187818.2333000000,fcfCompanyValuationResult.getCompanyValue(), 0.1);
+	}
+
+	@Test
+	public void performFcfCompanyValuationwithNegativAmounts() {
+		List<Double> cashflows = new ArrayList<Double>();
+		cashflows.add(176.76);
+		cashflows.add(-520.13);
+		cashflows.add(404.87);
+		cashflows.add(-203.78);
+		
+		List<Double> liabilities = new ArrayList<Double>();
+		liabilities.add(-1260.0);
+		liabilities.add(-1300.0);
+		liabilities.add(1000.0);
+		liabilities.add(-1400.0);
+		
+		double equityInterest = 0.100582;
+		double outsideCapitalInterest = 0.08;
+		double corporateTax = 0.30625;
+
+		
+		CompanyValuationService valuationService = new CompanyValuationService();
+
+		FcfCompanyValuationResultDto fcfCompanyValuationResult = valuationService.performFcfCompanyValuationResult(cashflows, liabilities, equityInterest,
+				outsideCapitalInterest, corporateTax);
+
+		Assert.assertEquals(-601.6495353431,fcfCompanyValuationResult.getCompanyValue(), 0.1);
+	}
+	
+	@Test
+	public void performFcfCompanyValuationWithSmallAmounts() {
+		List<Double> cashflows = new ArrayList<Double>();
+		cashflows.add(1.12);
+		cashflows.add(0.78);
+		cashflows.add(0.56);
+		cashflows.add(1.01);
+		
+		List<Double> liabilities = new ArrayList<Double>();
+		liabilities.add(0.34);
+		liabilities.add(1.2);
+		liabilities.add(0.8);
+		liabilities.add(0.51);
+		
+		double equityInterest = 0.100582;
+		double outsideCapitalInterest = 0.08;
+		double corporateTax = 0.30625;
+
+		
+		CompanyValuationService valuationService = new CompanyValuationService();
+
+		FcfCompanyValuationResultDto fcfCompanyValuationResult = valuationService.performFcfCompanyValuationResult(cashflows, liabilities, equityInterest,
+				outsideCapitalInterest, corporateTax);
+
+		Assert.assertEquals(9.4465325137,fcfCompanyValuationResult.getCompanyValue(), 0.1);
+	}
+	
+	@Test
+	public void performFcfCompanyValuationWithDifferentTaxRates() {
+		List<Double> cashflows = new ArrayList<Double>();
+		cashflows.add(176.76);
+		cashflows.add(520.13);
+		cashflows.add(404.87);
+		cashflows.add(203.78);
+		
+		List<Double> liabilities = new ArrayList<Double>();
+		liabilities.add(1260.0);
+		liabilities.add(1300.0);
+		liabilities.add(1000.0);
+		liabilities.add(1400.0);
+		
+		
+		double equityInterest = 0.080722;
+		double outsideCapitalInterest = 0.06;
+		double corporateTax = 0.349;
+
+		
+		CompanyValuationService valuationService = new CompanyValuationService();
+
+		FcfCompanyValuationResultDto fcfCompanyValuationResult = valuationService.performFcfCompanyValuationResult(cashflows, liabilities, equityInterest,
+				outsideCapitalInterest, corporateTax);
+
+		Assert.assertEquals(2146.60456861283,fcfCompanyValuationResult.getCompanyValue(), 0.1);
+	}
+	
+	@Test
+	public void performFcfCompanyValuationWithThreePeriods() {
+
+		List<Double> cashflows = new ArrayList<Double>();
+		cashflows.add(404.8692500000);
+		cashflows.add(203.7832500000);
+
+		
+		List<Double> liabilities = new ArrayList<Double>();
+		liabilities.add(1300.00);
+		liabilities.add(1400.00);
+
+		
+		double equityInterest = 0.100582;
+		double outsideCapitalInterest = 0.08;
+		double corporateTax = 0.30625;
+
+		
+		CompanyValuationService valuationService = new CompanyValuationService();
+
+		FcfCompanyValuationResultDto fcfCompanyValuationResult = valuationService.performFcfCompanyValuationResult(cashflows, liabilities, equityInterest,
+				outsideCapitalInterest, corporateTax);
+
+		Assert.assertEquals(1335.2312081890,fcfCompanyValuationResult.getCompanyValue(), 0.1);
+	}
+	
+	@Test
+	public void performFcfCompanyValuationWithTenPeriods() {
+		List<Double> cashflows = new ArrayList<Double>();
+		cashflows.add(3960.0);
+		cashflows.add(4158.0);
+		cashflows.add(4365.0);
+		cashflows.add(4584.0);
+		cashflows.add(4813.0);
+		cashflows.add(5054.0);
+		cashflows.add(4587.0);
+		cashflows.add(5035.0);
+		cashflows.add(4035.0);
+
+		
+		List<Double> liabilities = new ArrayList<Double>();
+		liabilities.add(1625.0);
+		liabilities.add(1771.0);
+		liabilities.add(1931.0);
+		liabilities.add(2104.0);
+		liabilities.add(2294.0);
+		liabilities.add(2500.0);
+		liabilities.add(1850.0);
+		liabilities.add(2300.0);
+		liabilities.add(2468.0);
+		
+		
+		
+		double equityInterest = 0.100582;
+		double outsideCapitalInterest = 0.08;
+		double corporateTax = 0.30625;
+		
+		CompanyValuationService valuationService = new CompanyValuationService();
+
+		FcfCompanyValuationResultDto fcfCompanyValuationResult = valuationService.performFcfCompanyValuationResult(cashflows, liabilities, equityInterest,
+				outsideCapitalInterest, corporateTax);
+
+		Assert.assertEquals(41640.17149257649,fcfCompanyValuationResult.getCompanyValue(), 0.1);
+	}
 	@Test
 	public void performFteCompanyValuation() {
 		
@@ -94,4 +624,289 @@ public class CompanyValuationServiceTests {
 		Assert.assertEquals(1055.24, fteCompanyValuationResult.getCompanyValue(), 0.1);
 
 	}
+	
+	@Test
+	public void performFteCompanyValuationWithBallwieserData() {
+		
+		List<Double> cashflows = new ArrayList<Double>();
+		cashflows.add(124.3456);
+		cashflows.add(134.50919999999996);
+		cashflows.add(166.0198);
+		cashflows.add(119.994);
+		
+		List<Double> liabilities = new ArrayList<Double>();
+		liabilities.add(1260.0);
+		liabilities.add(1320.0);
+		liabilities.add(1330.0);
+		liabilities.add(1400.0);
+		
+		double equityInterest = 0.09969137;
+		double outsideCapitalInterest = 0.08;
+		double corporateTax = 0.26325;
+
+		CompanyValuationService valuationService = new CompanyValuationService();
+		FteCompanyValuationResultDto fteCompanyValuationResult = valuationService.performFteCompanyValuationResult(
+				cashflows, liabilities, equityInterest, outsideCapitalInterest, corporateTax);
+
+		Assert.assertEquals(1055.24, fteCompanyValuationResult.getCompanyValue(), 0.1);
+
+	}
+	
+	@Test
+	public void performFteCompanyValuationWithPohlData() {
+		
+		List<Double> cashflows = new ArrayList<Double>();
+		cashflows.add(146.82999999999998);
+		cashflows.add(147.98000000000002);
+		cashflows.add(749.37);
+		cashflows.add(126.08000000000001);
+		
+		List<Double> liabilities = new ArrayList<Double>();
+		liabilities.add(1260.0);
+		liabilities.add(1300.0);
+		liabilities.add(1000.0);
+		liabilities.add(1400.0);
+		
+		double equityInterest = 0.100582;
+		double outsideCapitalInterest = 0.08;
+		double corporateTax = 0.30625;
+
+		CompanyValuationService valuationService = new CompanyValuationService();
+		FteCompanyValuationResultDto fteCompanyValuationResult = valuationService.performFteCompanyValuationResult(
+				cashflows, liabilities, equityInterest, outsideCapitalInterest, corporateTax);
+
+		Assert.assertEquals(1569.18934438987, fteCompanyValuationResult.getCompanyValue(), 0.1);
+
+	}
+	
+	@Test
+	public void performFteCompanyValuationWithAllZeroAmounts() {
+		
+		List<Double> cashflows = new ArrayList<Double>();
+		cashflows.add(0.0);
+		cashflows.add(0.0);
+		cashflows.add(0.0);
+		cashflows.add(0.0);
+		
+		List<Double> liabilities = new ArrayList<Double>();
+		liabilities.add(0.0);
+		liabilities.add(0.0);
+		liabilities.add(0.0);
+		liabilities.add(0.0);
+		
+		double equityInterest = 0.100582;
+		double outsideCapitalInterest = 0.08;
+		double corporateTax = 0.30625;
+
+		CompanyValuationService valuationService = new CompanyValuationService();
+		FteCompanyValuationResultDto fteCompanyValuationResult = valuationService.performFteCompanyValuationResult(
+				cashflows, liabilities, equityInterest, outsideCapitalInterest, corporateTax);
+
+		Assert.assertEquals(0.0, fteCompanyValuationResult.getCompanyValue(), 0.1);
+
+	}
+	
+	@Test
+	public void performFteCompanyValuationWithAllOnesAmounts() {
+		
+		List<Double> cashflows = new ArrayList<Double>();
+		cashflows.add(0.9445);
+		cashflows.add(0.9445);
+		cashflows.add(0.9445);
+		cashflows.add(0.9445);
+		
+		List<Double> liabilities = new ArrayList<Double>();
+		liabilities.add(1.0);
+		liabilities.add(1.0);
+		liabilities.add(1.0);
+		liabilities.add(1.0);
+
+		double equityInterest = 0.100582;
+		double outsideCapitalInterest = 0.08;
+		double corporateTax = 0.30625;
+
+		CompanyValuationService valuationService = new CompanyValuationService();
+		FteCompanyValuationResultDto fteCompanyValuationResult = valuationService.performFteCompanyValuationResult(
+				cashflows, liabilities, equityInterest, outsideCapitalInterest, corporateTax);
+
+		Assert.assertEquals(9.248386764, fteCompanyValuationResult.getCompanyValue(), 0.1);
+
+	}
+	
+	@Test
+	public void performFteCompanyValuationWithAllBillionsAmounts() {
+		
+		List<Double> cashflows = new ArrayList<Double>();
+		cashflows.add(1.61452E9);
+		cashflows.add(1.7712E9);
+		cashflows.add(2.5179E9);
+		cashflows.add(1.59675E9);
+		
+		List<Double> liabilities = new ArrayList<Double>();
+		liabilities.add(1360000000.0);
+		liabilities.add(1600000000.0);
+		liabilities.add(2200000000.0);
+		liabilities.add(1500000000.0);
+		
+		double equityInterest = 0.100582;
+		double outsideCapitalInterest = 0.08;
+		double corporateTax = 0.30625;
+
+		CompanyValuationService valuationService = new CompanyValuationService();
+		FteCompanyValuationResultDto fteCompanyValuationResult = valuationService.performFteCompanyValuationResult(
+				cashflows, liabilities, equityInterest, outsideCapitalInterest, corporateTax);
+
+		Assert.assertEquals(16504187818.2333000000, fteCompanyValuationResult.getCompanyValue(), 0.1);
+
+	}
+	
+	@Test
+	public void performFteCompanyValuationWithNegativAmounts() {
+		
+		List<Double> cashflows = new ArrayList<Double>();
+		cashflows.add(206.69);
+		cashflows.add(1852.02);
+		cashflows.add(-2050.63);
+		cashflows.add(-126.08000000000001);
+		
+		List<Double> liabilities = new ArrayList<Double>();
+		liabilities.add(-1260.0);
+		liabilities.add(-1300.0);
+		liabilities.add(1000.0);
+		liabilities.add(-1400.0);
+		
+		double equityInterest = 0.100582;
+		double outsideCapitalInterest = 0.08;
+		double corporateTax = 0.30625;
+
+		CompanyValuationService valuationService = new CompanyValuationService();
+		FteCompanyValuationResultDto fteCompanyValuationResult = valuationService.performFteCompanyValuationResult(
+				cashflows, liabilities, equityInterest, outsideCapitalInterest, corporateTax);
+
+		Assert.assertEquals(-601.6495353431, fteCompanyValuationResult.getCompanyValue(), 0.1);
+
+	}
+	
+	@Test
+	public void performFteCompanyValuationWithSmallAmounts() {
+		
+		List<Double> cashflows = new ArrayList<Double>();
+		cashflows.add(1.9611299999999998);
+		cashflows.add(0.3134000000000001);
+		cashflows.add(0.22560000000000002);
+		cashflows.add(0.981695);
+
+		
+		List<Double> liabilities = new ArrayList<Double>();
+		liabilities.add(0.34);
+		liabilities.add(1.2);
+		liabilities.add(0.8);
+		liabilities.add(0.51);
+		
+		double equityInterest = 0.100582;
+		double outsideCapitalInterest = 0.08;
+		double corporateTax = 0.30625;
+
+		CompanyValuationService valuationService = new CompanyValuationService();
+		FteCompanyValuationResultDto fteCompanyValuationResult = valuationService.performFteCompanyValuationResult(
+				cashflows, liabilities, equityInterest, outsideCapitalInterest, corporateTax);
+
+		Assert.assertEquals(9.4465325137, fteCompanyValuationResult.getCompanyValue(), 0.1);
+
+	}
+	
+	@Test
+	public void performFteCompanyValuationWithDifferentTaxRate() {
+		
+		List<Double> cashflows = new ArrayList<Double>();
+		cashflows.add(167.5444);
+		cashflows.add(169.35199999999998);
+		cashflows.add(765.81);
+		cashflows.add(149.096);
+		
+		List<Double> liabilities = new ArrayList<Double>();
+		liabilities.add(1260.0);
+		liabilities.add(1300.0);
+		liabilities.add(1000.0);
+		liabilities.add(1400.0);
+		
+		
+		double equityInterest = 0.080722;
+		double outsideCapitalInterest = 0.06;
+		double corporateTax = 0.349;
+
+		CompanyValuationService valuationService = new CompanyValuationService();
+		FteCompanyValuationResultDto fteCompanyValuationResult = valuationService.performFteCompanyValuationResult(
+				cashflows, liabilities, equityInterest, outsideCapitalInterest, corporateTax);
+
+		Assert.assertEquals(2146.60456861283, fteCompanyValuationResult.getCompanyValue(), 0.1);
+
+	}
+	
+	@Test
+	public void performFteCompanyValuationWithThreePeriods() {
+		
+		List<Double> cashflows = new ArrayList<Double>();
+		cashflows.add(432.71925000000005);
+		cashflows.add(126.08325000000002);
+
+		
+		List<Double> liabilities = new ArrayList<Double>();
+		liabilities.add(1300.00);
+		liabilities.add(1400.00);
+
+		
+		double equityInterest = 0.100582;
+		double outsideCapitalInterest = 0.08;
+		double corporateTax = 0.30625;
+
+		CompanyValuationService valuationService = new CompanyValuationService();
+		FteCompanyValuationResultDto fteCompanyValuationResult = valuationService.performFteCompanyValuationResult(
+				cashflows, liabilities, equityInterest, outsideCapitalInterest, corporateTax);
+
+		Assert.assertEquals(1335.2312081890, fteCompanyValuationResult.getCompanyValue(), 0.1);
+
+	}
+	
+	@Test
+	public void performFteCompanyValuationWithTenPeriods() {
+		
+		List<Double> cashflows = new ArrayList<Double>();
+		cashflows.add(4015.8125);
+		cashflows.add(4219.709500000001);
+		cashflows.add(4430.829500000001);
+		cashflows.add(4657.228);
+		cashflows.add(4891.683);
+		cashflows.add(4265.25);
+		cashflows.add(4934.325);
+		cashflows.add(5075.35);
+		cashflows.add(3898.026);
+
+		
+		List<Double> liabilities = new ArrayList<Double>();
+		liabilities.add(1625.0);
+		liabilities.add(1771.0);
+		liabilities.add(1931.0);
+		liabilities.add(2104.0);
+		liabilities.add(2294.0);
+		liabilities.add(2500.0);
+		liabilities.add(1850.0);
+		liabilities.add(2300.0);
+		liabilities.add(2468.0);
+		
+		
+		
+		double equityInterest = 0.100582;
+		double outsideCapitalInterest = 0.08;
+		double corporateTax = 0.30625;
+
+		CompanyValuationService valuationService = new CompanyValuationService();
+		FteCompanyValuationResultDto fteCompanyValuationResult = valuationService.performFteCompanyValuationResult(
+				cashflows, liabilities, equityInterest, outsideCapitalInterest, corporateTax);
+
+		Assert.assertEquals(41640.17149257649, fteCompanyValuationResult.getCompanyValue(), 0.1);
+
+	}
+	
+	
 }

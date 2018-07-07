@@ -2,11 +2,18 @@ package dhbw.ka.mwi.businesshorizon2.businesshorizon2;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Test;
 
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.services.AccountingFigureCalculationsService;
 
 public class AccountingFigureCalculationsServiceTest {
+	
+//	public List<Double> calculateFreeCashFlow(List<Double> revenue, List<Double> additionalIncome, List<Double> costOfMaterial, 
+//			List<Double> costOfStaff, List<Double> additionalCosts, List<Double> depreciation, Double businessTaxRate, 
+//			Double corporateTaxRate, Double solidaryTaxRate, List<Double> investments, List<Double> divestments)
 	
 	@Test
 	public void calculateFreeCashFlow(){
@@ -47,6 +54,44 @@ public class AccountingFigureCalculationsServiceTest {
 		
 		//Assert
 		assertEquals(expectedRes, actualRes, 0.01);
+	}
+	
+	@Test
+	public void calculateMultipleFlowToEquity1() {
+		//Arrange
+		AccountingFigureCalculationsService accountingService = new AccountingFigureCalculationsService();
+		
+		Double[] freeCashFlow = new Double[]{3960.0,4158.0,4365.0,4584.0,4813.0,5054.0,4587.0,5035.0,4035.0};
+		Double[] liabilities = new Double[]{1625.0,1771.0,1931.0,2104.0,2294.0,2500.0,1850.0,2300.0,2468.0,2468.0};
+		Double interestOnLiabilities = 0.08;
+		Double effectiveTaxRate = 0.30625;
+		
+		//Act 
+		Double[] fte = new Double[freeCashFlow.length];
+		
+		for (int i = 0; i < freeCashFlow.length; i++) {
+			fte[i] = accountingService.calculateFlowToEquity(freeCashFlow[i], liabilities[i+1], liabilities[i], interestOnLiabilities, effectiveTaxRate);
+			System.out.println("cashflows.add(" + fte[i] + ");");
+		}
+	}
+	
+	@Test
+	public void calculateMultipleFlowToEquity2() {
+		//Arrange
+		AccountingFigureCalculationsService accountingService = new AccountingFigureCalculationsService();
+		
+		Double[] freeCashFlow = new Double[]{176.76,520.13,404.87,203.78};
+		Double[] liabilities = new Double[]{1260.0,1300.0,1000.0,1400.0,1400.0};
+		Double interestOnLiabilities = 0.08;
+		Double effectiveTaxRate = 0.30625;
+		
+		//Act 
+		Double[] fte = new Double[freeCashFlow.length];
+		
+		for (int i = 0; i < freeCashFlow.length; i++) {
+			fte[i] = accountingService.calculateFlowToEquity(freeCashFlow[i], liabilities[i+1], liabilities[i], interestOnLiabilities, effectiveTaxRate);
+			System.out.println("cashflows.add(" + fte[i] + ");");
+		}
 	}
 	
 	@Test
