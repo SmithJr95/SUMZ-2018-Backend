@@ -49,7 +49,6 @@ public class AccountingFigureCalculationsService implements IAccountingFigureCal
 	
 		List<Double> freeCashFlow = new ArrayList<Double>();
 		
-		
 		for (int i = 0; i < revenue.size(); i++) {
 		
 			double proceeds = revenue.get(i) + additionalIncome.get(i);
