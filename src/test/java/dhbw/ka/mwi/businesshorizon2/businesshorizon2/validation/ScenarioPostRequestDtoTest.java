@@ -35,8 +35,8 @@ public class ScenarioPostRequestDtoTest {
 	@Before
 	public void setup() {
 		ScenarioRequestDto request = new ScenarioRequestDto();
-		request.setScenarioName("xyz");
-		request.setScenarioDescription("xyz");
+		request.setName("xyz");
+		request.setDescription("xyz");
 		request.setPeriods(2);
 		request.setBusinessTaxRate(0.5);
 		request.setCorporateTaxRate(0.5);
@@ -86,7 +86,7 @@ public class ScenarioPostRequestDtoTest {
 	public void validation_scenarioNameNull_violationsExist() throws Exception {
 		//Arrange
 		ScenarioRequestDto request = this.validRequest;
-		request.setScenarioName(null);
+		request.setName(null);
 		
 		//Act
 		Set<ConstraintViolation<ScenarioRequestDto>> violations = validator.validate(request);
@@ -99,7 +99,7 @@ public class ScenarioPostRequestDtoTest {
 	public void validation_scenarioNameLengthLessThanMinLength_violationsExist() throws Exception {
 		//Arrange
 		ScenarioRequestDto request = this.validRequest;
-		request.setScenarioName("");
+		request.setName("");
 		
 		//Act
 		Set<ConstraintViolation<ScenarioRequestDto>> violations = validator.validate(request);
@@ -112,7 +112,7 @@ public class ScenarioPostRequestDtoTest {
 	public void validation_scenarioNameLengthGreaterThanMaxLength_violationsExist() throws Exception {
 		//Arrange
 		ScenarioRequestDto request = this.validRequest;
-		request.setScenarioName("sssssssssssssssssssss");
+		request.setName("sssssssssssssssssssss");
 		
 		//Act
 		Set<ConstraintViolation<ScenarioRequestDto>> violations = validator.validate(request);
@@ -125,7 +125,7 @@ public class ScenarioPostRequestDtoTest {
 	public void validation_scenarioDescriptionNull_violationsExist() throws Exception {
 		//Arrange
 		ScenarioRequestDto request = this.validRequest;
-		request.setScenarioDescription(null);
+		request.setDescription(null);
 		
 		//Act
 		Set<ConstraintViolation<ScenarioRequestDto>> violations = validator.validate(request);
@@ -138,7 +138,7 @@ public class ScenarioPostRequestDtoTest {
 	public void validation_scenarioDescriptionLengthBelowMinLength_violationsExist() throws Exception {
 		//Arrange
 		ScenarioRequestDto request = this.validRequest;
-		request.setScenarioDescription("");
+		request.setDescription("");
 		
 		//Act
 		Set<ConstraintViolation<ScenarioRequestDto>> violations = validator.validate(request);
@@ -151,7 +151,7 @@ public class ScenarioPostRequestDtoTest {
 	public void validation_scenarioDescriptionLengthAboveMaxLength_violationsExist() throws Exception {
 		//Arrange
 		ScenarioRequestDto request = this.validRequest;
-		request.setScenarioDescription("fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+		request.setDescription("fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
 		
 		//Act
 		Set<ConstraintViolation<ScenarioRequestDto>> violations = validator.validate(request);
@@ -761,8 +761,8 @@ public class ScenarioPostRequestDtoTest {
 	public void validation_futureAndHistoricSeriesAlignedDateFormatYear_notViolationsExist() throws Exception {
 		//Arrange
 		ScenarioRequestDto request = new ScenarioRequestDto();
-		request.setScenarioName("xyz");
-		request.setScenarioDescription("xyz");
+		request.setName("xyz");
+		request.setDescription("xyz");
 		request.setPeriods(4);
 		request.setBusinessTaxRate(0.5);
 		request.setCorporateTaxRate(0.5);
@@ -804,8 +804,8 @@ public class ScenarioPostRequestDtoTest {
 	public void validation_futureAndHistoricSeriesAlignedDateFormatYearQuarter1_notViolationsExist() throws Exception {
 		//Arrange
 		ScenarioRequestDto request = new ScenarioRequestDto();
-		request.setScenarioName("xyz");
-		request.setScenarioDescription("xyz");
+		request.setName("xyz");
+		request.setDescription("xyz");
 		request.setPeriods(4);
 		request.setBusinessTaxRate(0.5);
 		request.setCorporateTaxRate(0.5);
@@ -847,8 +847,8 @@ public class ScenarioPostRequestDtoTest {
 	public void validation_futureAndHistoricSeriesAlignedDateFormatYearQuarter2_notViolationsExist() throws Exception {
 		//Arrange
 		ScenarioRequestDto request = new ScenarioRequestDto();
-		request.setScenarioName("xyz");
-		request.setScenarioDescription("xyz");
+		request.setName("xyz");
+		request.setDescription("xyz");
 		request.setPeriods(2);
 		request.setBusinessTaxRate(0.5);
 		request.setCorporateTaxRate(0.5);

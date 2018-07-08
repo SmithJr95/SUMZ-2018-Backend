@@ -18,10 +18,10 @@ public class CompanyValueDistributionPointDao {
 	@Column(name="CompanyValueDistributionPointId")
 	private Long companyValueDistributionPointId;
 	
-	@Column(name="XValue")
+	@Column(name="XValue", columnDefinition="float")
 	private Double xValue;
 	
-	@Column(name="YValue")
+	@Column(name="YValue", columnDefinition="float")
 	private Double yValue;
 	
 	@ManyToOne(fetch = FetchType.LAZY)

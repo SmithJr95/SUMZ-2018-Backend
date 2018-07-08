@@ -36,13 +36,18 @@ public class ScenarioController {
 	
 	@RequestMapping(method = RequestMethod.POST)
 	@PreAuthorize("hasAuthority('ADMIN_USER') or hasAuthority('STANDARD_USER')")
-	public ScenarioResponseDto create(@RequestBody @Valid ScenarioRequestDto scenario) {
+	public Long create(@RequestBody @Valid ScenarioRequestDto scenario) {
+		
+		System.out.println(scenario);
+		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String username = (String) auth.getPrincipal();
 		
 		Long appUserId = userService.getUserId(username);
 		
-		return scenarioService.createOrUpdateScenario(scenario, appUserId);
+		Long scenarioIdInDb = scenarioService.createOrUpdateScenario(scenario, appUserId);
+		
+		return scenarioIdInDb;
 	}
 	
 	@RequestMapping(method = RequestMethod.PUT)

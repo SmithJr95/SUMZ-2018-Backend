@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.IAccountingFigureCalculationsService;
@@ -86,12 +87,14 @@ public class AccountingFigureCalculationsService implements IAccountingFigureCal
 	
 	public List<Double> calculateFlowToEquity(List<Double> freeCashFlow, List<Double> liabilities, Double interestOnLiabilities, Double effectiveTaxRate){
 		Double duplicate = liabilities.get(liabilities.size() - 1);
-		liabilities.add(duplicate);
+		
+		List<Double> liabilitiesClone = new ArrayList<>(liabilities);
+		liabilitiesClone.add(duplicate);
 		
 		List<Double> flowToEquity = new ArrayList<Double>();
 		
 		for (int i = 0; i < freeCashFlow.size(); i++) {
-			flowToEquity.add(calculateFlowToEquity(freeCashFlow.get(i), liabilities.get(i + 1), liabilities.get(i), interestOnLiabilities, effectiveTaxRate));
+			flowToEquity.add(calculateFlowToEquity(freeCashFlow.get(i), liabilitiesClone.get(i + 1), liabilitiesClone.get(i), interestOnLiabilities, effectiveTaxRate));
 		}
 		
 		return flowToEquity;

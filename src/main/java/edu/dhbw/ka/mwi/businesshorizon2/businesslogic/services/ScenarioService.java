@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.IAccountingFigureCalculationsService;
@@ -13,9 +14,11 @@ import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.ICompanyValuati
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.IScenarioService;
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.ITimeSeriesPredictionService;
 import edu.dhbw.ka.mwi.businesshorizon2.dataaccess.interfaces.IAppUserRepository;
+import edu.dhbw.ka.mwi.businesshorizon2.dataaccess.interfaces.IScenarioGraphRepository;
 import edu.dhbw.ka.mwi.businesshorizon2.dataaccess.interfaces.IScenarioRepository;
 import edu.dhbw.ka.mwi.businesshorizon2.models.common.MultiPeriodAccountingFigureNames;
 import edu.dhbw.ka.mwi.businesshorizon2.models.daos.AppUserDao;
+import edu.dhbw.ka.mwi.businesshorizon2.models.daos.MultiPeriodAccountingFigureDao;
 import edu.dhbw.ka.mwi.businesshorizon2.models.daos.ScenarioDao;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ApvCompanyValuationResultDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.CompanyValueDistributionDto;
@@ -48,10 +51,10 @@ public class ScenarioService implements IScenarioService{
 	private IScenarioRepository scenarioRepository;
 	
 	@Autowired
-	private IAppUserRepository appUserRepository;
+	private IScenarioGraphRepository scenarioGraphRepository;
 	
 	@Override
-	public ScenarioResponseDto createOrUpdateScenario(ScenarioRequestDto scenarioDto, Long appUserId) {
+	public Long createOrUpdateScenario(ScenarioRequestDto scenarioDto, Long appUserId) {
 				
 		HashMap<MultiPeriodAccountingFigureNames, List<Double>> deterministicAccountingFigures = 
 				new HashMap<MultiPeriodAccountingFigureNames, List<Double>>();
@@ -110,30 +113,11 @@ public class ScenarioService implements IScenarioService{
 					freeCashFlows = getFreeCashFlows(deterministicAccountingFigures, stochasticAccountingFigures, scenarioDto.getPeriods(), scenarioDto.getBusinessTaxRate(), scenarioDto.getCorporateTaxRate(), scenarioDto.getSolidaryTaxRate(), sampleNum);
 				}
 				
-				List<Double> ftes = new ArrayList<Double>();
-				
-				for (int periodNum = 0; periodNum < scenarioDto.getPeriods(); periodNum++) {
-					double fte;
-					
-					if(periodNum == scenarioDto.getPeriods() - 1) {
-						fte = accountingService.calculateFlowToEquity(
-								freeCashFlows.get(periodNum), 
-								liabilities.get(periodNum), 
-								liabilities.get(periodNum), 
-								scenarioDto.getInterestOnLiabilitiesRate(), 
-								effectiveTaxRate);
-					}
-					else {
-						fte = accountingService.calculateFlowToEquity(
-								freeCashFlows.get(periodNum), 
-								liabilities.get(periodNum + 1), 
-								liabilities.get(periodNum), 
-								scenarioDto.getInterestOnLiabilitiesRate(), 
-								effectiveTaxRate);
-					}
-					
-					ftes.add(fte);
-				}
+				List<Double> ftes = accountingService.calculateFlowToEquity(
+						freeCashFlows, 
+						liabilities, 
+						scenarioDto.getInterestOnLiabilitiesRate(), 
+						effectiveTaxRate);
 				
 				if(!stochasticAccountingFigures.containsKey(MultiPeriodAccountingFigureNames.FlowToEquity)) {
 					stochasticAccountingFigures.put(MultiPeriodAccountingFigureNames.FlowToEquity, new HashMap<Integer, List<Double>>());
@@ -187,8 +171,8 @@ public class ScenarioService implements IScenarioService{
 			CompanyValueDistributionDto companyValueDistribution = companyValuationService.getCompanyValueDistribution(companyValues);
 			scenarioDao.setCompanyValueDistributionPoints(CompanyValueDistributionMapper.mapDtoToDao(companyValueDistribution));
 		}
-		else {
-			List<Double> liabilities = deterministicAccountingFigures.get(MultiPeriodAccountingFigureNames.Liabilities);
+		else {	
+			List<Double> liabilities = deterministicAccountingFigures.get(MultiPeriodAccountingFigureNames.Liabilities);		
 			List<Double> freeCashFlows;
 
 			if(freeCashFlowsProvided) {
@@ -203,19 +187,11 @@ public class ScenarioService implements IScenarioService{
 						scenarioDto.getSolidaryTaxRate());
 			}
 			
-			List<Double> ftes = new ArrayList<Double>();
-			for (int periodNum = 0; periodNum < scenarioDto.getPeriods(); periodNum++) {
-				double fte;
-				
-				if(periodNum == scenarioDto.getPeriods() - 1) {
-					fte = accountingService.calculateFlowToEquity(freeCashFlows.get(periodNum), liabilities.get(periodNum), liabilities.get(periodNum), scenarioDto.getInterestOnLiabilitiesRate(), effectiveTaxRate);
-				}
-				else {
-					fte = accountingService.calculateFlowToEquity(freeCashFlows.get(periodNum), liabilities.get(periodNum + 1), liabilities.get(periodNum), scenarioDto.getInterestOnLiabilitiesRate(), effectiveTaxRate);
-				}
-				
-				ftes.add(fte);
-			}
+			List<Double> ftes = accountingService.calculateFlowToEquity(
+					freeCashFlows, 
+					liabilities, 
+					scenarioDto.getInterestOnLiabilitiesRate(), 
+					effectiveTaxRate);
 			
 			apvRes = companyValuationService.performApvCompanyValuation(
 					freeCashFlows, 
@@ -239,19 +215,13 @@ public class ScenarioService implements IScenarioService{
 					effectiveTaxRate);
 		}
 
-		Optional<AppUserDao> appUser = appUserRepository.findById(appUserId);
-		if(!appUser.isPresent()) {
-			throw new UnsupportedOperationException();
-		}
-		
-		scenarioDao.setAppUser(appUser.get());
 		scenarioDao.setApvCompanyValuationResultDao(ApvCompanyValuationResultMapper.mapDtoToDao(apvRes));
 		scenarioDao.setFteCompanyValuationResultDao(FteCompanyValuationResultMapper.mapDtoToDao(fteRes));
 		scenarioDao.setFcfCompanyValuationResultDao(FcfCompanyValuationResultMapper.mapDtoToDao(fcfRes));
 		
-		ScenarioDao scenarioDaoInDb = scenarioRepository.save(scenarioDao);
+		Long scenarioInDbId = scenarioGraphRepository.createOrUpdate(scenarioDao, appUserId);
 		
-		return ScenarioMapper.mapDaoToDto(scenarioDaoInDb);
+		return scenarioInDbId;
 	}
 
 	@Override
@@ -309,24 +279,18 @@ public class ScenarioService implements IScenarioService{
 		List<Double> investments = getDeterministicOrStochasticAccountingFigure(MultiPeriodAccountingFigureNames.Investments, deterministicAccountingFigures, stochasticAccountingFigures, sampleNum);				
 		List<Double> divestments = getDeterministicOrStochasticAccountingFigure(MultiPeriodAccountingFigureNames.Divestments, deterministicAccountingFigures, stochasticAccountingFigures, sampleNum);
 		
-		List<Double> freeCashFlows = new ArrayList<>();	
-		for (int periodNum = 0; periodNum < periods; periodNum++) {
-			
-			double freeCashFlow = accountingService.calculateFreeCashFlow(
-					revenues.get(periodNum), 
-					additionalIncomes.get(periodNum), 
-					costOfMaterials.get(periodNum), 
-					costOfStaffs.get(periodNum), 
-					additionalCostss.get(periodNum), 
-					depreciations.get(periodNum), 
-					businessTaxRate, 
-					corporateTaxRate, 
-					solidaryTaxRate, 
-					investments.get(periodNum), 
-					divestments.get(periodNum));
-			
-			freeCashFlows.add(freeCashFlow);
-		}
+		List<Double> freeCashFlows = accountingService.calculateFreeCashFlow(
+				revenues, 
+				additionalIncomes, 
+				costOfMaterials, 
+				costOfStaffs, 
+				additionalCostss, 
+				depreciations, 
+				businessTaxRate, 
+				corporateTaxRate, 
+				solidaryTaxRate, 
+				investments, 
+				divestments);	
 		
 		return freeCashFlows;
 	}
@@ -347,25 +311,28 @@ public class ScenarioService implements IScenarioService{
 		List<Double> investments = deterministicAccountingFigures.get(MultiPeriodAccountingFigureNames.Investments);				
 		List<Double> divestments = deterministicAccountingFigures.get(MultiPeriodAccountingFigureNames.Divestments);
 		
-		List<Double> freeCashFlows = new ArrayList<>();	
-		for (int periodNum = 0; periodNum < periods; periodNum++) {
-			
-			double freeCashFlow = accountingService.calculateFreeCashFlow(
-					revenues.get(periodNum), 
-					additionalIncomes.get(periodNum), 
-					costOfMaterials.get(periodNum), 
-					costOfStaffs.get(periodNum), 
-					additionalCostss.get(periodNum), 
-					depreciations.get(periodNum), 
-					businessTaxRate, 
-					corporateTaxRate, 
-					solidaryTaxRate, 
-					investments.get(periodNum), 
-					divestments.get(periodNum));
-			
-			freeCashFlows.add(freeCashFlow);
-		}
+		List<Double> freeCashFlows = accountingService.calculateFreeCashFlow(
+				revenues, 
+				additionalIncomes, 
+				costOfMaterials, 
+				costOfStaffs, 
+				additionalCostss, 
+				depreciations, 
+				businessTaxRate, 
+				corporateTaxRate, 
+				solidaryTaxRate, 
+				investments, 
+				divestments);	
 		
 		return freeCashFlows;
+	}
+
+	@Override
+	public ScenarioResponseDto get(Long scenarioId) {
+		ScenarioDao dao = scenarioRepository.get(scenarioId);
+		
+		int length = dao.getMultiPeriodAccountingFigures().size();
+		
+		return ScenarioMapper.mapDaoToDto(dao);
 	}
 }

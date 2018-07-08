@@ -11,6 +11,9 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import edu.dhbw.ka.mwi.businesshorizon2.models.common.MultiPeriodAccountingFigureNames;
 import edu.dhbw.ka.mwi.businesshorizon2.validators.IsContinuousTimeSeries;
 import edu.dhbw.ka.mwi.businesshorizon2.validators.IsDateFormatConsistent;
@@ -23,13 +26,13 @@ import edu.dhbw.ka.mwi.businesshorizon2.validators.IsValidTimeSeriesRanges;
 @IsValidTimeSeriesRanges()
 public class ScenarioRequestDto {
 	
-	@NotNull(message = "scenarioName must not be null.")
+	@NotNull(message = "name must not be null.")
 	@Size(min=1, max=20, message="scenarioName must consist of 1-20 characters.")
-	private String scenarioName;
+	private String name;
 	
-	@NotNull(message = "scenarioDescription must not be null.")
+	@NotNull(message = "description must not be null.")
 	@Size(min=1, max=100, message="scenarioDescription must consist of 1-100 characters.")
-	private String scenarioDescription;
+	private String description;
 	
 	@NotNull(message = "periods must not be null.")
 	@Min(value=1, message="periods must be >=1 and <=10.")
@@ -91,11 +94,11 @@ public class ScenarioRequestDto {
 	@Valid
 	private MultiPeriodAccountingFigureRequestDto freeCashFlows;
 	
-	public String getScenarioName() { return scenarioName; }
-	public void setScenarioName(String name) { this.scenarioName = name; }
+	public String getName() { return name; }
+	public void setName(String name) { this.name = name; }
 	
-	public String getScenarioDescription() { return scenarioDescription; }
-	public void setScenarioDescription(String description) { this.scenarioDescription = description; }
+	public String getDescription() { return description; }
+	public void setDescription(String description) { this.description = description; }
 	
 	public Integer getPeriods() { return periods; }
 	public void setPeriods(Integer periods) { this.periods = periods; }
@@ -112,67 +115,87 @@ public class ScenarioRequestDto {
 	public Double getEquityInterestRate() { return equityInterestRate; }
 	public void setEquityInterestRate(Double equityInterestRate) { this.equityInterestRate = equityInterestRate; }
 	
+	public Double getInterestOnLiabilitiesRate() { return interestOnLiabilitiesRate; }
+	public void setInterestOnLiabilitiesRate(Double interestOnLiabilitiesRate) { this.interestOnLiabilitiesRate = interestOnLiabilitiesRate; }
+	
 	public MultiPeriodAccountingFigureRequestDto getRevenue() { return revenue; }
 	public void setRevenue(MultiPeriodAccountingFigureRequestDto revenue) {
 		this.revenue = revenue; 
-		this.revenue.setFigureName(MultiPeriodAccountingFigureNames.Revenue);
+		if(revenue != null) {
+			this.revenue.setFigureName(MultiPeriodAccountingFigureNames.Revenue);
+		}
 	}
 	
 	public MultiPeriodAccountingFigureRequestDto getAdditionalIncome() { return additionalIncome; }
 	public void setAdditionalIncome(MultiPeriodAccountingFigureRequestDto additionalIncome) { 
 		this.additionalIncome = additionalIncome; 
-		this.additionalIncome.setFigureName(MultiPeriodAccountingFigureNames.AdditionalIncome);
+		if(additionalIncome != null) {
+			this.additionalIncome.setFigureName(MultiPeriodAccountingFigureNames.AdditionalIncome);
+		}
 	}
 	
 	public MultiPeriodAccountingFigureRequestDto getCostOfMaterial() { return costOfMaterial; }
 	public void setCostOfMaterial(MultiPeriodAccountingFigureRequestDto costOfMaterial) { 
 		this.costOfMaterial = costOfMaterial; 
-		this.costOfMaterial.setFigureName(MultiPeriodAccountingFigureNames.CostOfMaterial);
+		if(costOfMaterial != null) {
+			this.costOfMaterial.setFigureName(MultiPeriodAccountingFigureNames.CostOfMaterial);
+		}
 	}
 	
 	public MultiPeriodAccountingFigureRequestDto getCostOfStaff() { return costOfStaff; }
 	public void setCostOfStaff(MultiPeriodAccountingFigureRequestDto costOfStaff) { 
 		this.costOfStaff = costOfStaff; 
-		this.costOfStaff.setFigureName(MultiPeriodAccountingFigureNames.CostOfStaff);
+		if(costOfStaff != null) {
+			this.costOfStaff.setFigureName(MultiPeriodAccountingFigureNames.CostOfStaff);
+		}
 	}
 	
 	public MultiPeriodAccountingFigureRequestDto getAdditionalCosts() { return additionalCosts; }
 	public void setAdditionalCosts(MultiPeriodAccountingFigureRequestDto additionalCosts) { 
 		this.additionalCosts = additionalCosts; 
-		this.additionalCosts.setFigureName(MultiPeriodAccountingFigureNames.AdditionalCosts);
+		if(additionalCosts != null){ 
+			this.additionalCosts.setFigureName(MultiPeriodAccountingFigureNames.AdditionalCosts);
+		}
 	}
-	
-	public Double getInterestOnLiabilitiesRate() { return interestOnLiabilitiesRate; }
-	public void setInterestOnLiabilitiesRate(Double interestOnLiabilitiesRate) { this.interestOnLiabilitiesRate = interestOnLiabilitiesRate; }
 	
 	public MultiPeriodAccountingFigureRequestDto getInvestments() { return investments; }
 	public void setInvestments(MultiPeriodAccountingFigureRequestDto investments) { 
 		this.investments = investments; 
-		this.investments.setFigureName(MultiPeriodAccountingFigureNames.Investments);
+		if(investments != null){ 
+			this.investments.setFigureName(MultiPeriodAccountingFigureNames.Investments);
+		}
 	}
 	
 	public MultiPeriodAccountingFigureRequestDto getDivestments() { return divestments; }
 	public void setDivestments(MultiPeriodAccountingFigureRequestDto divestments) { 
 		this.divestments = divestments; 
-		this.divestments.setFigureName(MultiPeriodAccountingFigureNames.Divestments);
+		if(divestments != null){ 
+			this.divestments.setFigureName(MultiPeriodAccountingFigureNames.Divestments);
+		}
 	}
-	
+		
 	public MultiPeriodAccountingFigureRequestDto getLiabilities() { return liabilities; }
 	public void setLiabilities(MultiPeriodAccountingFigureRequestDto liabilities) { 
 		this.liabilities = liabilities; 
-		this.liabilities.setFigureName(MultiPeriodAccountingFigureNames.Liabilities);
+		if(liabilities != null){ 
+			this.liabilities.setFigureName(MultiPeriodAccountingFigureNames.Liabilities);
+		}
 	}
 	
 	public MultiPeriodAccountingFigureRequestDto getFreeCashFlows() { return freeCashFlows; }
 	public void setFreeCashFlows(MultiPeriodAccountingFigureRequestDto freeCashFlows) { 
 		this.freeCashFlows = freeCashFlows; 
-		this.freeCashFlows.setFigureName(MultiPeriodAccountingFigureNames.FreeCashFlows);
+		if(freeCashFlows != null){ 
+			this.freeCashFlows.setFigureName(MultiPeriodAccountingFigureNames.FreeCashFlows);
+		}
 	}
 	
 	public MultiPeriodAccountingFigureRequestDto getDepreciation() { return depreciation; }
 	public void setDepreciation(MultiPeriodAccountingFigureRequestDto depreciation) { 
 		this.depreciation = depreciation; 
-		this.depreciation.setFigureName(MultiPeriodAccountingFigureNames.Depreciation);
+		if(depreciation != null){ 
+			this.depreciation.setFigureName(MultiPeriodAccountingFigureNames.Depreciation);
+		} 
 	} 
 	
 	public List<MultiPeriodAccountingFigureRequestDto> getAllMultiPeriodAccountingFigures(){
@@ -202,11 +225,11 @@ public class ScenarioRequestDto {
 		sb.append("------------------------------------------------------------------------");
 		sb.append(newLine);
 		sb.append("Name: ");
-		sb.append(this.scenarioName);
+		sb.append(this.name);
 		sb.append(", ");
 		sb.append(newLine);
 		sb.append("Description: ");
-		sb.append(this.scenarioDescription);
+		sb.append(this.description);
 		sb.append(", ");
 		sb.append(newLine);
 		sb.append("Periods: ");
