@@ -12,9 +12,10 @@ import javax.validation.Payload;
 @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Constraint(validatedBy = { IsValidTimeSeriesRangesValidator.class })
-public @interface IsValidTimeSeriesRanges {
-	String message() default "The time series are not correctly aligned or do not have the required length as dictated by the value of 'periods'.";
+@Constraint(validatedBy = { IsContinuousTimeSeriesPutRequestValidator.class })
+public @interface IsContinuousTimeSeriesPutRequest {
+
+	String message() default "The time series of all accounting figures must be continuous.";
 	 
     Class<?>[] groups() default {};
  

@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.IAccountingFigureCalculationsService;
@@ -25,13 +26,15 @@ import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.CompanyValueDistributionDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.FcfCompanyValuationResultDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.FteCompanyValuationResultDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.MultiPeriodAccountingFigureRequestDto;
-import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioRequestDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioPostRequestDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioPutRequestDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioResponseDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.mappers.ApvCompanyValuationResultMapper;
 import edu.dhbw.ka.mwi.businesshorizon2.models.mappers.CompanyValueDistributionMapper;
 import edu.dhbw.ka.mwi.businesshorizon2.models.mappers.FcfCompanyValuationResultMapper;
 import edu.dhbw.ka.mwi.businesshorizon2.models.mappers.FteCompanyValuationResultMapper;
 import edu.dhbw.ka.mwi.businesshorizon2.models.mappers.ScenarioMapper;
+import javassist.tools.web.BadHttpRequest;
 
 @Service
 public class ScenarioService implements IScenarioService{
@@ -54,7 +57,7 @@ public class ScenarioService implements IScenarioService{
 	private IScenarioGraphRepository scenarioGraphRepository;
 	
 	@Override
-	public Long createOrUpdateScenario(ScenarioRequestDto scenarioDto, Long appUserId) {
+	public Long create(ScenarioPostRequestDto scenarioDto, Long appUserId) {
 				
 		HashMap<MultiPeriodAccountingFigureNames, List<Double>> deterministicAccountingFigures = 
 				new HashMap<MultiPeriodAccountingFigureNames, List<Double>>();
@@ -119,10 +122,14 @@ public class ScenarioService implements IScenarioService{
 						scenarioDto.getInterestOnLiabilitiesRate(), 
 						effectiveTaxRate);
 				
+				if(!stochasticAccountingFigures.containsKey(MultiPeriodAccountingFigureNames.FreeCashFlows)) {
+					stochasticAccountingFigures.put(MultiPeriodAccountingFigureNames.FreeCashFlows, new HashMap<Integer, List<Double>>());
+				}
+				stochasticAccountingFigures.get(MultiPeriodAccountingFigureNames.FreeCashFlows).put(sampleNum, freeCashFlows);
+				
 				if(!stochasticAccountingFigures.containsKey(MultiPeriodAccountingFigureNames.FlowToEquity)) {
 					stochasticAccountingFigures.put(MultiPeriodAccountingFigureNames.FlowToEquity, new HashMap<Integer, List<Double>>());
 				}
-				
 				stochasticAccountingFigures.get(MultiPeriodAccountingFigureNames.FlowToEquity).put(sampleNum, ftes);
 				
 				ApvCompanyValuationResultDto res = companyValuationService.performApvCompanyValuation(
@@ -134,6 +141,7 @@ public class ScenarioService implements IScenarioService{
 				
 				companyValues.add(res.getCompanyValue());
 			}
+			
 			
 			List<Double> meanFreeCashFlows = deterministicAccountingFigures.containsKey(MultiPeriodAccountingFigureNames.FreeCashFlows) 
 					? deterministicAccountingFigures.get(MultiPeriodAccountingFigureNames.FreeCashFlows)
@@ -222,26 +230,25 @@ public class ScenarioService implements IScenarioService{
 		scenarioDao.setFteCompanyValuationResultDao(FteCompanyValuationResultMapper.mapDtoToDao(fteRes));
 		scenarioDao.setFcfCompanyValuationResultDao(FcfCompanyValuationResultMapper.mapDtoToDao(fcfRes));
 		
-		Long scenarioInDbId = scenarioGraphRepository.createOrUpdate(scenarioDao, appUserId);
+		Long scenarioInDbId = scenarioGraphRepository.create(scenarioDao, appUserId);
 		
 		return scenarioInDbId;
 	}
 
 	@Override
-	public Boolean delete(Long appUserId, Long scenarioId) {
+	public void delete(Long scenarioId, Long appUserId) {
 		
-		Boolean success = false;
+		ScenarioDao dao = scenarioRepository.get(scenarioId);
 		
-		Optional<ScenarioDao> scenario = scenarioRepository.findById(scenarioId);
-		
-		if(scenario.isPresent()) {
-			if(scenario.get().getAppUser().getAppUserId().equals(appUserId)) {
-				scenarioRepository.delete(scenario.get());
-				success = true;
-			}
+		if(dao == null) {
+			throw new IllegalArgumentException("The requested scenario does not exist.");
 		}
 		
-		return success;
+		if(!dao.getAppUser().getAppUserId().equals(appUserId)) {
+			throw new AccessDeniedException("The requested user is not authorized to delete the requested scenario.");
+		}
+		
+		scenarioRepository.delete(dao);
 	}
 
 	@Override
@@ -253,15 +260,38 @@ public class ScenarioService implements IScenarioService{
 		return dtos;
 	}
 	
-	private List<Double> getDeterministicOrStochasticAccountingFigure(
-			MultiPeriodAccountingFigureNames figureName, 
-			HashMap<MultiPeriodAccountingFigureNames, List<Double>> deterministicAccountingFigures,
-			HashMap<MultiPeriodAccountingFigureNames, HashMap<Integer, List<Double>>> stochasticAccountingFigures,
-			Integer sampleNum
-			) {
-		return deterministicAccountingFigures.containsKey(figureName)
-			? deterministicAccountingFigures.get(figureName)
-			: stochasticAccountingFigures.get(figureName).get(sampleNum);
+	@Override
+	public ScenarioResponseDto get(Long scenarioId, Long appUserId) {
+		
+		ScenarioDao dao = scenarioRepository.get(scenarioId);
+		
+		if(dao == null) {
+			throw new IllegalArgumentException("The requested scenario does not exist.");
+		}
+		
+		if(!dao.getAppUser().getAppUserId().equals(appUserId)) {
+			throw new AccessDeniedException("The requested user is not authorized to access the requested scenario.");
+		}
+
+		return ScenarioMapper.mapDaoToDto(dao);
+	}
+
+	@Override
+	public Long update(ScenarioPutRequestDto scenarioDto, Long appUserId) {
+		
+		ScenarioDao dao = scenarioRepository.get(scenarioDto.getId());
+		
+		if(dao == null) {
+			throw new IllegalArgumentException("The requested scenario does not exist.");
+		}
+		
+		if(!dao.getAppUser().getAppUserId().equals(appUserId)) {
+			throw new AccessDeniedException("The requested user is not authorized to update the requested scenario.");
+		}
+		
+		scenarioRepository.delete(dao);
+		
+		return create(scenarioDto, appUserId);
 	}
 	
 	private List<Double> getFreeCashFlows(
@@ -329,13 +359,15 @@ public class ScenarioService implements IScenarioService{
 		
 		return freeCashFlows;
 	}
-
-	@Override
-	public ScenarioResponseDto get(Long scenarioId) {
-		ScenarioDao dao = scenarioRepository.get(scenarioId);
-		
-		int length = dao.getMultiPeriodAccountingFigures().size();
-		
-		return ScenarioMapper.mapDaoToDto(dao);
+	
+	private List<Double> getDeterministicOrStochasticAccountingFigure(
+			MultiPeriodAccountingFigureNames figureName, 
+			HashMap<MultiPeriodAccountingFigureNames, List<Double>> deterministicAccountingFigures,
+			HashMap<MultiPeriodAccountingFigureNames, HashMap<Integer, List<Double>>> stochasticAccountingFigures,
+			Integer sampleNum
+			) {
+		return deterministicAccountingFigures.containsKey(figureName)
+			? deterministicAccountingFigures.get(figureName)
+			: stochasticAccountingFigures.get(figureName).get(sampleNum);
 	}
 }

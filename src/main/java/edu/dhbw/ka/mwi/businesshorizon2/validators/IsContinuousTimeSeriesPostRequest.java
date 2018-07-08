@@ -12,8 +12,8 @@ import javax.validation.Payload;
 @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Constraint(validatedBy = { IsContinuousTimeSeriesValidator.class })
-public @interface IsContinuousTimeSeries {
+@Constraint(validatedBy = { IsContinuousTimeSeriesPostRequestValidator.class })
+public @interface IsContinuousTimeSeriesPostRequest {
 	
 	String message() default "The time series of all accounting figures must be continuous.";
 	 

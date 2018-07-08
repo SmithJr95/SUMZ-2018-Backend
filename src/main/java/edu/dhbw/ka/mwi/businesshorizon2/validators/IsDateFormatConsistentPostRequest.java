@@ -12,8 +12,8 @@ import javax.validation.Payload;
 @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Constraint(validatedBy = { IsDateFormatConsistentValidator.class })
-public @interface IsDateFormatConsistent {
+@Constraint(validatedBy = { IsDateFormatConsistentPostRequestValidator.class })
+public @interface IsDateFormatConsistentPostRequest {
 	public final String acceptedDateFormat1 = "(year + quarter)";
 	public final String acceptedDateFormat2 = "(year)";
 	

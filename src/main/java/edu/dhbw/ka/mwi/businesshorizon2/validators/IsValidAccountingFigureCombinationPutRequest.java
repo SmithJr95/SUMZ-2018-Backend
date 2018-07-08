@@ -8,15 +8,12 @@ import java.lang.annotation.Target;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
-import javax.validation.Valid;
-
-import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.MultiPeriodAccountingFigureRequestDto;
 
 @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Constraint(validatedBy = { IsValidAccountingFigureCombinationValidator.class })
-public @interface IsValidAccountingFigureCombination {
+@Constraint(validatedBy = { IsValidAccountingFigureCombinationPutRequestValidator.class })
+public @interface IsValidAccountingFigureCombinationPutRequest {
 	public final String validCombination1 = "{additionalIncome, depreciation, additionalCosts, investments, divestments, revenue, costOfMaterial, costOfStaff, liabilities}";
 	public final String validCombination2 = "{liabilities, freeCashFlows}";
 	

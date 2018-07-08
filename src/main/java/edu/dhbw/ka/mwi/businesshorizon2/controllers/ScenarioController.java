@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 
@@ -21,7 +22,8 @@ import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.ICompanyValuati
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.IScenarioService;
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.ITimeSeriesPredictionService;
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.IUserService;
-import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioRequestDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioPostRequestDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioPutRequestDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioResponseDto;
 
 @RestController
@@ -36,7 +38,7 @@ public class ScenarioController {
 	
 	@RequestMapping(method = RequestMethod.POST)
 	@PreAuthorize("hasAuthority('ADMIN_USER') or hasAuthority('STANDARD_USER')")
-	public Long create(@RequestBody @Valid ScenarioRequestDto scenario) {
+	public Long create(@RequestBody @Valid ScenarioPostRequestDto scenario) {
 		
 		System.out.println(scenario);
 		
@@ -45,24 +47,27 @@ public class ScenarioController {
 		
 		Long appUserId = userService.getUserId(username);
 		
-		Long scenarioIdInDb = scenarioService.createOrUpdateScenario(scenario, appUserId);
+		Long scenarioIdInDb = scenarioService.create(scenario, appUserId);
 		
 		return scenarioIdInDb;
 	}
 	
-	@RequestMapping(method = RequestMethod.PUT)
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 	@PreAuthorize("hasAuthority('ADMIN_USER') or hasAuthority('STANDARD_USER')")
-	public ScenarioResponseDto update(@RequestBody @Valid ScenarioRequestDto scenario) {
+	public ResponseEntity<Long> update(@PathVariable("id") Long scenarioId, @RequestBody @Valid ScenarioPutRequestDto scenario) {
 		
-		throw new UnsupportedOperationException();
-		/*
+		if(!scenarioId.equals(scenario.getId())) {
+			return new ResponseEntity<Long>(HttpStatus.BAD_REQUEST);
+		}
+		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String username = (String) auth.getPrincipal();
 		
 		Long appUserId = userService.getUserId(username);
 		
-		return scenarioService.createOrUpdateScenario(scenario, appUserId);
-		*/
+		Long scenarioIdInDb = scenarioService.update(scenario, appUserId);
+		
+		return new ResponseEntity<>(scenarioIdInDb, HttpStatus.OK);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
@@ -77,6 +82,27 @@ public class ScenarioController {
 		return scenarios;
 	}
 	
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	@PreAuthorize("hasAuthority('ADMIN_USER') or hasAuthority('STANDARD_USER')")
+	public ResponseEntity<ScenarioResponseDto> get (@PathVariable("id") Long scenarioId) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String username = (String) auth.getPrincipal();
+		
+		Long appUserId = userService.getUserId(username);
+		
+		ScenarioResponseDto scenario;
+		
+		try {
+			scenario = scenarioService.get(scenarioId, appUserId);
+		}catch(IllegalArgumentException e){
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}catch(AccessDeniedException e) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+		
+		return new ResponseEntity<ScenarioResponseDto>(scenario, HttpStatus.OK);
+	}
+	
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	@PreAuthorize("hasAuthority('ADMIN_USER') or hasAuthority('STANDARD_USER')")
 	public ResponseEntity delete(@PathVariable("id") Long scenarioId) {
@@ -84,10 +110,13 @@ public class ScenarioController {
 		String username = (String) auth.getPrincipal();
 		
 		Long appUserId = userService.getUserId(username);
-		Boolean success = scenarioService.delete(appUserId, scenarioId);
 		
-		if(!success) {
-			return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+		try {
+			scenarioService.delete(scenarioId, appUserId);
+		}catch(IllegalArgumentException e) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}catch(AccessDeniedException e) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 		
 		return new ResponseEntity<>(HttpStatus.OK);

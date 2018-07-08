@@ -5,18 +5,14 @@ import java.util.List;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import org.springframework.stereotype.Component;
-
 import edu.dhbw.ka.mwi.businesshorizon2.models.common.MultiPeriodAccountingFigureNames;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.MultiPeriodAccountingFigureRequestDto;
-import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioRequestDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioPutRequestDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.TimeSeriesItemDateRequestDto;
 
-@Component
-public class IsValidTimeSeriesRangesValidator implements ConstraintValidator<IsValidTimeSeriesRanges, ScenarioRequestDto> {
-
+public class IsValidTimeSeriesRangesPutRequestValidator implements ConstraintValidator<IsValidTimeSeriesRangesPutRequest, ScenarioPutRequestDto> {
 	@Override
-	public boolean isValid(ScenarioRequestDto arg0, ConstraintValidatorContext arg1) {
+	public boolean isValid(ScenarioPutRequestDto arg0, ConstraintValidatorContext arg1) {
 		
 		List<MultiPeriodAccountingFigureRequestDto> historicMultiPeriodAccountingFigures = arg0.getAllMultiPeriodAccountingFigures();
 		historicMultiPeriodAccountingFigures.removeIf(x -> x == null || x.getTimeSeries() == null || x.getIsHistoric() == null || x.getIsHistoric().equals(false));
@@ -103,5 +99,4 @@ public class IsValidTimeSeriesRangesValidator implements ConstraintValidator<IsV
 				
 		return true;
 	}
-
 }

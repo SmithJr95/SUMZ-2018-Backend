@@ -59,7 +59,7 @@ public class ScenarioGraphRepository implements IScenarioGraphRepository{
 	private ICompanyValueDistributionPointRepository pointRepository;
 	
 	@Override
-	public Long createOrUpdate(ScenarioDao scenario, Long appUserId) {
+	public Long create(ScenarioDao scenario, Long appUserId) {
 		
 		ApvCompanyValuationResultDao apvResTemp = scenario.getApvCompanyValuationResultDao();
 		FteCompanyValuationResultDao fteResTemp = scenario.getFteCompanyValuationResultDao();

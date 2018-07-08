@@ -113,12 +113,14 @@ public class AccountingFigureCalculationsService implements IAccountingFigureCal
 	
 	public List<Double> getMeanAccountingFigureValues(HashMap<MultiPeriodAccountingFigureNames, HashMap<Integer, List<Double>>> stochasticAccountingFigures, MultiPeriodAccountingFigureNames figureName, int periods) {
 		
-		System.out.println(figureName.name());
-		
 		List<Double> meanAccountingFigureValues = new ArrayList<Double>();
 		
 		for (int i = 0; i < periods; i++) {
 			final int j = i;
+			
+			if(stochasticAccountingFigures.get(figureName) == null) {
+				System.out.println("Figure: " + figureName + " is null.");
+			}
 			
 			Double meanAccountingFigureValue = stochasticAccountingFigures.get(figureName)
 					.values()

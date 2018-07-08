@@ -15,16 +15,16 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import edu.dhbw.ka.mwi.businesshorizon2.models.common.MultiPeriodAccountingFigureNames;
-import edu.dhbw.ka.mwi.businesshorizon2.validators.IsContinuousTimeSeries;
-import edu.dhbw.ka.mwi.businesshorizon2.validators.IsDateFormatConsistent;
-import edu.dhbw.ka.mwi.businesshorizon2.validators.IsValidAccountingFigureCombination;
-import edu.dhbw.ka.mwi.businesshorizon2.validators.IsValidTimeSeriesRanges;
+import edu.dhbw.ka.mwi.businesshorizon2.validators.IsContinuousTimeSeriesPostRequest;
+import edu.dhbw.ka.mwi.businesshorizon2.validators.IsDateFormatConsistentPostRequest;
+import edu.dhbw.ka.mwi.businesshorizon2.validators.IsValidAccountingFigureCombinationPostRequest;
+import edu.dhbw.ka.mwi.businesshorizon2.validators.IsValidTimeSeriesRangesPostRequest;
 
-@IsValidAccountingFigureCombination()
-@IsDateFormatConsistent()
-@IsContinuousTimeSeries()
-@IsValidTimeSeriesRanges()
-public class ScenarioRequestDto {
+@IsValidAccountingFigureCombinationPostRequest()
+@IsDateFormatConsistentPostRequest()
+@IsContinuousTimeSeriesPostRequest()
+@IsValidTimeSeriesRangesPostRequest()
+public class ScenarioPostRequestDto {
 	
 	@NotNull(message = "scenarioName must not be null.")
 	@Size(min=1, max=20, message="scenarioName must consist of 1-20 characters.")

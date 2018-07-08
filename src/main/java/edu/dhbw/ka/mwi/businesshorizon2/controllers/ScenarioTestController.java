@@ -33,7 +33,7 @@ import edu.dhbw.ka.mwi.businesshorizon2.models.daos.MultiPeriodAccountingFigureD
 import edu.dhbw.ka.mwi.businesshorizon2.models.daos.ScenarioDao;
 import edu.dhbw.ka.mwi.businesshorizon2.models.daos.TimeSeriesItemDao;
 import edu.dhbw.ka.mwi.businesshorizon2.models.daos.TimeSeriesItemDateDao;
-import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioRequestDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioPostRequestDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioResponseDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.mappers.ScenarioMapper;
 

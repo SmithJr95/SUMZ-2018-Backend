@@ -9,12 +9,29 @@ import edu.dhbw.ka.mwi.businesshorizon2.models.common.MultiPeriodAccountingFigur
 import edu.dhbw.ka.mwi.businesshorizon2.models.daos.MultiPeriodAccountingFigureDao;
 import edu.dhbw.ka.mwi.businesshorizon2.models.daos.ScenarioDao;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.MultiPeriodAccountingFigureResponseDto;
-import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioRequestDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioPostRequestDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioPutRequestDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioResponseDto;
 
 public class ScenarioMapper {
 	
-	public static ScenarioDao mapDtoToDao(ScenarioRequestDto dto) {
+	public static ScenarioPutRequestDto mapPostDtoToPutDto(ScenarioPostRequestDto postDto) {
+		
+		if(postDto == null) {
+			return null;
+		}
+		
+		ScenarioPutRequestDto putDto = new ScenarioPutRequestDto();
+		
+		putDto.setAdditionalCosts(postDto.getAdditionalCosts());
+		putDto.setAdditionalIncome(postDto.getAdditionalIncome());
+		putDto.setBusinessTaxRate(postDto.getBusinessTaxRate());
+		
+		return putDto;
+	}
+	
+	
+	public static ScenarioDao mapDtoToDao(ScenarioPostRequestDto dto) {
 		
 		if(dto == null) {
 			return null;
