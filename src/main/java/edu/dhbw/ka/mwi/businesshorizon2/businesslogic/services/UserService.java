@@ -1,9 +1,6 @@
 package edu.dhbw.ka.mwi.businesshorizon2.businesslogic.services;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -12,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.mail.MessagingException;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +16,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.dhbw.ka.mwi.businesshorizon2.businesslogic.interfaces.IUserService;
-import edu.dhbw.ka.mwi.businesshorizon2.config.AdditionalWebConfig;
 import edu.dhbw.ka.mwi.businesshorizon2.config.EmailConfig;
 import edu.dhbw.ka.mwi.businesshorizon2.config.SecurityConfig;
 import edu.dhbw.ka.mwi.businesshorizon2.dataaccess.interfaces.IAppRoleRepository;
@@ -208,12 +200,15 @@ public class UserService implements IUserService {
 	
 	@Override 
 	public UserPasswordResetTokenDao checkPasswordResetToken(String tokenStr) throws Exception {
+		
 		byte[] bytes = Base64.getDecoder().decode(tokenStr);
 		tokenStr = new String(bytes);
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.findAndRegisterModules();
 		UserPasswordResetTokenDto tokenDto = objectMapper.readValue(tokenStr, UserPasswordResetTokenDto.class);
+		
+		System.out.println(tokenDto);
 		
 		UserPasswordResetTokenDao token = UserMapper.mapToDao(tokenDto);
 		token.setAppUser(userRepository.findById(tokenDto.getAppUserId()).get());

@@ -55,12 +55,11 @@ public class UserController {
 	public void checkPasswordResetToken(@PathVariable("token") String token, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		String redirectURL = "http://" + webConfig.getClientHost();
-
-		redirectURL = redirectURL + "/users/reset/" + token;
 		
+		redirectURL = redirectURL + "/users/reset/" + token;
 		userService.checkPasswordResetToken(token);
 		
-		response.sendRedirect(redirectURL + token);
+		response.sendRedirect(redirectURL);
 	}
 	
 	@RequestMapping(value = "/reset/{token}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
