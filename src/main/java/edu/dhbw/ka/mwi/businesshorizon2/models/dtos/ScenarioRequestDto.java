@@ -26,13 +26,13 @@ import edu.dhbw.ka.mwi.businesshorizon2.validators.IsValidTimeSeriesRanges;
 @IsValidTimeSeriesRanges()
 public class ScenarioRequestDto {
 	
-	@NotNull(message = "name must not be null.")
+	@NotNull(message = "scenarioName must not be null.")
 	@Size(min=1, max=20, message="scenarioName must consist of 1-20 characters.")
-	private String name;
+	private String scenarioName;
 	
-	@NotNull(message = "description must not be null.")
+	@NotNull(message = "scenarioDescription must not be null.")
 	@Size(min=1, max=100, message="scenarioDescription must consist of 1-100 characters.")
-	private String description;
+	private String scenarioDescription;
 	
 	@NotNull(message = "periods must not be null.")
 	@Min(value=1, message="periods must be >=1 and <=10.")
@@ -94,11 +94,11 @@ public class ScenarioRequestDto {
 	@Valid
 	private MultiPeriodAccountingFigureRequestDto freeCashFlows;
 	
-	public String getName() { return name; }
-	public void setName(String name) { this.name = name; }
+	public String getScenarioName() { return scenarioName; }
+	public void setScenarioName(String scenarioName) { this.scenarioName = scenarioName; }
 	
-	public String getDescription() { return description; }
-	public void setDescription(String description) { this.description = description; }
+	public String getScenarioDescription() { return scenarioDescription; }
+	public void setScenarioDescription(String scenarioDescription) { this.scenarioDescription = scenarioDescription; }
 	
 	public Integer getPeriods() { return periods; }
 	public void setPeriods(Integer periods) { this.periods = periods; }
@@ -225,11 +225,11 @@ public class ScenarioRequestDto {
 		sb.append("------------------------------------------------------------------------");
 		sb.append(newLine);
 		sb.append("Name: ");
-		sb.append(this.name);
+		sb.append(this.scenarioName);
 		sb.append(", ");
 		sb.append(newLine);
 		sb.append("Description: ");
-		sb.append(this.description);
+		sb.append(this.scenarioDescription);
 		sb.append(", ");
 		sb.append(newLine);
 		sb.append("Periods: ");

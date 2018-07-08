@@ -34,8 +34,8 @@ public class ScenarioMapper {
 		dao.setForecastPeriods(dto.getPeriods());
 		dao.setBusinessTaxRate(dto.getBusinessTaxRate());
 		dao.setCorporateTaxRate(dto.getCorporateTaxRate());
-		dao.setScenarioDescription(dto.getDescription());
-		dao.setScenarioName(dto.getName());
+		dao.setScenarioDescription(dto.getScenarioDescription());
+		dao.setScenarioName(dto.getScenarioName());
 		dao.setSolidaryTaxRate(dto.getSolidaryTaxRate());
 		
 		dao.setMultiPeriodAccountingFigures(multiPeriodAccountingFigures);
@@ -81,8 +81,8 @@ public class ScenarioMapper {
 		
 		dto.setBusinessTaxRate(dao.getBusinessTaxRate());
 		dto.setCorporateTaxRate(dao.getCorporateTaxRate());
-		dto.setDescription(dao.getScenarioDescription());
-		dto.setName(dao.getScenarioName());
+		dto.setScenarioDescription(dao.getScenarioDescription());
+		dto.setScenarioName(dao.getScenarioName());
 		dto.setSolidaryTaxRate(dao.getSolidaryTaxRate());
 		dto.setEquityInterestRate(dao.getEquityInterestRate());
 		dto.setPeriods(dao.getForecastPeriods());

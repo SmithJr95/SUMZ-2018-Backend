@@ -49,7 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       auth.userDetailsService(userDetailsService)
               .passwordEncoder(new BCryptPasswordEncoder(encodingStrength));
    }
-
+   
    @Override
    public void configure(WebSecurity web) throws Exception {
        web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**");
@@ -58,15 +58,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
       http
-              .sessionManagement()
-              .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-              .and()
-              .httpBasic()
-              .realmName(securityRealm)
-              .and()
-              .csrf()
-              .disable();
-
+      .cors()
+      .and()
+      .csrf()
+      .disable()
+      .sessionManagement()
+      .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+      .and()
+      .httpBasic()
+      .realmName(securityRealm);
    }
 
    @Bean

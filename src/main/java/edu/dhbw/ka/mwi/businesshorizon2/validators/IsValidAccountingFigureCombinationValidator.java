@@ -36,6 +36,10 @@ public class IsValidAccountingFigureCombinationValidator implements ConstraintVa
 		List<MultiPeriodAccountingFigureRequestDto> multiPeriodAccountingFigures = arg0.getAllMultiPeriodAccountingFigures();
 		multiPeriodAccountingFigures.removeIf(x -> x == null);
 		
+		for(MultiPeriodAccountingFigureRequestDto dto : multiPeriodAccountingFigures) {
+			System.out.println(dto.getFigureName().name());
+		}
+		
 		EnumSet<MultiPeriodAccountingFigureNames> actualCombination = EnumSet.noneOf(MultiPeriodAccountingFigureNames.class);
 		for (MultiPeriodAccountingFigureRequestDto figure : multiPeriodAccountingFigures) {
 			actualCombination.add(figure.getFigureName());

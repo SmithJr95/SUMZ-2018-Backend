@@ -186,6 +186,9 @@ public class ScenarioService implements IScenarioService{
 						scenarioDto.getCorporateTaxRate(), 
 						scenarioDto.getSolidaryTaxRate());
 			}
+			for(int i = 0; i < freeCashFlows.size(); i++) {
+				System.out.println(freeCashFlows.get(i) + ", ");
+			}
 			
 			List<Double> ftes = accountingService.calculateFlowToEquity(
 					freeCashFlows, 

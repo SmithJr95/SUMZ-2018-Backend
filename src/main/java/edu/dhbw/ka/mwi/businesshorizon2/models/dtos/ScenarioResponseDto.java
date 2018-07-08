@@ -5,8 +5,8 @@ public class ScenarioResponseDto {
 	
 	private Long id;
 	private Boolean stochastic;
-	private String name;
-	private String description;
+	private String scenarioName;
+	private String scenarioDescription;
 	private Integer periods;
 
 	private Double businessTaxRate;
@@ -37,11 +37,11 @@ public class ScenarioResponseDto {
 	public Boolean getStochastic() { return stochastic; }
 	public void setStochastic(Boolean stochastic) { this.stochastic = stochastic; }
 	
-	public String getName() { return name; }
-	public void setName(String name) { this.name = name; }
+	public String getScenarioName() { return scenarioName; }
+	public void setScenarioName(String scenarioName) { this.scenarioName = scenarioName; }
 	
-	public String getDescription() { return description; }
-	public void setDescription(String description) { this.description = description; }
+	public String getScenarioDescription() { return scenarioDescription; }
+	public void setScenarioDescription(String scenarioDescription) { this.scenarioDescription = scenarioDescription; }
 	
 	public Integer getPeriods() { return periods; }
 	public void setPeriods(Integer periods) { this.periods = periods; }
