@@ -2,18 +2,24 @@ package edu.dhbw.ka.mwi.businesshorizon2.config;
 
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 @Configuration
-@EnableWebMvc
-public class AdditionalWebConfig implements WebMvcConfigurer{
+public class AdditionalWebConfig{
 
-	public void addCorsMappings(CorsRegistry registry) {
+/*	public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/**")
-		.allowedMethods("HEAD", "GET", "PUT", "POST", "DELETE");;
+		.allowedOrigins("*")
+		.allowedMethods("*")
+		.allowedHeaders("*")
+		.allowCredentials(true);
+		
+		System.out.println("*************************************************************************************************");
 	}
 
 	@Value("${sumz.client.host}")
@@ -25,5 +31,35 @@ public class AdditionalWebConfig implements WebMvcConfigurer{
 
 	public void setClientHost(String clientHost) {
 		this.clientHost = clientHost;
+	}*/
+	
+    /**
+     * Allowing all origins, headers and methods here is only intended to keep this example simple.
+     * This is not a default recommended configuration. Make adjustments as
+     * necessary to your use case.
+     *
+     */
+	
+	@Value("${sumz.client.host}")
+	private String clientHost;
+	
+	public String getClientHost() {
+		return clientHost;
 	}
+
+	public void setClientHost(String clientHost) {
+		this.clientHost = clientHost;
+	}
+	
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("*");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
+    }
 }

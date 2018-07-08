@@ -38,10 +38,10 @@ public class ScenarioResponseDto {
 	public void setStochastic(Boolean stochastic) { this.stochastic = stochastic; }
 	
 	public String getScenarioName() { return scenarioName; }
-	public void setScenarioName(String name) { this.scenarioName = name; }
+	public void setScenarioName(String scenarioName) { this.scenarioName = scenarioName; }
 	
 	public String getScenarioDescription() { return scenarioDescription; }
-	public void setScenarioDescription(String description) { this.scenarioDescription = description; }
+	public void setScenarioDescription(String scenarioDescription) { this.scenarioDescription = scenarioDescription; }
 	
 	public Integer getPeriods() { return periods; }
 	public void setPeriods(Integer periods) { this.periods = periods; }

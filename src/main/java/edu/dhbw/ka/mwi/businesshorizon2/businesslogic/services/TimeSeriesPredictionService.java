@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -20,8 +21,7 @@ import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.PredictionResponseTimeSeries
 @Service
 public class TimeSeriesPredictionService implements ITimeSeriesPredictionService{
 	
-	final Integer numSamples = 5;
-	final String uri = "http://localhost:5000/predict";
+	final String uri = "http://sumz1718.dh-karlsruhe.de:5000/predict";
 	
 	@Override
 	public void MakePredictions(
@@ -51,11 +51,11 @@ public class TimeSeriesPredictionService implements ITimeSeriesPredictionService
 		System.out.println(result);
 		
 		for (PredictionResponseTimeSeriesDto ts : result.getTimeSeries()) {
-			MultiPeriodAccountingFigureNames name = MultiPeriodAccountingFigureNames.valueOf(ts.getId());
+			MultiPeriodAccountingFigureNames name = MultiPeriodAccountingFigureNames.valueOf(ts.getId());		
 			stochasticAccountingFigures.put(name, new HashMap<Integer, List<Double>>());
 			
 			for (int i = 0; i < numSamples; i++) {
-				stochasticAccountingFigures.get(name).put(i + 1, Arrays.asList(ts.getValues()[i]));
+				stochasticAccountingFigures.get(name).put(i + 1, Arrays.asList(ts.getPreds()[i]));
 			}				
 		}
 		

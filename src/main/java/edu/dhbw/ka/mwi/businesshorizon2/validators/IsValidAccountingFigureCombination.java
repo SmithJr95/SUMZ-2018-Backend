@@ -17,8 +17,8 @@ import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.MultiPeriodAccountingFigureR
 @Documented
 @Constraint(validatedBy = { IsValidAccountingFigureCombinationValidator.class })
 public @interface IsValidAccountingFigureCombination {
-	public final String validCombination1 = "{additionalIncome, depreciation, interestOnLiabilites, additionalCosts, investments, divestments, revenue, costOfMaterial, costOfStaff, liabilities}";
-	public final String validCombination2 = "{liabilities, freeCashFlows, interestOnLiabilities}";
+	public final String validCombination1 = "{additionalIncome, depreciation, additionalCosts, investments, divestments, revenue, costOfMaterial, costOfStaff, liabilities}";
+	public final String validCombination2 = "{liabilities, freeCashFlows}";
 	
 	String message() default "The only acceptable combination of accounting figures are " + validCombination1 + " and " + validCombination2;
 	 

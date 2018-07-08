@@ -12,6 +12,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,6 @@ import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.AppUserDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.UserPasswordResetTokenDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.UserPutRequestDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.mappers.UserMapper;
-
 
 @Service
 public class UserService implements IUserService {

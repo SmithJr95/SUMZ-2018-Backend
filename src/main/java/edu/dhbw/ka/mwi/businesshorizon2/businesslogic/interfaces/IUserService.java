@@ -5,6 +5,9 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
@@ -13,6 +16,7 @@ import edu.dhbw.ka.mwi.businesshorizon2.models.daos.UserPasswordResetTokenDao;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.AppUserDto;
 import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.UserPutRequestDto;
 
+@Service
 public interface IUserService {
 	
 	public List<AppUserDao> findAllUsers();

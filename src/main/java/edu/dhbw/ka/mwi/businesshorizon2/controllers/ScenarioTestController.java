@@ -2,8 +2,13 @@ package edu.dhbw.ka.mwi.businesshorizon2.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,14 +33,25 @@ import edu.dhbw.ka.mwi.businesshorizon2.models.daos.MultiPeriodAccountingFigureD
 import edu.dhbw.ka.mwi.businesshorizon2.models.daos.ScenarioDao;
 import edu.dhbw.ka.mwi.businesshorizon2.models.daos.TimeSeriesItemDao;
 import edu.dhbw.ka.mwi.businesshorizon2.models.daos.TimeSeriesItemDateDao;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioRequestDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioResponseDto;
+import edu.dhbw.ka.mwi.businesshorizon2.models.mappers.ScenarioMapper;
 
 @RestController
 @RequestMapping("/scenariostest")
 public class ScenarioTestController {
 
 	@Autowired
-	private IScenarioGraphRepository scenarioGraphRepository;
+	private IScenarioRepository scenarioRepository;
 	
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	public ScenarioResponseDto get(@PathVariable("id") Long id) {
+		
+		System.out.println(id);
+		return ScenarioMapper.mapDaoToDto(scenarioRepository.get(id));
+	}
+	
+	/*
 	@RequestMapping(method = RequestMethod.GET)
 	public void get() {
 		
@@ -79,4 +95,5 @@ public class ScenarioTestController {
 		
 		scenarioGraphRepository.createOrUpdate(dao, new Long(2));
 	}
+	*/
 }

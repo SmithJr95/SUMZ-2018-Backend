@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import edu.dhbw.ka.mwi.businesshorizon2.dataaccess.interfaces.IAppUserRepository;
 import edu.dhbw.ka.mwi.businesshorizon2.dataaccess.interfaces.IApvCompanyValuationResultRepository;
@@ -57,7 +59,7 @@ public class ScenarioGraphRepository implements IScenarioGraphRepository{
 	private ICompanyValueDistributionPointRepository pointRepository;
 	
 	@Override
-	public ScenarioDao createOrUpdate(ScenarioDao scenario, Long appUserId) {
+	public Long createOrUpdate(ScenarioDao scenario, Long appUserId) {
 		
 		ApvCompanyValuationResultDao apvResTemp = scenario.getApvCompanyValuationResultDao();
 		FteCompanyValuationResultDao fteResTemp = scenario.getFteCompanyValuationResultDao();
@@ -110,6 +112,6 @@ public class ScenarioGraphRepository implements IScenarioGraphRepository{
 			}
 		}
 		
-		return null;
+		return daoInDb.getScenarioId();
 	}
 }

@@ -107,7 +107,7 @@ public class ScenarioMapper {
 	}
 	
 	private static MultiPeriodAccountingFigureResponseDto selectMultiPeriodAccountingFigure(List<MultiPeriodAccountingFigureDao> figures, MultiPeriodAccountingFigureNames figureName) {
-		
+
 		Optional<MultiPeriodAccountingFigureDao> figure = figures
 			.stream()
 			.filter(x -> x.getFigureName().equals(figureName.name()))
