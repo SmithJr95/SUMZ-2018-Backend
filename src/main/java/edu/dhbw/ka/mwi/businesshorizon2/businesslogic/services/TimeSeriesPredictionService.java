@@ -21,7 +21,6 @@ import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.PredictionResponseTimeSeries
 @Service
 public class TimeSeriesPredictionService implements ITimeSeriesPredictionService{
 	
-	final Integer numSamples = 5;
 	final String uri = "http://sumz1718.dh-karlsruhe.de:5000/predict";
 	
 	@Override
@@ -56,9 +55,6 @@ public class TimeSeriesPredictionService implements ITimeSeriesPredictionService
 			stochasticAccountingFigures.put(name, new HashMap<Integer, List<Double>>());
 			
 			for (int i = 0; i < numSamples; i++) {
-				
-				System.out.println(ts.getPreds());
-				
 				stochasticAccountingFigures.get(name).put(i + 1, Arrays.asList(ts.getPreds()[i]));
 			}				
 		}

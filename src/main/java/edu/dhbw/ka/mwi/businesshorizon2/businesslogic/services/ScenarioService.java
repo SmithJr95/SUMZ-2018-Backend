@@ -36,7 +36,7 @@ import edu.dhbw.ka.mwi.businesshorizon2.models.mappers.ScenarioMapper;
 @Service
 public class ScenarioService implements IScenarioService{
 
-	private final Integer numSamples = 5;
+	private final Integer numSamples = 500;
 	
 	@Autowired
 	private IAccountingFigureCalculationsService accountingService;

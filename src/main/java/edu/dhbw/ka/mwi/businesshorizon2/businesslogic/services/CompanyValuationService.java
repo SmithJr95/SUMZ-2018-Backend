@@ -156,16 +156,24 @@ public class CompanyValuationService implements ICompanyValuationService {
 	
 	public CompanyValueDistributionDto getCompanyValueDistribution(List<Double> companyValues) {
 		
+		System.out.println("Company Values: ");
+		for (int i = 0; i < companyValues.size(); i++) {
+			System.out.println(companyValues.get(i) + ",");
+		}
+		
 		double mean = companyValues.stream().mapToDouble(x -> x).average().getAsDouble();
+		System.out.println("Mean: " + mean);
 		
 		Double variance = companyValues.stream().mapToDouble(x -> Math.pow((x - mean), 2)).sum() / companyValues.size();
 		
-		Double standardDeviation = 1E10;
-		if(variance >= 1E10) {
+		System.out.println("Variance: " + variance);
+		
+		Double standardDeviation = 1E-10;
+		if(variance >= 1E-10) {
 			standardDeviation = Math.sqrt(variance);
-		}else {
-			System.out.print("small af number");
 		}
+		
+		System.out.println("Standard Deviation: " + standardDeviation);
 		
 		double xInterval = standardDeviation / 5;
 		
