@@ -291,7 +291,7 @@ public class ScenarioService implements IScenarioService{
 		
 		scenarioRepository.delete(dao);
 		
-		return create(scenarioDto, appUserId);
+		return create(ScenarioMapper.mapPutDtoToPostDto(scenarioDto), appUserId);
 	}
 	
 	private List<Double> getFreeCashFlows(

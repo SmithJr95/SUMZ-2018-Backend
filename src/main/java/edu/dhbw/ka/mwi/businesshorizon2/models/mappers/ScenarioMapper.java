@@ -15,19 +15,34 @@ import edu.dhbw.ka.mwi.businesshorizon2.models.dtos.ScenarioResponseDto;
 
 public class ScenarioMapper {
 	
-	public static ScenarioPutRequestDto mapPostDtoToPutDto(ScenarioPostRequestDto postDto) {
+	public static ScenarioPostRequestDto mapPutDtoToPostDto(ScenarioPutRequestDto putDto) {
 		
-		if(postDto == null) {
+		if(putDto == null) {
 			return null;
 		}
 		
-		ScenarioPutRequestDto putDto = new ScenarioPutRequestDto();
+		ScenarioPostRequestDto postDto = new ScenarioPostRequestDto();
 		
-		putDto.setAdditionalCosts(postDto.getAdditionalCosts());
-		putDto.setAdditionalIncome(postDto.getAdditionalIncome());
-		putDto.setBusinessTaxRate(postDto.getBusinessTaxRate());
+		postDto.setAdditionalCosts(putDto.getAdditionalCosts());
+		postDto.setAdditionalIncome(putDto.getAdditionalIncome());
+		postDto.setBusinessTaxRate(putDto.getBusinessTaxRate());
+		postDto.setCorporateTaxRate(putDto.getCorporateTaxRate());
+		postDto.setCostOfMaterial(putDto.getCostOfMaterial());
+		postDto.setCostOfStaff(putDto.getCostOfStaff());
+		postDto.setDepreciation(putDto.getDepreciation());
+		postDto.setDivestments(putDto.getDivestments());
+		postDto.setEquityInterestRate(putDto.getEquityInterestRate());
+		postDto.setFreeCashFlows(putDto.getFreeCashFlows());
+		postDto.setInterestOnLiabilitiesRate(putDto.getInterestOnLiabilitiesRate());
+		postDto.setInvestments(putDto.getInvestments());
+		postDto.setLiabilities(putDto.getLiabilities());
+		postDto.setPeriods(putDto.getPeriods());
+		postDto.setRevenue(putDto.getRevenue());
+		postDto.setScenarioDescription(putDto.getScenarioDescription());
+		postDto.setScenarioName(putDto.getScenarioName());
+		postDto.setSolidaryTaxRate(putDto.getSolidaryTaxRate());
 		
-		return putDto;
+		return postDto;
 	}
 	
 	

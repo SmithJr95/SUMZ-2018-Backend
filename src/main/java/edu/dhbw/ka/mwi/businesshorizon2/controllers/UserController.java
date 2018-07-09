@@ -39,9 +39,10 @@ public class UserController {
 		userService.activateUser(token);
 		
 		String redirectURL = "http://" + webConfig.getClientHost();
-		redirectURL = redirectURL + "/login";
+		redirectURL = redirectURL + "/login?useractivated";
 		
 		response.sendRedirect(redirectURL);
+		
 	}
 	
 	@RequestMapping(value = "/forgot", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)

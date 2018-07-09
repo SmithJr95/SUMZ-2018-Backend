@@ -65,8 +65,14 @@ public class ScenarioController {
 		
 		Long appUserId = userService.getUserId(username);
 		
-		Long scenarioIdInDb = scenarioService.update(scenario, appUserId);
+		Long scenarioIdInDb;
 		
+		try {
+			scenarioIdInDb = scenarioService.update(scenario, appUserId);
+		}catch(IllegalArgumentException e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+
 		return new ResponseEntity<>(scenarioIdInDb, HttpStatus.OK);
 	}
 	
