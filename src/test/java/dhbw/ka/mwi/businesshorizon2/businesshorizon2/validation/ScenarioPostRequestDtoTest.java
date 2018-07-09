@@ -177,20 +177,7 @@ public class ScenarioPostRequestDtoTest {
 	public void validation_periodsLessThanMinValue_violationsExist() throws Exception {
 		//Arrange
 		ScenarioPostRequestDto request = this.validRequest;
-		request.setPeriods(0);
-		
-		//Act
-		Set<ConstraintViolation<ScenarioPostRequestDto>> violations = validator.validate(request);
-		
-		//Assert
-		assertTrue(violations.size() > 0);
-	}
-	
-	@Test
-	public void validation_periodsGreaterThanMaxValue_violationsExist() throws Exception {
-		//Arrange
-		ScenarioPostRequestDto request = this.validRequest;
-		request.setPeriods(11);
+		request.setPeriods(1);
 		
 		//Act
 		Set<ConstraintViolation<ScenarioPostRequestDto>> violations = validator.validate(request);

@@ -35,8 +35,7 @@ public class ScenarioPostRequestDto {
 	private String scenarioDescription;
 	
 	@NotNull(message = "periods must not be null.")
-	@Min(value=1, message="periods must be >=1 and <=10.")
-	@Max(value=10, message="periods must be >=1 and <=10.")
+	@Min(value=2, message="periods must be >=2.")
 	private Integer periods;
 	
 	@NotNull(message = "businessTaxRate must not be null.")
